@@ -22,9 +22,10 @@
 
 ### 第 1 步：装好（只需一次）
 
+**Windows：双击 `install.cmd`**（会自己找 DSH 自带的 node，**不需要先装 Node.js**）；macOS / Linux：`node install.js`（或 `./install.sh`）。
+
 ```bash
-# 需要 Node.js 18+（只写作看批改的话可以跳过这一步，直接看第 2 步）
-node install.js
+node install.js          # 等价命令（前提：PATH 里有 node；Windows 建议直接用 install.cmd）
 ```
 
 `install.js` 会做三件事：自检文件是否齐全、把评分标准安装到 DSH 用户技能目录、打印你所在平台的下一步操作。**不需要手工改任何个人信息。**
@@ -34,9 +35,11 @@ node install.js
 
 **Windows**
 
-1. 安装 Node.js：到 <https://nodejs.org/> 下载 LTS 版，一路下一步
-2. 在项目文件夹里按住 `Shift` + 右键 →「在此处打开 PowerShell」→ 执行 `node install.js`
-3. 之后双击 `一键批改.cmd` 即可批改
+1. 双击 **`install.cmd`** —— 它会自动查找 DSH 自带的 node（PATH → DSH 安装位置 → 各盘符 → 注册表卸载项）；找不到才提示你安装 Node.js
+2. 自检通过后，双击 `app\index.html` 开始写作
+3. 要批改时：双击 `一键批改.cmd`，或先 `start-helper.cmd` 再回网页点「一键批改」
+
+> 只有"没装 DSH、也没有 Node.js"时才需要到 <https://nodejs.org/> 下载 LTS 版安装。
 
 **macOS / Linux**
 
@@ -209,6 +212,7 @@ kaoyan-english-writing/
 ├─ README.md                  ← 本文件
 ├─ AGENTS.md                  ← 给 Codex 等智能体的工作说明
 ├─ install.js                 ← 一键安装与自检（跨平台）
+├─ install.cmd                ← Windows：双击即安装自检（自动找 DSH 自带 node）
 ├─ grade-once.sh              ← macOS / Linux：一次性批改
 ├─ start-helper.sh / stop-helper.sh / update-bank.sh
 ├─ 一键批改.cmd / start-helper.cmd / stop-helper.cmd / 更新题库.cmd   ← Windows

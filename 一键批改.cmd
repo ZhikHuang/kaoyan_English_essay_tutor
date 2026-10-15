@@ -31,7 +31,7 @@ echo [错误] 找不到 node，也找不到 DSH 自带的运行时。
 echo   三种办法任选：
 echo   1. 安装 Node.js 18 以上版本：https://nodejs.org/ ，装完重新双击本文件
 echo   2. 不用命令行：双击 一键批改.cmd，或在 DSH 对话里说一句「批改待批改作文」
-echo      （后者需要先把网页提交同步成 app\data\pending_submissions.json，见 README 第 5 节）
+echo      （后者需要先把网页提交同步成 app\data\pending_submissions.json，见 README 第 2.3 节）
 echo   3. 如果 DSH 装在别的盘，请确认该盘根目录下有 dsh\resources\runtime\primary-runtime
 echo.
 pause

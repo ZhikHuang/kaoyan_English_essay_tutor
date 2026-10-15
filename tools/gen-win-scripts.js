@@ -38,6 +38,22 @@ const NONODE = [
 ].join('\r\n');
 
 const files = {
+  'install.cmd': [
+    '@echo off',
+    'chcp 65001 >nul',
+    'cd /d "%~dp0"',
+    'title 考研英语（一）（二）· 安装与自检',
+    FIND_NODE,
+    'if not defined NODE goto nonode',
+    'echo.',
+    '"%NODE%" install.js',
+    'echo.',
+    'pause',
+    'exit /b 0',
+    '',
+    NONODE
+  ].join('\r\n'),
+
   'start-helper.cmd': [
     '@echo off',
     'chcp 65001 >nul',

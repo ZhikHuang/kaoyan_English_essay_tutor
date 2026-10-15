@@ -4,7 +4,7 @@
 
 ---
 
-## 一、安装 Node.js（唯一需要装的东西）
+## 一、安装 Node.js（**已经装了 DSH 的话可以跳过**）
 
 1. 打开 <https://nodejs.org/>，下载 **LTS** 版本的 `.msi` 安装包
 2. 一路「下一步」安装完成
@@ -17,20 +17,20 @@
    能显示版本号（如 `v22.x.x`）就成功了。
 
 > 只想写作和看已有批改的话，这步可以跳过 —— 网页本身不需要 Node。
+> **装了 DSH 的用户也建议跳过**：`install.cmd`、`一键批改.cmd`、`start-helper.cmd` 会自己找到 DSH 自带的 node（查找顺序：PATH → DSH 安装目录 → 各盘符 → 注册表卸载项），不必额外装 Node.js。
 
 ---
 
 ## 二、安装与自检
 
 1. 把项目文件夹解压到任意位置（例如 `D:\kaoyan-english-writing`）
-2. 打开该文件夹，在空白处按住 `Shift` + 右键 →「在此处打开 PowerShell 窗口」（或「在终端中打开」）
-3. 执行：
+2. **双击 `install.cmd`**（推荐，自动找 node），或按住 `Shift` + 右键 →「在此处打开 PowerShell 窗口」后执行：
 
    ```powershell
    node install.js
    ```
 
-看到「✅ 自检通过」即可（若提示找不到 `dsh.cmd`，见第六节；不影响网页写作与查看）。它会顺便把批改标准安装到你的 DSH 用户目录（`%USERPROFILE%\.dsh\skills\`）。
+看到「✅ 批改依赖可用：…dsh.cmd」即可（若提示找不到 `dsh.cmd`，见第六节；不影响网页写作与查看）。它会顺便把批改标准安装到你的 DSH 用户目录（`%USERPROFILE%\.dsh\skills\`）。
 
 ---
 

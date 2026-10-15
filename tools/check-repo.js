@@ -16,7 +16,7 @@ console.log('');
 /* 1. 必需文件 */
 console.log('【1】必需文件是否齐全');
 const files = [
-  'README.md', 'AGENTS.md', 'LICENSE', '.gitignore', 'install.js', 'install.sh',
+  'README.md', 'AGENTS.md', 'LICENSE', '.gitignore', 'install.js', 'install.sh', 'install.cmd',
   'grade-once.sh', 'start-helper.sh', 'stop-helper.sh', 'update-bank.sh',
   '一键批改.cmd', 'start-helper.cmd', 'stop-helper.cmd', '更新题库.cmd',
   'app/index.html', 'app/data/state.js', 'app/data/questions.js', 'app/data/figures.js',
@@ -25,7 +25,7 @@ const files = [
   'tools/check-repo.js', 'tools/make-examples.js',
   'app/tools/validate.js', 'app/tools/grade-helper.js', 'app/tools/gen-questions.js', 'app/tools/en2-data.js',
   'tools/grade-once.js', 'tools/gen-win-scripts.js', 'tools/check-repo.js', 'tools/make-examples.js',
-  'tools/check-ref-json.js', 'tools/normalize-ref-json.js', 'tools/eval-in-browser.js',
+  'tools/check-ref-json.js', 'tools/normalize-ref-json.js', 'tools/eval-in-browser.js', 'tools/test-guards.js',
   'skill/SKILL.md', 'skill/references/english1_essay_major.md', 'skill/references/english1_essay_minor.md',
   'skill/references/english1_translation.md', 'skill/references/translation_long_sentence.md',
   'skill/references/english2_essay_major.md', 'skill/references/english2_essay_minor.md',

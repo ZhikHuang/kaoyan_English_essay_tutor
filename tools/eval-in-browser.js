@@ -1,20 +1,36 @@
-/* 用 Edge 的 DevTools 协议在真实浏览器里求值，验证页面实际状态
-   用法：node tools/eval-in-browser.js <file-url> "<js表达式>" */
+/* 用 Chromium 系浏览器的 DevTools 协议在真实浏览器里求值，验证页面实际状态
+   用法：node tools/eval-in-browser.js <file-url> "<js表达式>"
+   浏览器查找顺序：环境变量 DSH_BROWSER → Edge → Chrome → Chromium（都在标准安装位置）；
+   找不到就打印提示并退出（本脚本只是开发自检用，不影响批改功能）。 */
 'use strict';
 const { spawn } = require('child_process');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 const URL_ = process.argv[2];
 const EXPR = process.argv[3] || '1';
-const EDGE = [
+const CANDIDATES = [
+  process.env.DSH_BROWSER || '',
   'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe'
-].find(p => fs.existsSync(p));
+  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+  path.join(process.env.LOCALAPPDATA || '', 'Google', 'Chrome', 'Application', 'chrome.exe'),
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+  '/usr/bin/google-chrome',
+  '/usr/bin/chromium'
+].filter(Boolean);
+const BROWSER = CANDIDATES.find(p => { try { return fs.existsSync(p); } catch (e) { return false; } });
+if (!BROWSER) {
+  console.log('没找到 Chromium 系浏览器（Edge / Chrome）。可用环境变量 DSH_BROWSER 指定可执行文件路径。');
+  process.exit(1);
+}
 
-const profile = path.join(process.env.TEMP, 'edge-cdp-' + Date.now());
-const child = spawn(EDGE, [
+const profile = path.join(os.tmpdir(), 'cdp-profile-' + Date.now());
+const child = spawn(BROWSER, [
   '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
   '--remote-debugging-port=9222', '--user-data-dir=' + profile, URL_
 ], { stdio: 'ignore', windowsHide: true });

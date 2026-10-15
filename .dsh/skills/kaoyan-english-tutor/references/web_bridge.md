@@ -99,11 +99,18 @@ window.__KAOYAN_STATE__ = {
 window.__KAOYAN_PATCHES = window.__KAOYAN_PATCHES || {};
 window.__KAOYAN_PATCHES['sub_0001'] = {
   "id": "sub_0001",
+  "questionId": "q_real_2021_major",
   "status": "graded",
   "gradedAt": "2026-02-14T10:30:00+08:00",
   "grading": { /* 见下 */ }
 };
 ```
+
+> **`questionId` 必填（防止"编号撞车"）**：网页加载补丁时会拿它和提交的 `questionId` 比对，**对不上就拒绝套用**，
+> 这条会继续显示为「待批改」，顶栏提示「⚠ 批改补丁的题目与这条提交不一致」。
+> 为什么必须有：`sub_XXXX` 只是自增编号，而提交分散在浏览器 local-storage 与 `pending_submissions.json` 两处，
+> 换浏览器、换电脑、自检脚本都可能凑出同一个编号；只按编号匹配的话，**A 的批改结果会被静默显示到 B 的作文上**。
+> 写补丁时请**直接复制提交对象里的 `questionId`**，不要凭印象写。
 
 等价的可选写法：`window.__KAOYAN_PATCHES['sub_0001'] = {...};`（对象字面量必须能被 JS 解析，因此**字符串里的引号要转义**，不能有尾逗号、不能有 `//` 注释以外的杂项）。
 若同时提供 `data/patches/sub_0001.json`，网页只在 http(s) 模式下读取；**本地文件模式下只认 `.js`**，所以务必写 `.js`。
@@ -178,10 +185,12 @@ window.__KAOYAN_PATCHES['sub_0001'] = {
 
 ## 六、补丁生成检查清单
 
-- [ ] `id` 与补丁文件名、`state.js` 中的提交 id 完全一致，文件名是 `sub_XXXX.js`
+- [ ] `id` 与补丁文件名、提交 id 完全一致，文件名是 `sub_XXXX.js`
+- [ ] **`questionId` 与这条提交的 `questionId` 完全一致**（防编号撞车；不一致时网页会拒绝显示该结果）
 - [ ] 文件以 `window.__KAOYAN_PATCHES = window.__KAOYAN_PATCHES || {};` 开头
 - [ ] `status:"graded"`、`gradedAt` 为 ISO 时间
 - [ ] `score` ≤ `fullScore`，`revisedWordCount` 与 `revisedEssay` 实际词数接近
 - [ ] 所有 `level` 值合法；`sentenceNotes` 覆盖了原文每个有问题的句子
 - [ ] `review.priority` 恰好 3 条且每条含可执行练习建议
 - [ ] 语法自检命令已跑通（见第四节第 6 条）
+- [ ] 若发现提交正文为空、或图片路径指向不存在的文件：**先问用户，不要凭空评分**（那多半是空提交或图片没放进去）

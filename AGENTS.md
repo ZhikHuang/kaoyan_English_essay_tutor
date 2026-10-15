@@ -39,12 +39,15 @@
 
    ```js
    window.__KAOYAN_PATCHES = window.__KAOYAN_PATCHES || {};
-   window.__KAOYAN_PATCHES['sub_0003'] = { id:'sub_0003', status:'graded', gradedAt:'<ISO 时间>', grading:{ … } };
+   window.__KAOYAN_PATCHES['sub_0003'] = { id:'sub_0003', questionId:'<这条提交的 questionId>', status:'graded', gradedAt:'<ISO 时间>', grading:{ … } };
    ```
 
    必须是 **`.js`**（网页在 `file://` 下无法 fetch JSON），UTF-8 无 BOM，字段与分值必须自洽。
+   **`questionId` 必填**：网页会拿它比对提交的题目，对不上就拒绝显示（防止"编号撞车"把别人的批改结果套到这条作文上）。请直接从提交对象里复制。
 5. 写完运行 `node app/tools/validate.js`，确认无 FAIL。
 6. 告知用户：得分、补丁路径、网页会在 8 秒内自动刷新。
+
+**遇到这些情况先停下来问用户**：提交的 `essayText` 为空（可能只有图片路径、图片却没放进 `app/data/uploads/`），或 `questionId` 指向的题目与正文明显不是一回事——不要凭空评分，也不要把结果套到别的编号上。
 
 **不要做的事**：不要重写整个 `state.js`（会覆盖用户草稿）；不要删除用户的提交或补丁；不要改动补丁里的 `revises / draftGroup / draftNo`（那是改稿链的关联字段）。
 

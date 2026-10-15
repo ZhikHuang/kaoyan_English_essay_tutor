@@ -158,6 +158,7 @@ Directions 三段式（英语二标准写法）：
 window.__KAOYAN_PATCHES = window.__KAOYAN_PATCHES || {};
 window.__KAOYAN_PATCHES['sub_0003'] = {
   "id": "sub_0003",
+  "questionId": "q_en2_2021_major",
   "status": "graded",
   "gradedAt": "2026-02-14T10:30:00+08:00",
   "grading": {

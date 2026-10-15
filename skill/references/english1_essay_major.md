@@ -246,6 +246,7 @@
 ```json
 {
   "id": "sub_0002",
+  "questionId": "q_real_2021_major",
   "status": "graded",
   "gradedAt": "2026-02-14T10:30:00+08:00",
   "grading": {

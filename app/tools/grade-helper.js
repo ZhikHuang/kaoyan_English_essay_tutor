@@ -389,30 +389,41 @@ function buildUpdateTask(years){
   ].join('\n');
 }
 
-/* 找到可用的 dsh：① PATH ② 从当前 node 位置反推 DSH 自带运行时 ③ 常见安装位置 */
+/* 找到可用的 dsh（不依赖用户手工配 PATH，也不写死盘符）：
+   ① PATH ② 从当前 node 位置反推 DSH 自带运行时 ③ DSH_HOME 推断 + 常见安装位置 ④ 各盘符根目录 */
 function resolveDsh(){
+  const p = require('path');
   const isWin = process.platform === 'win32';
   const exe = isWin ? 'dsh.cmd' : 'dsh';
+  const REL = ['resources', 'runtime', 'cli', 'bin', exe];
   const probe = spawnSync(isWin ? 'where' : 'which', [exe], { encoding: 'utf8' });
   if (!probe.error && probe.status === 0) {
     const first = String(probe.stdout || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean)[0];
     if (first && fs.existsSync(first)) return first;
   }
   const cands = [];
-  let d = path.dirname(process.execPath);
-  for (let i = 0; i < 7; i++) { d = path.dirname(d); cands.push(path.join(d, 'resources', 'runtime', 'cli', 'bin', exe)); }
-  if (process.env.DSH_HOME) cands.push(path.join(path.dirname(process.env.DSH_HOME), 'resources', 'runtime', 'cli', 'bin', exe));
+  let d = p.dirname(process.execPath);
+  for (let i = 0; i < 7; i++) { d = p.dirname(d); cands.push(p.join(d, ...REL)); }
+  if (process.env.DSH_HOME) cands.push(p.join(p.dirname(process.env.DSH_HOME), ...REL));
   if (isWin) {
     const la = process.env.LOCALAPPDATA || '';
     const pf = process.env.ProgramFiles || 'C:\\Program Files';
     const pf86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
-    [pf, pf86].forEach(base => cands.push(path.join(base, 'DSH', 'resources', 'runtime', 'cli', 'bin', exe)));
-    if (la) cands.push(path.join(la, 'Programs', 'DSH', 'resources', 'runtime', 'cli', 'bin', exe));
+    const bases = [pf, pf86];
+    if (la) bases.push(p.join(la, 'Programs'));
+    bases.forEach(base => {
+      cands.push(p.join(base, 'DSH', ...REL));
+      cands.push(p.join(base, 'dsh', ...REL));
+    });
+    for (const letter of 'CDEFGHIJKLMNOPQRSTUVWXYZ') {
+      for (const dir of ['dsh', 'DSH']) cands.push(p.join(letter + ':\\', dir, ...REL));
+      cands.push(p.join(letter + ':\\', 'Program Files', 'DSH', ...REL));
+    }
   } else {
     cands.push('/opt/dsh/resources/runtime/cli/bin/' + exe);
     cands.push('/Applications/DSH.app/Contents/Resources/runtime/cli/bin/' + exe);
   }
-  for (const c of cands) { if (fs.existsSync(c)) return c; }
+  for (const c of cands) { try { if (fs.existsSync(c)) return c; } catch (e) {} }
   return null;
 }
 

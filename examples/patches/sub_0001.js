@@ -2,6 +2,7 @@
 window.__KAOYAN_PATCHES = window.__KAOYAN_PATCHES || {};
 window.__KAOYAN_PATCHES['sub_0001'] = {
     "id":  "sub_0001",
+    "questionId": "q_mock_01_major",
     "status":  "graded",
     "gradedAt":  "2026-02-14T10:30:00+08:00",
     "grading":  {

@@ -319,6 +319,7 @@
 ```json
 {
   "id": "sub_0003",
+  "questionId": "q_real_2021_minor",
   "status": "graded",
   "gradedAt": "2026-02-14T11:40:00+08:00",
   "grading": { }

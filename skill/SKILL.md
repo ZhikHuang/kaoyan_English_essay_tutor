@@ -124,6 +124,8 @@ user-invocable: true
 
 - 状态文件：`data/state.js`（`window.__KAOYAN_STATE = {...}`，注意**没有**末尾双下划线），含 `questions`、`completions`、`meta`。
 - 结果文件：`data/patches/sub_<id>.js`（JS 形式：`window.__KAOYAN_PATCHES['sub_0001'] = {...}`），UTF-8 无 BOM。
+- **补丁必须带 `questionId`**：网页会用它比对提交的题目，对不上就拒绝显示该结果（防止 `sub_XXXX` 编号撞车时，把别人的批改结果套到这条作文上）。请从提交对象里原样复制，不要凭印象写。
+- **拿不准就先问**：提交没有正文（`essayText` 为空）或 `questionId` 与正文明显不是一回事时，不要评分、也不要把结果写到别的编号上，先让用户确认。
 - **科目**：`questions[].subject` ∈ `en1`（英语一）| `en2`（英语二）；缺省视为英语一。
 - 题目分类：`questions[].category` ∈ `real|mock|mine`；用户自带题目的 id 用 `q_mine_001` 递增。
 - 提交字段：`id/questionId/submittedAt/status/essayText/imagePath/note`，用户自带题目时另有 `ownPrompt`。

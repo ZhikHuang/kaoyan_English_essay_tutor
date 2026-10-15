@@ -517,6 +517,7 @@ function loadData(){
         } else if(Store.patchFiles.length){
           Store.syncNote = '数据已加载 · 补丁 ' + Store.patchFiles.length + ' 个 · ' + fmtTime(new Date().toISOString());
         }
+        notePatchConflicts();          // 编号撞车检查（有冲突时覆盖上面的状态文字）
         Store.lastLoad = new Date();
         if(finishLoad) finishLoad();
         Store.loadingPromise = null;
@@ -964,12 +965,37 @@ function patchOf(id){ return Store.patches[id] || null; }
 function applyPatch(c){
   var p = patchOf(c.id);
   if(!p) return c;
+  /* 防「编号撞车」：批改补丁里带 questionId（AI 写补丁时必填）。
+     如果补丁的题目与这条提交的题目对不上，说明这个 sub_XXXX.js 是别人的结果
+     （例如另一个浏览器、另一台电脑、或自检脚本用了同一个编号），此时**不套用**，
+     只做标记，页面会把这条继续显示为「待批改」，并在顶栏给出提示。 */
+  if(p.questionId && c.questionId && String(p.questionId) !== String(c.questionId)){
+    var mism = {};
+    for(var k0 in c) mism[k0] = c[k0];
+    mism.patchMismatch = String(p.questionId);
+    return mism;
+  }
   var merged = {};
   for(var k in c) merged[k] = c[k];
   if(p.status) merged.status = p.status;
   if(p.gradedAt) merged.gradedAt = p.gradedAt;
   if(p.grading) merged.grading = p.grading;
   return merged;
+}
+/* 有哪些提交的补丁与题目对不上（编号撞车） */
+function patchConflictIds(){
+  var out = [];
+  allCompletions(true).forEach(function(c){ if(c.patchMismatch) out.push(c.id); });
+  return out;
+}
+/* 把冲突写进顶栏状态；返回冲突编号数组 */
+function notePatchConflicts(){
+  var ids = patchConflictIds();
+  Store.patchConflicts = ids;
+  if(ids.length){
+    Store.syncNote = '⚠ ' + ids.join('、') + '：批改补丁的题目与这条提交不一致，已忽略该结果（疑似编号撞车，请检查 data/patches/ 并重新批改）';
+  }
+  return ids;
 }
 function allCompletions(includeGraded){
   var out = [], seen = {};
@@ -2388,10 +2414,13 @@ function renderMistakes(){
 
   h += '<div class="card"><h2>导出 / 备份</h2><div class="hint">把本机提交导出为 JSON 文件，便于交给 AI 或备份。</div>'
     + '<div class="row"><button class="btn" id="btn-export">导出本机提交 JSON</button>'
-    + '<button class="btn ghost" id="btn-wipe">清除本机草稿与图片缓存</button></div>'
+    + '<button class="btn ghost" id="btn-wipe">清空本机数据（提交/草稿/图片/批改缓存）</button></div>'
     + '<div class="note" style="margin-top:12px">提交进 AI 的三种途径：<b>①</b> 双击 <span class="mono">start-helper.cmd</span> 后，本页会自动把提交同步成 <span class="mono">data/pending_submissions.json</span>，' 
     + '在对话里说一句<b>批改待批改作文</b>即可；<b>②</b> 点下面的按钮导出 JSON，另存为 <span class="mono">data/pending_submissions.json</span>；'
-    + '<b>③</b> 直接把作文粘到对话里。批改结果一律写在 <span class="mono">data/patches/</span>。</div></div>';
+    + '<b>③</b> 直接把作文粘到对话里。批改结果一律写在 <span class="mono">data/patches/</span>。</div>'
+    + '<div class="note" style="margin-top:8px">建议<b>固定用一个浏览器</b>练习：提交记录按浏览器分开保存，换浏览器会互相看不见，'
+    + '还可能出现同一个编号 <span class="mono">sub_XXXX</span> 被两边各用一次（页面已能识别并忽略题目对不上的批改补丁）。'
+    + '如果同一个文件路径在两个浏览器里都打开过，请只保留其中一份记录，并把另一份的 <span class="mono">data/pending_submissions.json</span> 清掉。</div></div>';
 
   el.innerHTML = h;
   bindItems(el);
@@ -2404,13 +2433,18 @@ function renderMistakes(){
   });
   $('#btn-wipe') && $('#btn-wipe').addEventListener('click', function(){
     var pend = pendingList().length;
-    var msg = '将清空本机保存的全部提交记录、草稿与图片缓存：\n'
+    var msg = '将清空本机保存的全部提交记录、草稿、图片缓存与批改结果缓存：\n'
       + '· 共 ' + allCompletions(true).length + ' 条提交，其中【未批改 ' + pend + ' 条】会永久丢失（补丁里通常没有作文原文，无法恢复）\n'
-      + '· 已批改结果（data/patches/）不受影响\n\n'
+      + '· 清空后本页不再记录这些提交；data/patches/ 里的批改补丁文件不会被删除\n\n'
+      + '重要：如果这些提交也同步到了服务端（data/pending_submissions.json），清空后请把该文件一并删掉——'
+      + '否则它会残留成"网页上并不存在的待批改记录"。\n\n'
       + '建议先点「导出本机提交 JSON」留一份备份。确定要清除吗？';
     if(!confirm(msg)) return;
     localStorage.removeItem(LS_SUBS); localStorage.removeItem(LS_IMGS); localStorage.removeItem(LS_META);
-    Store.subs = []; Store.imgs = {}; toast('已清除本机缓存（建议同时清掉服务端的 data/pending_submissions.json）'); render();
+    localStorage.removeItem(LS_PATCH);          // 补丁缓存也要清，否则页面会凭缓存"复活"出幽灵记录
+    Store.subs = []; Store.imgs = {}; Store.patches = {};
+    toast('已清除本机缓存；记得同时删掉 data/pending_submissions.json（如果存在）');
+    renderMeta(); render();
   });
 }
 
@@ -2604,6 +2638,9 @@ function boot(){
           Store.syncNote = '数据已加载 · 补丁 ' + Store.patchFiles.length + ' 个 · ' + fmtTime(new Date().toISOString());
           renderMeta(); render();
         }
+        var conf = notePatchConflicts();
+        if(conf.length && changed) toast('⚠ ' + conf.join('、') + '：补丁与题目不一致，已忽略');
+        if(conf.length){ renderMeta(); render(); }
       });
     }, POLL_MS);
   });

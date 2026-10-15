@@ -353,6 +353,7 @@
 ```json
 {
   "id": "sub_0003",
+  "questionId": "q_real_2021_translation",
   "status": "graded",
   "gradedAt": "2026-02-14T11:20:00+08:00",
   "grading": { }

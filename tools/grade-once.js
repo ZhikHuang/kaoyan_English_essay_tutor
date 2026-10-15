@@ -78,8 +78,12 @@ function buildCommand(){
    ① 先在 PATH 里找（which/where）
    ② 用"当前 node 的安装位置"逐级反推 DSH 自带运行时（node 来自 DSH 时最准）
    ③ DSH_HOME 推断 + 常见安装位置（Program Files / LOCALAPPDATA\Programs）
-   ④ 最后扫各盘符根目录（DSH 装在 D:\dsh、E:\dsh 这类非系统盘很常见）
-   返回 null 表示确实找不到（调用方给出可执行的人工指引）。 */
+   ④ 【Windows】读注册表卸载项的 InstallLocation —— 安装器会把真实安装位置写在这里，
+      比猜盘符可靠（实测 DSH 装在 D:\dsh 时，①②③都找不到，这里能直接命中）
+   ⑤ 最后扫各盘符根目录（DSH 装在 D:\dsh、E:\dsh 这类非系统盘很常见）
+   返回 null 表示确实找不到（调用方给出可执行的人工指引）。
+   注意：同样的逻辑在 install.js / app/tools/grade-helper.js 各有一份，
+        改动请三处一起改，并跑 node tools/test-guards.js 校验。 */
 function resolveDsh(){
   const fs = require('fs');
   const p = require('path');
@@ -116,6 +120,32 @@ function resolveDsh(){
     cands.push('/Applications/DSH.app/Contents/Resources/runtime/cli/bin/' + exe);
   }
   for (const c of cands) { try { if (fs.existsSync(c)) return c; } catch (e) {} }
+  // 注册表兜底：卸载项里的 InstallLocation 就是安装目录
+  if (isWin) {
+    const fromReg = dshFromRegistry(fs, p, REL);
+    if (fromReg) return fromReg;
+  }
+  return null;
+}
+/* 从注册表卸载项里找 DSH 安装目录（只读，约 0.5 秒） */
+function dshFromRegistry(fs, p, REL){
+  const roots = [
+    'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+    'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+    'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+  ];
+  for (const root of roots) {
+    let out = '';
+    try { out = String((spawnSync('reg', ['query', root, '/s', '/v', 'InstallLocation'], { encoding: 'utf8' }) || {}).stdout || ''); }
+    catch (e) { continue; }
+    const lines = out.match(/InstallLocation\s+REG_SZ\s+(.+)/g) || [];
+    for (const line of lines) {
+      const dir = line.replace(/^InstallLocation\s+REG_SZ\s+/, '').trim();
+      if (!dir) continue;
+      const cand = p.join(dir, ...REL);
+      try { if (fs.existsSync(cand)) return cand; } catch (e) {}
+    }
+  }
   return null;
 }
 

@@ -101,20 +101,56 @@ fs.mkdirSync(path.join(APP, 'data', 'uploads'), { recursive: true });
 fs.mkdirSync(path.join(APP, 'data', 'backups'), { recursive: true });
 
 /* 真正的批改依赖：命令行里的 dsh（网页批量按钮 / 一键批改.cmd 都靠它启动智能体）
-   先看 PATH，再看 DSH 自带运行时（用户从 DSH 里跑本脚本时就是这种情况）。 */
+   查找顺序与 tools/grade-once.js、app/tools/grade-helper.js 保持一致（三处一起改）：
+   ① PATH ② 从当前 node 位置反推 ③ DSH_HOME 推断 + 常见安装位置 ④ 各盘符根目录 ⑤ 注册表卸载项。 */
 const { spawnSync } = require('child_process');
 const dshBase = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
 function findDsh(){
-  const probe = spawnSync(process.platform === 'win32' ? 'where' : 'which', [dshBase], { encoding: 'utf8' });
+  const exe = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
+  const REL = ['resources', 'runtime', 'cli', 'bin', exe];
+  const probe = spawnSync(process.platform === 'win32' ? 'where' : 'which', [exe], { encoding: 'utf8' });
   if (!probe.error && probe.status === 0) {
     const first = String(probe.stdout || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean)[0];
     if (first && fs.existsSync(first)) return first;
   }
   const cands = [];
   let d = path.dirname(process.execPath);
-  for (let i = 0; i < 7; i++) { d = path.dirname(d); cands.push(path.join(d, 'resources', 'runtime', 'cli', 'bin', dshBase)); }
-  if (process.env.DSH_HOME) cands.push(path.join(path.dirname(process.env.DSH_HOME), 'resources', 'runtime', 'cli', 'bin', dshBase));
-  for (const c of cands) { if (fs.existsSync(c)) return c; }
+  for (let i = 0; i < 7; i++) { d = path.dirname(d); cands.push(path.join(d, ...REL)); }
+  if (process.env.DSH_HOME) cands.push(path.join(path.dirname(process.env.DSH_HOME), ...REL));
+  if (process.platform === 'win32') {
+    const la = process.env.LOCALAPPDATA || '';
+    const pf = process.env.ProgramFiles || 'C:\\Program Files';
+    const pf86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
+    const bases = [pf, pf86];
+    if (la) bases.push(path.join(la, 'Programs'));
+    bases.forEach(base => {
+      cands.push(path.join(base, 'DSH', ...REL));
+      cands.push(path.join(base, 'dsh', ...REL));
+    });
+    for (const letter of 'CDEFGHIJKLMNOPQRSTUVWXYZ') {
+      for (const dir of ['dsh', 'DSH']) cands.push(path.join(letter + ':\\', dir, ...REL));
+      cands.push(path.join(letter + ':\\', 'Program Files', 'DSH', ...REL));
+    }
+  }
+  for (const c of cands) { try { if (fs.existsSync(c)) return c; } catch (e) {} }
+  if (process.platform === 'win32') {
+    const roots = [
+      'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+      'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+      'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+    ];
+    for (const root of roots) {
+      let out = '';
+      try { out = String((spawnSync('reg', ['query', root, '/s', '/v', 'InstallLocation'], { encoding: 'utf8' }) || {}).stdout || ''); }
+      catch (e) { continue; }
+      const lines = out.match(/InstallLocation\s+REG_SZ\s+(.+)/g) || [];
+      for (const line of lines) {
+        const dir = line.replace(/^InstallLocation\s+REG_SZ\s+/, '').trim();
+        if (!dir) continue;
+        try { const cand = path.join(dir, ...REL); if (fs.existsSync(cand)) return cand; } catch (e) {}
+      }
+    }
+  }
   return null;
 }
 const dshFound = findDsh();

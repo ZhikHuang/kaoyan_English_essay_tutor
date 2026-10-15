@@ -108,4 +108,5 @@
 | 更新题库 | `node tools/grade-once.js --update 2027` |
 | 常驻服务（网页按钮） | `node app/tools/grade-helper.js` |
 | 校验数据与页面 | `node app/tools/validate.js --report` |
+| 守卫回归自检 | `node tools/test-guards.js`（dsh 定位三处一致 + 补丁防编号撞车） |
 | 重新生成题库 | `node app/tools/gen-questions.js`（`--max-year 2020` 可只生成到某年） |

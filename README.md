@@ -74,9 +74,9 @@ macOS 首次运行脚本若被系统拦下：右键脚本 →「打开」→ 确
 | 找什么 | 查找顺序（找到就用，不再往下找） |
 |---|---|
 | `node` | ① PATH 里的 node ② `%DSH_HOME%\..\dsh\resources\runtime\primary-runtime\...` ③ `%LOCALAPPDATA%\Programs\DSH\...`、`%ProgramFiles%\DSH\...` ④ **各盘符根目录**（`C:\dsh\...`、`D:\dsh\...`、`E:\dsh\...` …） |
-| `dsh` | ① PATH ② 从当前 node 位置逐级反推 ③ `DSH_HOME` 推断 ④ 常见安装位置 ⑤ **各盘符根目录**的 `dsh\resources\runtime\cli\bin\dsh.cmd` |
+| `dsh` | ① PATH ② 从当前 node 位置逐级反推 ③ `DSH_HOME` 推断 ④ 常见安装位置 ⑤ **各盘符根目录**的 `dsh\resources\runtime\cli\bin\dsh.cmd` ⑥ **读注册表卸载项的 `InstallLocation`**（安装器把真实安装位置写在这里，最可靠） |
 
-也就是说：**只要 DSH 是正常安装的（哪怕装在 D:、E: 等非系统盘），就不用手工配 PATH**；脚本里没有写死任何一台电脑的路径。
+也就是说：**只要 DSH 是正常安装的（哪怕装在 D:\、E: 等非系统盘、或自定义目录），就不用手工配 PATH**；脚本里没有写死任何一台电脑的路径。上面⑥条是兜底：`install.js`、`tools/grade-once.js`、`app/tools/grade-helper.js` 三处实现一致，并由 `node tools/test-guards.js` 守着（含"PATH 与盘符都不命中、只有注册表可用"的隔离测试）。
 
 什么时候仍然需要手工配置：
 
@@ -87,8 +87,10 @@ macOS 首次运行脚本若被系统拦下：右键脚本 →「打开」→ 确
 排错命令：
 
 ```bash
-node app/tools/validate.js     # 数据与页面自检
-node tools/check-repo.js       # 仓库自检（含"是否残留机器专属路径"检查）
+node app/tools/validate.js     # 数据文件、补丁字段、分值自洽
+node app/tools/validate.js --report   # 额外做页面渲染仿真
+node tools/check-repo.js       # 仓库自检（路径、命令、机器专属信息、两科完整性）
+node tools/test-guards.js      # 两个"守卫"回归自检（dsh 定位三处一致 + 补丁防编号撞车）
 ```
 
 ### 2.2 批改时最好**只开一个浏览器**（强烈建议）
@@ -272,6 +274,7 @@ kaoyan-english-writing/
 ```bash
 node app/tools/validate.js            # 检查数据文件、补丁字段、分值自洽
 node app/tools/validate.js --report   # 额外用 DOM 仿真检查页面渲染
+node tools/test-guards.js             # 守卫回归自检：dsh 定位三处一致 + 补丁防编号撞车
 ```
 
 | 现象 | 处理 |

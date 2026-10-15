@@ -390,7 +390,8 @@ function buildUpdateTask(years){
 }
 
 /* 找到可用的 dsh（不依赖用户手工配 PATH，也不写死盘符）：
-   ① PATH ② 从当前 node 位置反推 DSH 自带运行时 ③ DSH_HOME 推断 + 常见安装位置 ④ 各盘符根目录 */
+   ① PATH ② 从当前 node 位置反推 ③ DSH_HOME 推断 + 常见安装位置 ④ 各盘符根目录 ⑤ 注册表卸载项
+   注意：同样的逻辑在 install.js / tools/grade-once.js 各有一份，改动请三处一起改。 */
 function resolveDsh(){
   const p = require('path');
   const isWin = process.platform === 'win32';
@@ -424,6 +425,33 @@ function resolveDsh(){
     cands.push('/Applications/DSH.app/Contents/Resources/runtime/cli/bin/' + exe);
   }
   for (const c of cands) { try { if (fs.existsSync(c)) return c; } catch (e) {} }
+  // 注册表兜底：卸载项里的 InstallLocation 就是安装目录
+  if (isWin) {
+    const fromReg = dshFromRegistry(p, REL);
+    if (fromReg) return fromReg;
+  }
+  return null;
+}
+/* 从注册表卸载项里找 DSH 安装目录（只读，约 0.5 秒）
+   注意：同样的逻辑在 install.js / tools/grade-once.js 各有一份，改动请三处一起改。 */
+function dshFromRegistry(p, REL){
+  const roots = [
+    'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+    'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+    'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+  ];
+  for (const root of roots) {
+    let out = '';
+    try { out = String((spawnSync('reg', ['query', root, '/s', '/v', 'InstallLocation'], { encoding: 'utf8' }) || {}).stdout || ''); }
+    catch (e) { continue; }
+    const lines = out.match(/InstallLocation\s+REG_SZ\s+(.+)/g) || [];
+    for (const line of lines) {
+      const dir = line.replace(/^InstallLocation\s+REG_SZ\s+/, '').trim();
+      if (!dir) continue;
+      const cand = p.join(dir, ...REL);
+      try { if (fs.existsSync(cand)) return cand; } catch (e) {}
+    }
+  }
   return null;
 }
 

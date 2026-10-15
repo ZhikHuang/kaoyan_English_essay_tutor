@@ -23,7 +23,7 @@
 
 ## 二、安装与自检
 
-1. 把项目文件夹解压到任意位置（例如 `D:\kaoyan-english-writing`）
+1. 把项目文件夹解压到合适的位置 —— **只放 C 盘就用用户目录**（`%USERPROFILE%\kaoyan-english-writing\`，「此电脑 → C 盘 → 用户 → 你的名字」下面），**有 D 盘就用 `D:\kaoyan-english-writing\`**；不要放 `Program Files`、不要放 OneDrive 同步的桌面/文档、不要放移动硬盘（完整理由见 README 第 1 节「第 0 步」）。
 2. **双击 `install.cmd`**（推荐，自动找 node），或按住 `Shift` + 右键 →「在此处打开 PowerShell 窗口」后执行：
 
    ```powershell

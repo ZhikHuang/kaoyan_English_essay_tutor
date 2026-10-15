@@ -1,0 +1,381 @@
+#!/usr/bin/env node
+/* 批改辅助服务（grade-helper）
+ * 作用：让网页里的「一键批改」按钮可以真正触发 AI 批改。
+ * 原理：网页按按钮 → 本服务收到请求 → 启动一次独立的 headless harness
+ *       （dsh --profile headless "任务"）→ AI 批改并写出 data/patches/sub_XXXX.js
+ *       → 网页每 8 秒自动加载补丁，批改结果就显示出来了。
+ *
+ * 重要说明：
+ *   - 本服务自己**不含** AI，也不联网；它只在本机 127.0.0.1 上听一个端口，并启动 dsh 命令。
+ *   - 每次点按钮都会启动一个独立的 harness 进程（跑完即退出），不打开 GUI，也不需要你先打开 DSH 对话。
+ *   - 不需要用了：在这个窗口按 Ctrl+C，或双击 停止批改服务.cmd。
+ *
+ * 用法：
+ *   node tools/grade-helper.js                 # 默认端口 8787
+ *   node tools/grade-helper.js --port 9999     # 换端口
+ *   node tools/grade-helper.js --task "只批改含时态错误的"   # 自定义批改指令
+ */
+'use strict';
+
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const { spawn } = require('child_process');
+
+const ROOT = path.resolve(__dirname, '..');
+const args = process.argv.slice(2);
+function argValue(name, dflt){
+  const i = args.indexOf(name);
+  return (i >= 0 && args[i + 1]) ? args[i + 1] : dflt;
+}
+const PORT = parseInt(argValue('--port', '8787'), 10);
+const TASK = argValue('--task', '批改待批改作文');
+const STATE_FILE = path.join(ROOT, 'data', 'state.js');
+const QUESTIONS_FILE = path.join(ROOT, 'data', 'questions.js');
+
+let running = false;          // 同一时间只允许一次任务
+let runningKind = null;       // 'grade' 或 'update'
+let last = null;              // 上一次任务的结果
+let lastBackupName = null;    // 本次更新前生成的备份文件名
+const LOG_LIMIT = 60000;      // 保留输出字符数上限
+
+function readText(p){ try { return fs.readFileSync(p, 'utf8'); } catch (e) { return ''; } }
+
+/* 从题目文件里读出各科目的真题年份覆盖
+   英语一：q_real_<年>_major / _minor
+   英语二：q_en2_<年>_major / _minor / _translation（也兼容 q_real_<年>_en2_* 写法） */
+function bankYears(subject){
+  const src = readQuestionSource();
+  const en1 = [], en2 = [];
+  let m;
+  const re1 = /id:\s*'q_real_(\d{4})_(?!en2)[a-z]+'/g;
+  while ((m = re1.exec(src)) !== null) en1.push(parseInt(m[1], 10));
+  const re2a = /id:\s*'q_en2_(\d{4})_[a-z]+'/g;
+  while ((m = re2a.exec(src)) !== null) en2.push(parseInt(m[1], 10));
+  const re2b = /id:\s*'q_real_(\d{4})_en2_[a-z]+'/g;
+  while ((m = re2b.exec(src)) !== null) en2.push(parseInt(m[1], 10));
+  const uniq = a => [...new Set(a)].sort((x, y) => x - y);
+  const pick = subject === 'en1' ? en1 : (subject === 'en2' ? en2 : [...en1, ...en2]);
+  const years = uniq(pick);
+  return { years, min: years[0] || null, max: years[years.length - 1] || null, count: years.length,
+           subjects: { en1: uniq(en1), en2: uniq(en2) } };
+}
+function readQuestionSource(){
+  const banks = [QUESTIONS_FILE, STATE_FILE];
+  let all = '';
+  for (const p of banks) all += readText(p);
+  return all;
+}
+
+/* 某科目该补哪些年份：
+   · 已有题目 → 从该科目最大年份 +1 到今年
+   · 完全没有该科目题目 → 从起点年份（2010）一直补到今年 */
+const BASELINE_YEAR = 2010;
+function missingYears(subject){
+  const b = bankYears(subject);
+  const nowYear = new Date().getFullYear();
+  const need = [];
+  if (b.max) {
+    for (let y = b.max + 1; y <= nowYear; y++) need.push(y);
+  } else {
+    for (let y = BASELINE_YEAR; y <= nowYear; y++) need.push(y);
+  }
+  return { bank: b, need, upToDate: need.length === 0, empty: !b.max };
+}
+/* 两个科目一起判断 */
+function updateNeeds(){
+  const en1 = missingYears('en1');
+  const en2 = missingYears('en2');
+  const need = [...new Set([...en1.need, ...en2.need])].sort((a, b) => a - b);
+  return {
+    bank: bankYears('all'),
+    nowYear: new Date().getFullYear(),
+    need,
+    needBySubject: { en1: en1.need, en2: en2.need },
+    subjects: {
+      en1: { min: en1.bank.min, max: en1.bank.max, count: en1.bank.count, need: en1.need },
+      en2: { min: en2.bank.min, max: en2.bank.max, count: en2.bank.count, need: en2.need }
+    },
+    upToDate: en1.upToDate && en2.upToDate
+  };
+}
+
+/* 统计 state.js 里的待批改提交（与网页同一套数据） */
+function pendingInfo(){
+  const src = readText(STATE_FILE);
+  const ids = [...src.matchAll(/id:\s*['"](sub_\d+)['"]/g)].map(m => m[1]);
+  const graded = new Set();
+  const pdir = path.join(ROOT, 'data', 'patches');
+  if (fs.existsSync(pdir)) {
+    for (const f of fs.readdirSync(pdir)) {
+      const m = /^sub_\d+\.js$/.exec(f);
+      if (m) graded.add(f.replace('.js', ''));
+    }
+  }
+  const pending = ids.filter(id => !graded.has(id));
+  return { total: ids.length, graded: graded.size, pending };
+}
+
+function json(res, code, obj){
+  const body = Buffer.from(JSON.stringify(obj), 'utf8');
+  res.writeHead(code, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'content-type',
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Cache-Control': 'no-store'
+  });
+  res.end(body);
+}
+
+const server = http.createServer((req, res) => {
+  const url = req.url.split('?')[0];
+  if (req.method === 'OPTIONS') { json(res, 204, {}); return; }
+
+  if (url === '/ping') {
+    json(res, 200, { ok: true, running, runningKind, task: TASK, last: last ? { at: last.at, kind: last.kind, ok: last.ok, code: last.code } : null });
+    return;
+  }
+  if (url === '/pending') {
+    json(res, 200, pendingInfo());
+    return;
+  }
+  if (url === '/bank') {                      // 题库年份覆盖情况（网页「一键更新」面板用）
+    json(res, 200, updateNeeds());
+    return;
+  }
+  if (url === '/status') {
+    json(res, 200, { running, runningKind, last });
+    return;
+  }
+  if (url === '/grade' && req.method === 'POST') {
+    if (running) { json(res, 409, { ok: false, error: '已经有一次任务在进行中（' + runningKind + '），请等它结束' }); return; }
+
+    const info = pendingInfo();
+    if (info.pending.length === 0) {
+      json(res, 200, { ok: false, error: '没有待批改的作文（data/state.js 里的提交都已有补丁）' });
+      return;
+    }
+    // 允许网页覆盖任务文字（例如"只批改 sub_0003"）
+    let body = '';
+    req.on('data', c => { body += c; if (body.length > 4000) req.destroy(); });
+    req.on('end', () => {
+      let task = TASK;
+      try { const j = JSON.parse(body || '{}'); if (j && typeof j.task === 'string' && j.task.trim()) task = j.task.trim(); } catch (e) {}
+      runAgent(task, 'grade');
+      json(res, 200, { ok: true, started: true, task, pending: info.pending });
+    });
+    return;
+  }
+  if (url === '/update' && req.method === 'POST') {   // 一键更新题库：让 agent 自己联网查最新真题并补进题库
+    if (running) { json(res, 409, { ok: false, error: '已经有一次任务在进行中（' + runningKind + '），请等它结束' }); return; }
+    let body = '';
+    req.on('data', c => { body += c; if (body.length > 4000) req.destroy(); });
+    req.on('end', () => {
+      let years = [];
+      try { const j = JSON.parse(body || '{}'); if (Array.isArray(j.years)) years = j.years.filter(y => Number.isInteger(y)); } catch (e) {}
+      const need = updateNeeds();
+      const list = (years.length ? years : need.need);
+      const snap = snapshotBank();                     // 更新前自动备份，写坏可回退
+      lastBackupName = (snap && snap.name) || null;
+      const task = buildUpdateTask(list.length ? list : [need.nowYear]);
+      runAgent(task, 'update', 28 * 60 * 1000);        // 联网核查较慢，给 28 分钟
+      json(res, 200, { ok: true, started: true, years: list, task, bank: need.bank, backup: snap });
+    });
+    return;
+  }
+  if (url === '/restore' && req.method === 'POST') {   // 回退到最近一次备份
+    if (running) { json(res, 409, { ok: false, error: '任务进行中，稍后再试' }); return; }
+    const r = restoreBank();
+    json(res, r.ok ? 200 : 400, r);
+    return;
+  }
+  if (url === '/browser') {          // 换一个浏览器打开练习台（辅助服务顺手提供，方便）
+    const idx = path.join(ROOT, 'index.html');
+    if (!fs.existsSync(idx)) { json(res, 404, { ok: false }); return; }
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end('<meta http-equiv="refresh" content="0;url=../index.html">');
+    return;
+  }
+  json(res, 404, { ok: false, error: 'unknown endpoint' });
+});
+
+/* 每次更新前把 questions.js 备份到 data/backups/，最多保留最近 10 份 */
+function snapshotBank(){
+  try{
+    const dir = path.join(ROOT, 'data', 'backups');
+    fs.mkdirSync(dir, { recursive: true });
+    const d = new Date();
+    const p = n => String(n).padStart(2, '0');
+    const name = 'questions_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '_' +
+      p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds()) + '.js';
+    fs.copyFileSync(QUESTIONS_FILE, path.join(dir, name));
+    // 只留最近 10 份
+    const files = fs.readdirSync(dir).filter(f => /^questions_\d+_\d+\.js$/.test(f)).sort();
+    while (files.length > 10) {
+      const old = files.shift();
+      try { fs.unlinkSync(path.join(dir, old)); } catch (e) {}
+    }
+    return { ok: true, name: name, dir: 'data/backups' };
+  }catch(e){ return { ok: false, error: String(e.message || e) }; }
+}
+/* 回退到最近一次备份 */
+function restoreBank(){
+  try{
+    const dir = path.join(ROOT, 'data', 'backups');
+    if (!fs.existsSync(dir)) return { ok: false, error: '还没有任何备份（每次「一键更新题库」前会自动备份）' };
+    const files = fs.readdirSync(dir).filter(f => /^questions_\d+_\d+\.js$/.test(f)).sort();
+    if (!files.length) return { ok: false, error: '备份目录为空' };
+    const latest = files[files.length - 1];
+    fs.copyFileSync(path.join(dir, latest), QUESTIONS_FILE);
+    return { ok: true, restored: latest, files: files.length };
+  }catch(e){ return { ok: false, error: String(e.message || e) }; }
+}
+
+/* 构造"一键更新题库"的任务文字：交给 agent 自己去联网查证并补题（英语一 + 英语二）
+   注意：headless 是一次性任务，指令必须"短、硬、边界清晰"，否则 agent 会跑偏去做别的事。 */
+function buildUpdateTask(years){
+  const need = updateNeeds();
+  const s1 = need.subjects.en1, s2 = need.subjects.en2;
+  const list = years.join('、');
+  const fmt = s => s && s.count ? ('已覆盖 ' + s.min + '—' + s.max + '，' + s.count + ' 个年份') : '尚无题目';
+  return [
+    '任务：给本机题库补齐 ' + list + ' 年的考研英语（一）与英语（二）真题主观题。',
+    '当前覆盖情况：英语一 ' + fmt(s1) + '；英语二 ' + fmt(s2) + '。',
+    '',
+    '严格按下面做完就结束，不要做任何其它事：',
+    '',
+    '【A. 英语一】每年补 2 道，用联网搜索核对 2—4 个来源：',
+    '  · 大作文（Part B，20 分，160—200 词）：id 用 q_real_<年份>_major',
+    '  · 小作文（Part A，10 分，约 100 词）：id 用 q_real_<年份>_minor',
+    '  注意：2010—2023 英语一大作文是图画作文；2024 是"图画+柱状图"，2025 是表格，2026 是双图表。',
+    '',
+    '【B. 英语二】每年补 3 道，用联网搜索核对 2—4 个来源：',
+    '  · 大作文（15 分，约 150 词）：**图表作文**，id 用 q_en2_<年份>_major；题干是 "Write an essay based on the following chart/table, in which you should 1) interpret the chart, 2) give possible reasons, 3) draw a conclusion."',
+    '  · 小作文（Part A，10 分，约 100 词）：id 用 q_en2_<年份>_minor',
+    '  · 翻译（15 分）：**整段英译汉**（不是划线句），id 用 q_en2_<年份>_translation；字段 passage 放英文原文（可放按句拆开的版本），sentences 放需要翻译的句子，hints 里注明"整段翻译，15 分"。',
+    '',
+    '【C. 写在哪里（重要）】本仓库的题库文件 data/questions.js 由生成器产出，直接改它会被下次生成覆盖，所以要改数据源：',
+    '  · 英语一：编辑 tools/gen-questions.js 里的 MAJOR 数组（大作文）与 MINOR 数组（小作文），照表中已有条目的写法追加；',
+    '  · 英语二：编辑 tools/en2-data.js 里的 EN2_MAJOR / EN2_MINOR / EN2_TRANS 三个数组；',
+    '  · 改完后运行 `node tools/gen-questions.js` 重新生成 data/questions.js（它会自动带上 subject 与 id 规则）。',
+    '  若题库已改成手工追加（questions.js 里直接有题目对象、且没有对应的生成器条目），那就直接往 data/questions.js 末尾追加 BANK.push({...})。',
+    '',
+    '【D. 每条题目必须包含的字段】照已有题目的写法：',
+    '  subject（英语一填 "en1"，英语二填 "en2"）、category:"real"、kind（major/minor/translation）、',
+    '  year（写成 "<年份> 真题"）、title、source（写成"<年份> 年考研英语一/二 大作文（Part B，20/15 分）"这类）、',
+    '  promptZh（中文题目说明）、promptTextZh（图画/图表内容或选段话题的文字说明）、promptEn（规范英文题干）、hints、tags；',
+    '  翻译题还要给 passage（英文原文或按句拆开的版本）与 sentences（需翻译的句子）。',
+    '  图表用 data/figures.js 里的现成函数：F.barChart / F.table / F.pieChart / F.pie2 / F.pieBar / F.twinBars / F.lineChart；',
+    '  英语一图画作文用 F.twoPanel / F.facing / F.crowd / F.phones。',
+    '  **不要自己发明图函数名**；若确实需要新图型，必须同时在 data/figures.js 里定义并挂到 window.__KAOYAN_FIG，否则题库会整体加载失败。',
+    '',
+    '【E. 纪律】',
+    '  1. 只允许修改 tools/gen-questions.js、tools/en2-data.js、data/questions.js（必要时 data/figures.js）。不要动 index.html、state.js、patches/、其它 tools/。',
+    '  2. 只增不改：不要修改已有年份的题目或它们的 id，也不要改生成器里已有的条目。',
+    '  3. 追加前先查重：某年某题型已存在就跳过并说明。',
+    '  4. 不要分析网页或脚本实现，不要修其它 bug，不要增加本次任务之外的题目。',
+    '  5. 查不到的年份或细节如实说"查不到/不确定"，不要编造。',
+    '  6. 写完运行 `node tools/validate.js` 确认通过（有 FAIL 就改好再跑）。',
+    '',
+    '【F. 汇报】最后用 8 行以内说明：英语一新增了哪几年哪几道、英语二新增了哪几年哪几道、来源链接、哪些细节不确定。',
+  ].join('\n');
+}
+
+/* 启动一次独立的 headless agent 任务（批改 or 更新题库） */
+function runAgent(task, kind, timeoutMs){
+  running = true;
+  runningKind = kind || 'grade';
+  const startedAt = new Date().toISOString();
+  const isUpdate = runningKind === 'update';
+  console.log('');
+  console.log('=== ' + (isUpdate ? '开始更新题库' : '开始批改') + ' ' + startedAt + ' ===');
+  console.log('工作目录：' + ROOT);
+  console.log('任务：' + task.split('\n')[0] + (task.indexOf('\n') >= 0 ? ' …（共 ' + task.split('\n').length + ' 行指令）' : ''));
+  if (isUpdate) {
+    const u = updateNeeds();
+    const f = s => s.need && s.need.length ? s.need.join('、') : '无需补';
+    console.log('需要补齐的年份：英语一 ' + f(u.subjects.en1) + '；英语二 ' + f(u.subjects.en2));
+    console.log('当前覆盖：英语一 ' + (u.subjects.en1.min || '?') + '—' + (u.subjects.en1.max || '?') +
+                '；英语二 ' + (u.subjects.en2.min || '?') + '—' + (u.subjects.en2.max || '?'));
+  }
+  else console.log('待批改：' + (pendingInfo().pending.join('、') || '（暂无）'));
+  console.log('（这是一个独立的 headless harness 进程，跑完自己退出；不需要另外打开 DSH）');
+
+  // 在 Windows 上用 dsh.cmd（npm 装的命令行入口）；任务词用 env 传入，避免 shell 拼接参数
+  const cmd = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
+  const child = spawn(cmd, ['--profile', 'headless', task], {
+    cwd: ROOT,
+    windowsHide: true,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    // Node 24 在 Windows 上启动 .cmd 必须经 shell（否则 EINVAL）。
+    // 任务文字只来自本文件内置指令或网页的固定按钮，不接受外部任意命令，因此没有注入面。
+    shell: process.platform === 'win32',
+    env: Object.assign({}, process.env, { KAOYAN_TASK: task })
+  });
+
+  let out = '';
+  const push = (buf) => {
+    out += buf.toString('utf8');
+    if (out.length > LOG_LIMIT) out = out.slice(-LOG_LIMIT);
+    process.stdout.write(buf);
+  };
+  child.stdout.on('data', push);
+  child.stderr.on('data', push);
+
+  const limit = timeoutMs || 15 * 60 * 1000;
+  const timer = setTimeout(() => {
+    console.log('!! 超过 ' + Math.round(limit / 60000) + ' 分钟仍未结束，终止本次' + (isUpdate ? '更新' : '批改'));
+    try { child.kill(); } catch (e) {}
+  }, limit);
+
+  child.on('error', (err) => {
+    clearTimeout(timer);
+    running = false; runningKind = null;
+    last = { at: startedAt, kind: kind, ok: false, code: -1, error: String(err.message || err), log: out };
+    console.log('启动 dsh 失败：' + err.message);
+    console.log('请确认命令行里能运行 dsh（在黑窗口里输入 dsh --version 测试）。');
+  });
+
+  child.on('exit', (code) => {
+    clearTimeout(timer);
+    running = false; runningKind = null;
+    const info = pendingInfo();
+    const b = bankYears();
+    last = { at: startedAt, kind: kind, endedAt: new Date().toISOString(), ok: code === 0, code, log: out, pendingLeft: info.pending, bank: b, backupName: lastBackupName };
+    if (isUpdate) {
+      const need = updateNeeds();
+      console.log('=== 更新结束，退出码 ' + code + ' ===');
+      console.log('现在题库覆盖：' + (b.min || '?') + '—' + (b.max || '?') + '（' + b.count + ' 个年份）');
+      console.log(need.upToDate ? '已是最新，无需再补。' : '仍缺年份：' + need.need.join('、'));
+    } else {
+      console.log('=== 批改结束，退出码 ' + code + ' ===');
+      if (info.pending.length) console.log('仍有待批改：' + info.pending.join('、') + '（可再点一次按钮，或看看上面的输出）');
+      else console.log('所有提交都已批改。回到网页即可看到结果（网页每 8 秒自动刷新）。');
+    }
+  });
+}
+
+server.listen(PORT, '127.0.0.1', () => {
+  const u = updateNeeds();
+  console.log('');
+  console.log('  考研英语一 · 本地辅助服务已启动');
+  console.log('  ------------------------------------------------');
+  console.log('  地址：http://127.0.0.1:' + PORT + '   （只监听本机，不联网）');
+  console.log('  工作目录：' + ROOT);
+  console.log('  待批改：' + (pendingInfo().pending.join('、') || '（暂无）'));
+  console.log('  题库覆盖：' + (u.bank.min || '?') + '—' + (u.bank.max || '?') + '，' +
+    (u.upToDate ? '已是最新' : '缺 ' + u.need.join('、') + '（可在网页点「一键更新题库」）'));
+  console.log('');
+  console.log('  保持这个窗口开着，然后在网页上点「一键批改」或「一键更新题库」。');
+  console.log('  结束：按 Ctrl+C，或双击 停止批改服务.cmd');
+  console.log('');
+});
+server.on('error', (e) => {
+  if (e && e.code === 'EADDRINUSE') {
+    console.log('端口 ' + PORT + ' 已被占用：可能服务已经在运行了。');
+    console.log('直接用网页上的「一键批改」即可；若要换端口：node tools/grade-helper.js --port 8899');
+  } else {
+    console.log('服务启动失败：' + (e && e.message));
+  }
+});

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>考研英语（一）（二）· 作文批改练习台 操作手册</title>
+<style>
+  @page { size: A4; margin: 15mm 14mm 16mm 14mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    font-size: 10.4pt; line-height: 1.72; color: #24211c; background: #fff;
+  }
+  /* ---------- 封面 ---------- */
+  .cover {
+    /* A4 297mm − 上下页边距 15+16mm = 266mm，正好占满一页 */
+    height: 266mm; display: flex; flex-direction: column; justify-content: space-between;
+    background: linear-gradient(160deg, #1f4e46 0%, #2c6b5f 42%, #9c3b34 100%);
+    color: #fff; margin: -15mm -14mm 0 -14mm; padding: 26mm 20mm 14mm 20mm;
+    page-break-after: always; break-after: page;
+  }
+  .cover .kicker { font-size: 12pt; letter-spacing: 6px; opacity: .9; }
+  .cover h1 { font-size: 40pt; line-height: 1.24; margin: 8mm 0 4mm; font-weight: 800; letter-spacing: 2px; }
+  .cover .sub { font-size: 13pt; opacity: .95; line-height: 1.9; }
+  .cover .rule { width: 46mm; height: 3px; background: #ffd97a; margin: 9mm 0; }
+  .cover .badges { display: flex; flex-wrap: wrap; gap: 3mm; margin-top: 6mm; }
+  .cover .badge {
+    border: 1px solid rgba(255,255,255,.55); border-radius: 20px; padding: 1.4mm 4.5mm; font-size: 9.6pt;
+  }
+  .cover .foot { font-size: 9.6pt; opacity: .9; border-top: 1px solid rgba(255,255,255,.35); padding-top: 5mm; }
+  .cover .foot b { color: #ffd97a; }
+  /* ---------- 内容通用 ---------- */
+  h2.sec {
+    font-size: 15.5pt; margin: 0 0 4mm; padding: 0 0 2.5mm 0;
+    border-bottom: 2.5px solid #1f4e46; color: #1f4e46;
+    display: flex; align-items: center; gap: 3mm; page-break-after: avoid;
+  }
+  h2.sec .no {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 8.4mm; height: 8.4mm; border-radius: 50%; background: #1f4e46; color: #fff;
+    font-size: 11pt; font-weight: 700; flex: 0 0 auto;
+  }
+  h3 { font-size: 11.6pt; margin: 5.5mm 0 2mm; color: #9c3b34; page-break-after: avoid; }
+  h4 { font-size: 10.6pt; margin: 4mm 0 1.5mm; color: #2c6b5f; page-break-after: avoid; }
+  p { margin: 0 0 2.4mm; }
+  ul, ol { margin: 0 0 2.6mm; padding-left: 6.5mm; }
+  li { margin: 0 0 1.1mm; }
+  b, strong { color: #1f4e46; }
+  code, .mono {
+    font-family: Consolas, "Cascadia Mono", monospace; font-size: 9.2pt;
+    background: #f2efe8; border: 1px solid #e2dbcd; border-radius: 3px; padding: 0 1.2mm;
+  }
+  .sec-wrap { page-break-before: always; }
+  .sec-wrap:first-of-type { page-break-before: auto; }
+  /* ---------- 组件 ---------- */
+  .lead { background: #f6faf8; border-left: 4px solid #2c6b5f; border-radius: 4px; padding: 3mm 4mm; margin: 0 0 4mm; }
+  .note { background: #fdf9ee; border: 1px solid #ecdcae; border-left: 4px solid #b8892f; border-radius: 4px; padding: 2.6mm 3.6mm; margin: 3mm 0; }
+  .warn { background: #fdf1ef; border: 1px solid #f0c8c4; border-left: 4px solid #b3261e; border-radius: 4px; padding: 2.6mm 3.6mm; margin: 3mm 0; }
+  .ok { background: #eef8f4; border: 1px solid #cbe8dd; border-left: 4px solid #2c6b4f; border-radius: 4px; padding: 2.6mm 3.6mm; margin: 3mm 0; }
+  table { width: 100%; border-collapse: collapse; margin: 2.6mm 0 4mm; font-size: 9.7pt; page-break-inside: avoid; }
+  th, td { border: 1px solid #ddd6c8; padding: 1.9mm 2.4mm; text-align: left; vertical-align: top; }
+  th { background: #f3efe6; color: #1f4e46; font-weight: 700; }
+  td.c, th.c { text-align: center; }
+  tbody tr:nth-child(even) td { background: #fcfaf6; }
+  .steps { list-style: none; padding: 0; margin: 3mm 0; counter-reset: st; }
+  .steps > li {
+    position: relative; padding: 2.4mm 3mm 2.4mm 11mm; margin-bottom: 2mm;
+    background: #fbfaf7; border: 1px solid #e8e2d6; border-radius: 5px; counter-increment: st; page-break-inside: avoid;
+  }
+  .steps > li::before {
+    content: counter(st); position: absolute; left: 2.8mm; top: 2.5mm;
+    width: 6mm; height: 6mm; border-radius: 50%; background: #9c3b34; color: #fff;
+    font-size: 9pt; font-weight: 700; text-align: center; line-height: 6mm;
+  }
+  .steps > li .t { font-weight: 700; color: #1f4e46; }
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 2mm; margin: 3mm 0 4mm; }
+  .flow .node {
+    flex: 1 1 30mm; min-width: 30mm; background: #f4f8f6; border: 1px solid #cfe3da;
+    border-radius: 6px; padding: 2.4mm 2.6mm; font-size: 9.4pt; text-align: center; page-break-inside: avoid;
+  }
+  .flow .node b { display: block; font-size: 10pt; margin-bottom: .6mm; }
+  .flow .arrow { align-self: center; color: #9c3b34; font-weight: 700; }
+  .kv { display: flex; gap: 3mm; flex-wrap: wrap; margin: 3mm 0; }
+  .kv .box {
+    flex: 1 1 44mm; border: 1px solid #e2dbcd; border-radius: 6px; padding: 2.6mm 3mm; background: #fbfaf7;
+  }
+  .kv .box .k { font-size: 9.2pt; color: #7d7466; }
+  .kv .box .v { font-size: 13pt; font-weight: 800; color: #1f4e46; }
+  .toc { margin: 0; padding: 0; list-style: none; }
+  .toc li { display: flex; align-items: baseline; gap: 2mm; padding: 1.5mm 0; border-bottom: 1px dotted #ded7c8; font-size: 10.6pt; }
+  .toc li .n { color: #9c3b34; font-weight: 700; min-width: 8mm; }
+  .toc li .t { flex: 1; }
+  .toc li .d { color: #8d8477; font-size: 9.2pt; }
+  .two { display: flex; gap: 4mm; flex-wrap: wrap; }
+  .two > div { flex: 1 1 70mm; }
+  .tag { display: inline-block; font-size: 8.8pt; border-radius: 3px; padding: .3mm 1.8mm; margin-right: 1mm; }
+  .tag.real { background: #fdeeee; color: #a32b22; border: 1px solid #f0c8c4; }
+  .tag.mock { background: #eff4fa; color: #2b4f75; border: 1px solid #cfdff0; }
+  .tag.mine { background: #fdf6e3; color: #7d5f10; border: 1px solid #eadfae; }
+  .avoid { page-break-inside: avoid; }
+  .small { font-size: 9.2pt; color: #6f675c; }
+  hr.thin { border: 0; border-top: 1px dashed #e0d9cb; margin: 5mm 0; }
+</style>
+</head>
+<body>
+
+<!-- ============ 封面 ============ -->
+<section class="cover">
+  <div>
+    <div class="kicker">考 研 英 语 一</div>
+    <h1>作文批改<br>练习台操作手册</h1>
+    <div class="rule"></div>
+    <div class="sub">
+      从选题目、写作文、拿到逐句批改，到复盘错题与改稿对比<br>
+      —— 一份可以直接照着做的完整使用流程
+    </div>
+    <div class="badges">
+      <span class="badge">题库 95 道</span>
+      <span class="badge">真题 2010—2026</span>
+      <span class="badge">支持英语一 / 英语二</span>
+      <span class="badge">真题 2010—2026</span>
+      <span class="badge">翻译 5×2 分</span>
+      <span class="badge">离线可用</span>
+    </div>
+  </div>
+  <div class="foot">
+    项目位置：你解压 / 克隆下来的 <b>kaoyan-english-writing</b> 文件夹（目录名与位置任意）<br>
+    配套技能：<b>kaoyan-english-tutor</b>（运行 <span class="mono">node install.js</span> 会自动装到 DSH 用户技能目录）<br>
+    本手册共 11 节，建议第一次使用时按第 2 至第 6 节顺序走一遍
+  </div>
+</section>
+
+<!-- ============ 目录 + 一分钟看懂 ============ -->
+<section>
+  <h2 class="sec"><span class="no">目</span>录</h2>
+  <ul class="toc">
+    <li><span class="n">1</span><span class="t">一分钟看懂：这套东西是什么</span><span class="d">核心流程</span></li>
+    <li><span class="n">2</span><span class="t">开始之前：文件在哪、需要装什么</span><span class="d">前置依赖</span></li>
+    <li><span class="n">3</span><span class="t">完整使用流程：一次练习的 8 步</span><span class="d">主流程</span></li>
+    <li><span class="n">4</span><span class="t">提交作文页面的 6 个分点怎么填</span><span class="d">最常问</span></li>
+    <li><span class="n">5</span><span class="t">三种提交方式：题库选题 / 上传自己的题目 / 直接对话</span><span class="d">怎么选</span></li>
+    <li><span class="n">6</span><span class="t">拿到批改后看哪里：六个标签页逐个讲</span><span class="d">读批改</span></li>
+    <li><span class="n">7</span><span class="t">同一篇作文改了又改：改稿链与并排对比</span><span class="d">看进步</span></li>
+    <li><span class="n">8</span><span class="t">手写作文怎么办</span><span class="d">照片流程</span></li>
+    <li><span class="n">9</span><span class="t">题库说明：三类题、更新规则、怎么加题</span><span class="d">题库</span></li>
+    <li><span class="n">10</span><span class="t">排错、数据备份与使用建议</span><span class="d">附录</span></li>
+    <li><span class="n">11</span><span class="t">跨平台安装与一键更新题库</span><span class="d">Windows / macOS</span></li>
+  </ul>
+
+  <h2 class="sec" style="margin-top:8mm"><span class="no">1</span>一分钟看懂：这套东西是什么</h2>
+  <div class="lead">
+    一句话：<b>网页负责写和看，DSH 里的 AI 负责批改，两边靠本地文件自动同步。</b>
+    你写作文、选题目、翻看历史批改都在网页里完成；批改由 AI 按对应科目（英语一 / 英语二）的评分标准逐句完成，结果自动回到网页，不需要你复制粘贴。
+  </div>
+
+  <h3>整体流程</h3>
+  <div class="flow">
+    <div class="node"><b>① 打开网页</b>双击 index.html</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>② 选题目</b>题库 95 道任选（英语一 / 英语二分科筛选）</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>③ 提交作文</b>粘贴正文，点提交</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>④ 触发批改</b>点按钮 / 双击脚本 / 说一句话</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>⑤ 看批改与复盘</b>注意事项·错题库·趋势</div>
+  </div>
+
+  <h3>这套系统能给你什么</h3>
+  <table>
+    <thead><tr><th style="width:34mm">功能</th><th>具体内容</th></tr></thead>
+    <tbody>
+      <tr><td><b>模拟评分</b></td><td>按对应科目档位标准定档给分（英语一：大作文 20 / 小作文 10 / 翻译 10；英语二：图表大作文 15 / 小作文 10 / 整段翻译 15），给出具体依据，不是拍脑袋打分</td></tr>
+      <tr><td><b>逐句批改</b></td><td>按「原句 → 问题 → 修改句 → 中文解释」呈现，区分<b>【必须修改】</b>与<b>【可选优化】</b>，作文正文里用红/黄/绿三色标出</td></tr>
+      <tr><td><b>讲透语法</b></td><td>每个必须修改的错误都讲清「错在哪 → 为什么错（点名语法规则）→ 怎么改 → 同类错误如何自查」</td></tr>
+      <tr><td><b>改稿对比</b></td><td>同一篇作文的第二稿、第三稿可并排对比：分数变化、哪些问题改好了、哪些还在</td></tr>
+      <tr><td><b>错题沉淀</b></td><td>历次【必须修改】自动按语法类别归库（主谓一致、时态、冠词……），附原句、改法与自查方法</td></tr>
+      <tr><td><b>进度可视</b></td><td>分数趋势曲线、每道题练过几次、均分率、题库练习进度</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <b>关于评分标准：</b>评分参考为公开流传的档位整理，<b>非官方阅卷标准</b>，结果仅供练习参考，不构成分数承诺。模拟题与示意图均为原创，真题只提供题干与写作要求（不提供参考范文，避免直接背诵）。
+  </div>
+</section>
+
+<!-- ============ 2 前置 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">2</span>开始之前：文件在哪、需要装什么</h2>
+
+  <h3>2.1 文件位置</h3>
+  <p>整个项目就是一个文件夹（解压或克隆到哪里都行，路径不限）：</p>
+  <p><code>kaoyan-english-writing\</code>　<span class="small">（Windows 双击 <code>app\index.html</code>；macOS 在访达里双击 <code>app/index.html</code>）</span></p>
+  <table>
+    <thead><tr><th style="width:52mm">文件 / 文件夹</th><th>作用</th><th style="width:24mm">要动它吗</th></tr></thead>
+    <tbody>
+      <tr><td><b>app/index.html</b></td><td>练习台网页本体，双击就打开</td><td class="c">双击用</td></tr>
+      <tr><td><b>一键批改.cmd</b></td><td>Windows：双击一次 = 让 AI 批改待批改作文</td><td class="c">双击用</td></tr>
+      <tr><td><b>grade-once.sh</b></td><td>macOS / Linux：终端执行 <code>./grade-once.sh</code>，作用同上</td><td class="c">终端用</td></tr>
+      <tr><td><b>start-helper.cmd</b> / <code>start-helper.sh</code></td><td>启动本地小服务，让网页出现「一键批改」「一键更新题库」按钮（可选）</td><td class="c">可选</td></tr>
+      <tr><td><b>stop-helper.cmd</b> / <code>stop-helper.sh</code></td><td>关闭上面那个服务</td><td class="c">可选</td></tr>
+      <tr><td><b>更新题库.cmd</b> / <code>update-bank.sh</code></td><td>联网补齐最新年份真题（也可以直接在网页点按钮）</td><td class="c">每年一次</td></tr>
+      <tr><td><b>install.js</b></td><td>一键安装与自检：<code>node install.js</code></td><td class="c">装一次</td></tr>
+      <tr><td><b>docs/操作手册.pdf</b></td><td>就是本文件</td><td class="c">阅读</td></tr>
+      <tr><td><b>skill/</b></td><td>批改标准（评分档位、检查清单、数据契约），供智能体读取</td><td class="c">不用改</td></tr>
+      <tr><td>app/data/ </td><td>数据目录：题库、状态、批改结果、照片、备份</td><td class="c">一般不用</td></tr>
+      <tr><td>&nbsp;&nbsp;├ questions.js</td><td>题库（真题 + 模拟题）</td><td class="c">可加题</td></tr>
+      <tr><td>&nbsp;&nbsp;├ state.js</td><td>状态：考试日期 + 你的提交记录</td><td class="c">改考试日期</td></tr>
+      <tr><td>&nbsp;&nbsp;├ figures.js</td><td>示意图库（图画 / 表格 / 柱状图 / 饼图 / 双图表）</td><td class="c">不用</td></tr>
+      <tr><td>&nbsp;&nbsp;├ patches/</td><td>每一次批改的结果，一次提交一个文件</td><td class="c"><b>不要删</b></td></tr>
+      <tr><td>&nbsp;&nbsp;├ uploads/</td><td>手写作文照片放这里</td><td class="c">放照片</td></tr>
+      <tr><td>&nbsp;&nbsp;└ backups/</td><td>「一键更新题库」前自动生成的题库备份（保留最近 10 份）</td><td class="c">回退用</td></tr>
+      <tr><td>app/tools/</td><td>自检工具、题库生成脚本、批改服务</td><td class="c">排错时用</td></tr>
+      <tr><td>README.md</td><td>文字版快速开始（本手册的详版）</td><td class="c">备用</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 需要装什么</h3>
+  <table>
+    <thead><tr><th style="width:40mm">项目</th><th class="c" style="width:20mm">必需？</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>Chrome / Edge / Safari 等浏览器</td><td class="c"><b>必需</b></td><td>打开网页，任意现代浏览器都行</td></tr>
+      <tr><td><code>app/index.html</code> 与 <code>app/data/</code> 同层</td><td class="c"><b>必需</b></td><td>别单独把 index.html 复制到别处，否则读不到题库</td></tr>
+      <tr><td>DSH 或其他智能体</td><td class="c">仅批改时需要</td><td>用 <code>一键批改.cmd</code> / <code>./grade-once.sh</code> 时不必先打开 DSH</td></tr>
+      <tr><td>Node.js（18 以上）</td><td class="c">批改/更新时需要</td><td>安装脚本、一键批改、一键更新题库都要它；只写作看批改则不需要</td></tr>
+      <tr><td>网络</td><td class="c">不需要</td><td>网页零外链、零请求，断网照常使用（只有「一键更新题库」需要联网）</td></tr>
+    </tbody>
+  </table>
+  <div class="ok"><b>第一次使用只需三步：</b>① 运行 <code>node install.js</code>（自检 + 安装技能）；② 打开 <code>app/index.html</code> 确认题库能显示；③ 在智能体里说一句「批改待批改作文」确认能读到标准。<b>不需要手工改任何个人信息</b>；考试日期想设就在网页里对 AI 说一声。</div>
+</section>
+
+<!-- ============ 3 完整流程 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">3</span>完整使用流程：一次练习的 8 步</h2>
+  <p class="small">建议第一次严格按这个顺序走一遍，之后可以只留第 1、3、5、6、8 步。</p>
+  <ol class="steps">
+    <li><span class="t">双击</span> <code>index.html</code>，浏览器打开练习台。默认在「总览」页，能看到累计提交、已批改、平均得分率。</li>
+    <li><span class="t">选题目</span>：点上方「<b>题库</b>」标签 → 用「考研真题 / 模拟题 / 我的题目」筛选 → 找到想练的那道题 → 点开看题干、示意图与<b>练习轨迹</b>。</li>
+    <li><span class="t">进入写作</span>：在题目里点「<b>用这道题写一篇 →</b>」，页面跳到「提交作文」并自动选中该题。</li>
+    <li><span class="t">写作文</span>：按题干要求写（建议先写在纸上，更贴近考场），写完整理成文字。</li>
+    <li><span class="t">粘贴并提交</span>：在「2. 粘贴我的作文正文」里粘贴 → 按需填写第 3 至 6 项（见第 4 节）→ 点「<b>提交，等待 AI 批改</b>」。此时网页顶部「提交作文」上会出现红色数字角标（待批改篇数）。</li>
+    <li><span class="t">触发批改</span>，三种方式任选其一（见 3.2）。</li>
+    <li><span class="t">看批改</span>：回网页点「<b>批改结果</b>」标签，展开那一条，按顺序读：整体评价 → 逐句批改 → 修改后全文 → 表达积累 → <b>本篇注意事项</b>。</li>
+    <li><span class="t">复盘</span>：写完一篇后，固定去三处看一眼 —— 「错题与语言点库」看同类错误有没有反复出现、「分数趋势」看最近三次有没有在涨、「题库」看哪些题还没练。下次动笔前，先读一遍上次的注意事项。</li>
+  </ol>
+
+  <h3>3.1 一次练习的完整流程图</h3>
+  <div class="flow">
+    <div class="node"><b>网页</b>选题目<br>写作文<br>点提交</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>触发批改</b>按钮 / 脚本 / 对话</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>AI 批改</b>读技能标准<br>写 patches 文件</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>网页自动刷新</b>8 秒内出现批改</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>三处复盘</b>注意事项<br>错题库<br>趋势</div>
+  </div>
+
+  <h3>3.2 三种「触发批改」方式怎么选</h3>
+  <table>
+    <thead><tr><th style="width:46mm">方式</th><th>你要做的</th><th style="width:32mm">适合什么时候</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>A. 网页按钮</b><br><span class="small">（推荐日常使用）</span></td>
+        <td>① 双击 <code>启动批改服务.cmd</code>（出现一个标题为「批改服务」的窗口，保持它开着）<br>② 网页「提交作文」页最下方点「<b>一键批改（N 篇）</b>」</td>
+        <td>连练好几篇、不想反复切换窗口</td>
+      </tr>
+      <tr>
+        <td><b>B. 一键批改.cmd</b></td>
+        <td>双击 <code>一键批改.cmd</code>，等窗口跑完（通常 1—5 分钟）。它会一次处理完<b>所有</b>待批改的作文，跑完自动关闭</td>
+        <td>不想常驻任何程序；攒了几篇一起批</td>
+      </tr>
+      <tr>
+        <td><b>C. 回到 DSH 说一句</b></td>
+        <td>在 DSH 对话框输入：<b>批改待批改作文</b></td>
+        <td>想顺带追问细节（如「第三句再展开讲讲」）</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="ok">
+    <b>批改需要 harness，但不需要你打开 DSH 界面：</b>方式 A 与 B 都会在后台启动一次独立的「一次性批改进程」（跑完自己退出，不打开窗口、不联网监听）。
+    方式 A 常驻的只是一个小服务，它本身不含 AI。
+  </div>
+
+  <h3>3.3 时间预期</h3>
+  <div class="kv">
+    <div class="box"><div class="k">打开网页</div><div class="v">即时</div></div>
+    <div class="box"><div class="k">启动批改进程</div><div class="v">约 9 秒</div></div>
+    <div class="box"><div class="k">一篇作文批改</div><div class="v">1—5 分钟</div></div>
+    <div class="box"><div class="k">网页自动显示</div><div class="v">≤ 8 秒</div></div>
+  </div>
+</section>
+
+<!-- ============ 4 六个分点 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">4</span>提交作文页面的 6 个分点怎么填</h2>
+  <div class="lead">
+    <b>先纠正一个常见误解：这 6 项不是 6 种上传方式，而是同一次提交的 6 个步骤。</b>
+    填完点一次「提交」，就生成一条待批改记录。同一道题想练第二遍，就再走一遍这 6 项、再提交一次 —— 编号自动递增，练习次数 +1，全部挂在那道题下面。
+  </div>
+  <table>
+    <thead><tr><th class="c" style="width:12mm">分点</th><th style="width:38mm">名称</th><th>作用</th><th class="c" style="width:24mm">是否必填</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><b>1</b></td><td>选择题目</td><td>决定这次练的是哪道题。下拉按三类分组（考研真题 / 模拟题 / 我的题目），并标注<code>[练过 N 次]</code>或<code>[未练习]</code>。下方会实时显示该题的题干、示意图和练习轨迹。</td><td class="c">必选</td></tr>
+      <tr><td class="c"><b>2</b></td><td>粘贴我的作文正文</td><td>作文正文本身，直接粘贴英文。这是最主要的输入。</td><td class="c">与第 3 项至少填一个</td></tr>
+      <tr><td class="c"><b>3</b></td><td>手写照片</td><td>同一篇作文的<b>照片形式</b>（二选一即可，不必同时填）。选好照片后点「保存到 data/uploads/」，页面会帮你起好文件名。</td><td class="c">可选</td></tr>
+      <tr><td class="c"><b>4</b></td><td>图片相对路径</td><td>照片存放位置（如 <code>data/uploads/sub_0003.jpg</code>）。第 3 步选完照片后<b>会自动填好</b>，也可以手填。</td><td class="c">选照片时自动</td></tr>
+      <tr><td class="c"><b>5</b></td><td>附加要求</td><td>对<b>这一次批改</b>的额外要求，例如「重点看时态」「讲解要更细」「只批语言不改结构」。</td><td class="c">可选</td></tr>
+      <tr><td class="c"><b>6</b></td><td>与这道题的关系</td><td><b>独立一篇</b>（另起一次练习）或 <b>是某一篇的修改稿</b>（挑上一次那一篇）。选后者才能形成「改稿链」，之后可以并排对比（见第 7 节）。</td><td class="c">想对比改稿就选后者</td></tr>
+    </tbody>
+  </table>
+
+  <h3>常见疑问</h3>
+  <div class="two">
+    <div>
+      <h4>同一道题练第二遍，会不会覆盖上一次？</h4>
+      <p>不会。每次都新建一条记录（<code>sub_0003</code>、<code>sub_0004</code>…），题库里那道题的「练习与改稿记录」会按时间列出全部提交与得分。</p>
+      <h4>能不能一次交两篇不同的作文？</h4>
+      <p>不能，一次提交只对应一篇作文。要交两篇就提交两次，或者选两道不同的题分别提交。</p>
+    </div>
+    <div>
+      <h4>提交后想改一下再交，怎么办？</h4>
+      <p>直接再提交一次即可，并在第 6 项选「是某一篇的修改稿」。这样两稿就会并排出现在「改稿总览」里。</p>
+      <h4>草稿会不会丢？</h4>
+      <p>不会。页面里的草稿与提交记录都保存在本机浏览器里（localStorage），关掉再打开还在。但<b>清除浏览器数据会丢未批改的草稿</b>，已批改的结果在 <code>data/patches/</code> 里不受影响。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 三种提交方式 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">5</span>三种提交方式：题库选题 / 上传自己的题目 / 直接对话</h2>
+
+  <h3>方式一：从题库选题（最常用）</h3>
+  <ol>
+    <li>「题库」→ 筛选「<b>考研真题</b>」（2010—2026，共 34 道）或「<b>模拟题</b>」（10 道）。</li>
+    <li>点开题目，核对题干与示意图（真题的图画/图表是本站自绘示意图，非真题原图）。</li>
+    <li>点「用这道题写一篇 →」，粘贴作文，提交。</li>
+  </ol>
+
+  <h3>方式二：上传自己的题目（题目 + 作文一起交）</h3>
+  <p>在「提交作文」页最下方有独立的「<b>上传自己的题目</b>」板块。适用于：你手上有别处的题目（讲义、真题本、老师给的题）。</p>
+  <ol class="steps">
+    <li><span class="t">粘贴题目原文</span>（中文题干、英文 Directions、图画文字说明，有多少贴多少）。粘贴过程中页面会<b>实时提示相似题目</b>（显示相似度百分比）。</li>
+    <li><span class="t">选择处理方式</span>：
+      <ul>
+        <li>「这是一道新题」→ 归档到「我的题目」类别，编号 <code>q_mine_001</code> 起递增；</li>
+        <li>「和题库里已有的题重复」→ 选择目标题目，你的作文与批改结果会<b>归并到那道题下面</b>（练习次数 +1，不会重复建题）。</li>
+      </ul>
+    </li>
+    <li><span class="t">粘贴作文正文</span>，点「提交题目与作文」。</li>
+  </ol>
+  <div class="note">
+    <b>判重是双保险：</b>页面侧用相似度给出提示与「就是这一道 → 归并」按钮；AI 侧批改时还会再判一次 —— 明显是同一道题就自动归并，拿不准会先问你。如果你已经提交了才发现忘了标，直接在对话里说「<code>sub_0007 其实是 sub_0005 的修改稿</code>」即可补上关联。
+  </div>
+
+  <h3>方式三：直接在 DSH 对话里交（最快）</h3>
+  <p>不用先写网页，把题目和作文直接粘给 AI，说「<b>批改这篇作文</b>」。批改结果同样会写成补丁回到网页。</p>
+  <div class="ok">
+    <b>三种方式的关系：</b>方式一、二在网页里留下完整记录（练习次数、改稿链、错题库都靠它统计）；方式三最省事，但网页里的「新提交」只存在浏览器本地，AI 读不到文件 —— 所以方式三请<b>直接粘贴作文</b>，或在网页点「错题与语言点库 → 导出本机提交 JSON」另存到 <code>data/</code> 后再告诉 AI。
+  </div>
+</section>
+
+<!-- ============ 6 六个标签页 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">6</span>拿到批改后看哪里：六个标签页逐个讲</h2>
+  <table>
+    <thead><tr><th style="width:30mm">标签页</th><th>看什么</th><th style="width:34mm">什么时候看</th></tr></thead>
+    <tbody>
+      <tr><td><b>总览</b></td><td>累计提交 / 已批改 / 平均得分率 / 最高分；待批改清单；最近批改；题库练习进度（三类各练了多少）；当前最需要治的问题（按错误频次排序）</td><td>每次打开网页先扫一眼</td></tr>
+      <tr><td><b>提交作文</b></td><td>写新作文；<b>上传自己的题目</b>；一键批改面板；本机提交记录</td><td>动笔时</td></tr>
+      <tr><td><b>批改结果</b></td><td>全部批改，可按题型/状态筛选。每条含：题目 → 我的作文（三色高亮）→ 逐句批改 → 修改后全文 → 表达积累 → <b>本篇注意事项</b></td><td>拿到批改后重点看这里</td></tr>
+      <tr><td><b>题库</b></td><td>95 道题（英语一 44 + 英语二 51），先按科目再按三类筛选；点开每题可看题干、示意图与<b>练习与改稿记录</b>（练过几次、每次得分、可跳转看批改、可并排对比）</td><td>选题目、查自己练过什么</td></tr>
+      <tr><td><b>错题与语言点库</b></td><td>历次【必须修改】自动按类别归库（主谓一致、时态与语态、名词与冠词、词性与搭配、从句与句法、代词与指代、拼写与标点、内容与审题、结构与衔接）；下方是表达积累库</td><td>每周固定清一次</td></tr>
+      <tr><td><b>分数趋势</b></td><td>得分率曲线 + 逐篇明细表；自动对比「总体平均」与「最近 3 次」并给建议</td><td>每隔几篇看一次</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.1 一条批改记录里各部分的读法</h3>
+  <ol>
+    <li><b>分数与档位</b>：例如 <code>13 / 20（13-16 分档，较好完成任务）</code>。旁边有原文词数与改后词数，用于对照 160—200 词要求。</li>
+    <li><b>分项评价</b>：内容与审题 / 语言准确性与丰富性 / 结构与衔接 三个维度，每个维度都引用你原文的具体句子作为依据。</li>
+    <li><b>逐句批改</b>：核心部分。每条包含：
+      <ul>
+        <li><span class="tag real">必须修改</span> 影响语法正确性或妨碍理解的问题 —— <b>这类必须逐条改</b>；</li>
+        <li><span class="tag mock">可选优化</span> 正确但可以更地道的表达 —— 有余力再改；</li>
+        <li><span class="tag mine">可保留</span> 写对了的句子，说明"为什么可以保留"。</li>
+      </ul>
+      每个【必须修改】都按「错在哪 → 为什么错（点名语法规则）→ 怎么改 → 同类错误如何自查」四步讲解。
+    </li>
+    <li><b>修改后全文</b>：保留你的原意与正确句式，只改该改的地方，加粗处即主要修改。可以对照着看"我的文章升级后是什么样"。</li>
+    <li><b>表达积累</b>：3—5 个考场可直接复现的表达，附中文意思与适用场景（不堆砌生僻词）。</li>
+    <li><b>本篇注意事项</b>：从本篇错误里提炼的最该优先改的几条 —— <b>下次动笔前先看这里</b>。</li>
+  </ol>
+
+  <h3>6.2 三色错误高亮怎么用</h3>
+  <div class="kv">
+    <div class="box"><div class="k">红色</div><div class="v">必须修改</div><div class="small">鼠标悬停可看问题与改法</div></div>
+    <div class="box"><div class="k">黄色</div><div class="v">可选优化</div><div class="small">进阶表达与地道性</div></div>
+    <div class="box"><div class="k">绿色</div><div class="v">可保留</div><div class="small">写对的地方，别乱改</div></div>
+  </div>
+  <p>每条作文上方有「关闭/开启错误高亮」按钮：第一遍建议<b>开着看</b>（对照批改），第二遍建议<b>关掉再自己找一遍错</b>，效果最好。</p>
+</section>
+
+<!-- ============ 7 改稿链 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">7</span>同一篇作文改了又改：改稿链与并排对比</h2>
+
+  <h3>7.1 要做的操作（每次改稿 2 次点击）</h3>
+  <ol class="steps">
+    <li><span class="t">填好作文</span>后，看第 <b>6</b> 项「这一篇和这道题的关系」。</li>
+    <li><span class="t">选「是下面某一篇的修改稿」</span>，挑上一次那一篇 → 提交。网页会自动记下稿次关系，把几稿连成一条「改稿链」。</li>
+  </ol>
+
+  <h3>7.2 两个查看入口（都只需一次点击）</h3>
+  <table>
+    <thead><tr><th style="width:36mm">入口</th><th>位置</th><th>能看到什么</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>总览对比</b></td>
+        <td>「批改结果」页顶部；或题库里那道题的「练习与改稿记录」面板 → 点「总览对比（N 稿）」</td>
+        <td>每一稿并排一列：<b>那一稿的作文原文</b>、得分、字数、<b>【必须修改】逐条清单</b>、复盘重点、修改后全文，以及一行高亮的 <b>「与上一稿相比：已解决 X / N 项，仍然存在……」</b>；顶部还有一句分数进步总结（如 <code>13/20 → 16/20（得分率 65% → 80%，提升 15%）</code>）</td>
+      </tr>
+      <tr>
+        <td><b>练习与改稿记录</b></td>
+        <td>题库 → 点开那道题</td>
+        <td>该题全部提交的时间线表格，标出「第 1 稿 / 第 2 稿 / 独立一篇」，每行都有「看批改」「对比」两个按钮</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>对比视图里每一稿还带两个按钮：<b>看完整批改</b>（跳到那一稿的全部批改内容）、<b>基于本稿改一版</b>（把那一稿填回提交页，你改完直接提交就自动成为下一稿）。</p>
+
+  <h3>7.3 建议的改稿节奏</h3>
+  <div class="flow">
+    <div class="node"><b>第 1 稿</b>按考场时间独立写完</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>看批改</b>只记【必须修改】</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>第 2 稿</b>不看批改，凭记忆重写</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>总览对比</b>看哪些问题真的解决了</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>第 3 稿</b>只针对残留问题上分</div>
+  </div>
+  <div class="note">同一篇作文改到第三稿即可，再多收益递减。<b>更值得做的是换一道新题检验</b>：把上一题总结的问题带到新题里，看还会不会犯 —— 这才是错题库真正的用法。</div>
+</section>
+
+<!-- ============ 8 手写 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">8</span>手写作文怎么办</h2>
+  <p>考场上是要手写的，所以平时尽量手写。手写稿交给 AI 有两条路：</p>
+
+  <h3>路线 A：网页登记（推荐，记录完整）</h3>
+  <ol class="steps">
+    <li><span class="t">拍照</span>：把作文拍清楚，光线均匀、四角完整、字迹可辨。</li>
+    <li><span class="t">在「提交作文」页第 3 项点「选择照片」</span>，页面会显示预览，并按即将分配的编号自动起好文件名（如 <code>data/uploads/sub_0003.jpg</code>）。</li>
+    <li><span class="t">点「保存到 data/uploads/」</span>，在弹出的保存对话框里选到本文件夹的 <code>data\uploads\</code> 目录即可。第 4 项的路径会自动填好。</li>
+    <li><span class="t">提交</span>，然后触发批改。AI 会先<b>准确转录</b>你的手写内容（保留你原有的拼写与语法错误，不会偷偷改对），再逐句批改。</li>
+  </ol>
+
+  <h3>路线 B：直接在对话里发照片（最省事）</h3>
+  <p>把照片拖进 DSH 对话框，说「批改这篇作文，这是 20XX 年真题的大作文」。AI 转录后批改，结果同样回到网页。</p>
+
+  <div class="warn">
+    <b>辨认不清时会发生什么：</b>AI 会把无法确认的地方<b>列出来问你</b>，而不会猜着写、更不会把识别错误当你的错误。若整篇照片模糊，会要求你重拍，而不是给 0 分。
+  </div>
+  <div class="note">
+    <b>照片规范建议：</b>①横平竖直、不要斜拍；②单页一张，别把两页挤进一张；③不要用美颜/滤镜（会糊掉字母）；④文件名保持简单（如 <code>sub_0003.jpg</code>），避免空格与特殊字符。
+  </div>
+</section>
+
+<!-- ============ 9 题库 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">9</span>题库说明：三类题、更新规则、怎么加题</h2>
+
+  <h3>9.1 题库构成（当前 95 道）</h3>
+  <div class="kv">
+    <div class="box"><div class="k">英语一真题</div><div class="v">34 道</div><div class="small">2010—2026，每年大作文（20 分）+ 小作文（10 分）</div></div>
+    <div class="box"><div class="k">英语二真题</div><div class="v">51 道</div><div class="small">2010—2026，每年图表大作文（15 分）+ 小作文（10 分）+ 整段翻译（15 分）</div></div>
+    <div class="box"><div class="k">模拟题</div><div class="v">10 道</div><div class="small">原创：3 篇图画作文 + 3 小作文 + 3 翻译 + 1 长难句专项</div></div>
+    <div class="box"><div class="k">我的题目</div><div class="v">0 道</div><div class="small">你上传题目后自动归档</div></div>
+  </div>
+  <div class="ok">
+    <b>两个科目的差别（别批错）：</b>英语一大作文满分 <b>20 分</b>（图画作文为主）、翻译是 <b>5 个划线句（10 分）</b>；
+    英语二大作文满分 <b>15 分</b>（图表作文、约 150 词）、翻译是 <b>整段英译汉（15 分）</b>。
+    网页「题库」页顶部可切换科目，提交页的选题目下拉也按科目分组。
+  </div>
+
+  <h3>9.2 ⚠ 题型已变化（做题与批改都要注意）</h3>
+  <table>
+    <thead><tr><th style="width:26mm">年份</th><th style="width:42mm">大作文题型</th><th>例子</th></tr></thead>
+    <tbody>
+      <tr><td>2010—2023</td><td><b>图画作文</b><br><span class="small">based on the following drawing</span></td><td>文化火锅、手机时代的聚会、相携、途中、图书馆、美猴王父子对话、龙舟赛……</td></tr>
+      <tr><td>2024</td><td><b>图画 + 柱状图</b></td><td>公园建设与民生：左图画市民在公园活动，右图三年公园数量 406 → 532 → 670 座</td></tr>
+      <tr><td>2025</td><td><b>表格</b></td><td>居民每百户耐用消费品拥有量：空调 75.2 → 145.9 台（近乎翻倍）</td></tr>
+      <tr><td>2026</td><td><b>双图表</b></td><td>养老机器人接受度饼图 + 首要关注点柱状图（安全占 46.3%）</td></tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <b>英语二的情况不同：</b>17 届（2010—2026）大作文<b>全是图表作文</b>——柱状图、饼图、表格、折线图逐年轮换
+    （2012 表格、2015/2016/2018/2020 饼图、2017/2023 折线图、其余多为柱状图），分值 <b>15 分</b>、约 <b>150 词</b>，
+    Directions 为 <code>interpret the chart</code> + <code>give your comments</code>。因此英语二的核心是<b>描述数据的能力</b>：
+    说清趋势与占比、挑关键数字、别逐行抄表。翻译也与其他题型不同，是<b>整段英译汉 15 分</b>。
+  </div>
+  <div class="warn">
+    做题时务必看清题干结尾是 <code>based on the following drawing</code> 还是 <code>based on the following chart(s)</code>。
+    图表作文必须写<b>数据趋势</b>并<b>分析原因</b>，只写画面或不引用数据都会失分。批改也会按对应标准执行（技能里已有专门的图表作文检查清单）。
+  </div>
+
+  <h3>9.3 各类题的更新规则</h3>
+  <table>
+    <thead><tr><th style="width:26mm">类别</th><th class="c" style="width:24mm">谁能加</th><th style="width:34mm">加到哪里</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag real">考研真题</span></td><td class="c">AI</td><td><code>data/questions.js</code></td><td>只收题干与写作要求，不提供参考范文；图画用自绘示意图；按年份命名（<code>q_real_2021_major</code>）</td></tr>
+      <tr><td><span class="tag mock">模拟题</span></td><td class="c">AI</td><td><code>data/questions.js</code></td><td>原创命题，风格对齐近年真题，图画作文必配示意图；可随时要求追加</td></tr>
+      <tr><td><span class="tag mine">我的题目</span></td><td class="c">你</td><td><code>data/state.js</code></td><td>在网页上传；先与真题/模拟题查重，重复的自动归并，新题才建 <code>q_mine_001</code></td></tr>
+    </tbody>
+  </table>
+  <p><b>四条硬规则：</b>①只增不改；②题目 id 终身不变（改了历史记录会失联）；③写对文件；④先在<b>同科目内</b>查重再落笔（英语二的题不能归并到英语一题目下）。<b>每条题目都要带 <code>subject</code> 字段</b>（<code>en1</code> / <code>en2</code>）。加题后<b>刷新网页即可看到，不需要改其它文件</b>（页面会把两个题库文件合并去重后显示）。</p>
+
+  <h3>9.4 常用口语指令（在 DSH 对话框里说）</h3>
+  <table>
+    <thead><tr><th style="width:52mm">你说</th><th>会发生什么</th></tr></thead>
+    <tbody>
+      <tr><td>批改待批改作文</td><td>批改网页里所有待批改的提交</td></tr>
+      <tr><td>整理我的题库</td><td>把零散提供的题目规范化、查重后归档</td></tr>
+      <tr><td>再出 3 套模拟题，主题偏科技与教育</td><td>按真题风格原创命题（图画作文配 SVG 示意图）</td></tr>
+      <tr><td>再出几道 2026 风格的双图表题</td><td>出图表作文（配表格/柱状图/饼图）</td></tr>
+      <tr><td>练长难句翻译</td><td>进入外刊长难句专项：主干图解 + 采分点 + 得分率</td></tr>
+      <tr><td>批改翻译</td><td>按真题翻译模式（5 个划线句，每句 2 分）批改</td></tr>
+      <tr><td>sub_0007 其实是 sub_0005 的修改稿</td><td>补上改稿关联，两稿即可并排对比</td></tr>
+      <tr><td>把考试日期改成 2027 年 12 月 25 日</td><td>更新顶栏倒计时（当前已设为 <b>2026-12-19</b>；要改成别的日期就说这一句）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 10 附录 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">10</span>排错、数据备份与使用建议</h2>
+
+  <h3>10.1 排错对照表</h3>
+  <table>
+    <thead><tr><th style="width:46mm">现象</th><th>原因与处理</th></tr></thead>
+    <tbody>
+      <tr><td>顶栏显示「⚠ 未能读取 data/state.js」</td><td>确认 <code>index.html</code> 与 <code>data\</code> 在同一层目录，且 <code>data\state.js</code> 存在</td></tr>
+      <tr><td>提交后网页上看不到批改结果</td><td>①确认补丁文件是 <code>data\patches\sub_XXXX.js</code>（<b>必须是 .js</b>）；②点右上角「重新加载数据」；③跑一次自检（见下）</td></tr>
+      <tr><td>题目显示「（题目已删除）」</td><td>提交里的 <code>questionId</code> 在题库中找不到。检查 <code>data/state.js</code> 与 <code>data/questions.js</code> 里题目 id 是否被改过</td></tr>
+      <tr><td>网页里点了「一键批改」但没反应</td><td>批改服务窗口是否还开着？关掉就点了会失败。重新双击 <code>启动批改服务.cmd</code>，或改用 <code>一键批改.cmd</code></td></tr>
+      <tr><td>「一键批改.cmd」闪一下就关</td><td>会停在窗口里显示错误信息（如找不到 dsh）。把窗口里的内容发给 AI 看即可</td></tr>
+      <tr><td>批改服务窗口出现 <code>DEP0190</code> 提示</td><td>Node 的弃用提醒，不影响运行，可忽略</td></tr>
+      <tr><td>分数或统计对不上</td><td>跑自检工具定位到具体哪个补丁不一致（见 10.2）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.2 自检工具</h3>
+  <p>在项目文件夹里打开命令行，执行：</p>
+  <p><code>node tools\validate.js</code> —— 检查内联脚本语法、题库与状态文件、示意图结构、每个补丁的字段与分值自洽（采分点合计是否为 2、各句得分之和是否等于总分、注意事项是否 3 条等）。</p>
+  <p><code>node tools\validate.js --report</code> —— 额外用最小 DOM 仿真跑一遍页面逻辑，检查题目解析、逐句批改区块、图表渲染、错题库归类、趋势图等是否真的渲染出来。</p>
+
+  <h3>10.3 数据存在哪里 / 怎么备份</h3>
+  <table>
+    <thead><tr><th style="width:40mm">数据</th><th style="width:44mm">位置</th><th>备注意</th></tr></thead>
+    <tbody>
+      <tr><td>题库、考试日期、初始提交</td><td><code>app/data/state.js</code>、<code>app/data/questions.js</code></td><td>文本文件，可手动编辑</td></tr>
+      <tr><td>你在网页里的新提交</td><td>浏览器 localStorage</td><td>只在本机这个浏览器里。可点「错题与语言点库 → 导出本机提交 JSON」备份</td></tr>
+      <tr><td>AI 批改结果</td><td><code>app/data/patches/sub_XXXX.js</code></td><td><b>这是最该备份的目录</b>，复制走即可</td></tr>
+      <tr><td>手写照片</td><td><code>app/data/uploads/</code></td><td>按需备份</td></tr>
+      <tr><td>题库更新前的快照</td><td><code>app/data/backups/</code></td><td>每次「一键更新题库」前自动生成，保留最近 10 份，可在网页一键回退</td></tr>
+    </tbody>
+  </table>
+  <div class="ok"><b>备份方法：</b>把整个 <code>kaoyan-english-writing</code> 文件夹复制一份到别处（U 盘 / 云盘）即可，所有数据都在里面。迁移到另一台电脑时，整个文件夹拷过去、运行一次 <code>node install.js</code> 就能继续用（Windows 与 macOS 之间也能直接搬）。</div>
+
+  <h3>10.4 使用建议（把它用出效果）</h3>
+  <ol>
+    <li><b>先练真题，再练模拟题。</b>真题是标尺，模拟题是加练。2010—2026 的大小作文足够覆盖所有常见题型。</li>
+    <li><b>每周固定节奏：</b>3 篇大作文 + 3 篇小作文 + 2 次翻译练习；每篇都走完"提交 → 批改 → 读注意事项 → 隔天重写一稿"。</li>
+    <li><b>错题库每周清一次。</b>同一类别连续出现三次以上，就停止刷新题，专门做这个类别的针对性练习（注意事项里都给了具体动作）。</li>
+    <li><b>手写练手感。</b>考前两个月起尽量手写、限时（大作文 35 分钟、小作文 15 分钟），再拍照交给 AI 批改。</li>
+    <li><b>不要把"修改后全文"当范文背。</b>它的作用是让你看清"自己的文章能变成什么样"，真正要记的是【必须修改】的原因和自查方法。</li>
+    <li><b>注意题型变化。</b>2024 起已出现图表作文，2025 是表格、2026 是双图表 —— 数据描述与原因分析必须专门练。</li>
+  </ol>
+
+  <hr class="thin">
+  <p class="small" style="text-align:center">
+    操作手册 · 考研英语（一）（二）作文批改练习台　|　题库 95 道（真题 85：英语一 34 + 英语二 51）　|　本手册 11 节<br>
+    评分参考为公开流传的档位整理，非官方阅卷标准，结果仅供练习参考。全部数据保存在本机，页面不联网。
+  </p>
+</section>
+
+<!-- ============ 11 跨平台安装与一键更新 ============ -->
+<section class="sec-wrap">
+  <h2 class="sec"><span class="no">11</span>跨平台安装与一键更新题库</h2>
+
+  <h3>11.1 首次安装（Windows 与 macOS 各一次）</h3>
+  <div class="flow">
+    <div class="node"><b>① 下载</b>解压到任意位置<br><span class="small">或 git clone</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>② 安装自检</b><code>node install.js</code><br><span class="small">自动装好技能文档</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>③ 打开网页</b>双击 <code>app/index.html</code></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>④ 让 AI 批改</b>三种方式任选</div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:34mm">步骤</th><th>Windows</th><th>macOS / Linux</th></tr></thead>
+    <tbody>
+      <tr><td><b>安装 + 自检</b></td><td><code>node install.js</code></td><td><code>node install.js</code>（或先 <code>chmod +x *.sh</code>）</td></tr>
+      <tr><td><b>打开网页</b></td><td>双击 <code>app\index.html</code></td><td>访达里双击 <code>app/index.html</code>，或 <code>open app/index.html</code></td></tr>
+      <tr><td><b>一次性批改</b></td><td>双击 <code>一键批改.cmd</code></td><td><code>./grade-once.sh</code></td></tr>
+      <tr><td><b>常驻服务</b>（网页按钮）</td><td>双击 <code>start-helper.cmd</code>；停止用 <code>stop-helper.cmd</code></td><td><code>./start-helper.sh</code>；停止用 <code>./stop-helper.sh</code>（或 Ctrl+C）</td></tr>
+      <tr><td><b>自检</b></td><td><code>node app\tools\validate.js --report</code></td><td><code>node app/tools/validate.js --report</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <b>macOS 用户注意两点：</b>
+    <ol class="tight" style="margin-top:6px">
+      <li>从网上下载的脚本默认没有执行权限。若提示 <code>Permission denied</code>，在项目目录执行一次 <code>chmod +x *.sh</code> 即可（也可以直接用 <code>node tools/grade-once.js</code>，绕开权限问题）。</li>
+      <li>首次双击 <code>.sh</code> 若被 Gatekeeper 拦下，右键 →「打开」→ 确认一次即可；或直接在终端里运行。</li>
+    </ol>
+  </div>
+
+  <h3>11.2 一键更新题库（每年 12 月考研结束后做一次）</h3>
+  <p>这是为下一年考生准备的功能：<b>网页里点一个按钮，AI 自己联网查最新真题并补进题库</b>。位置在「题库」页顶部的「一键更新题库」面板。</p>
+  <ol class="steps">
+    <li><span class="t">先启动服务</span>：<code>start-helper.cmd</code>（Windows）或 <code>./start-helper.sh</code>（macOS）。</li>
+    <li><span class="t">点「一键更新题库」</span>：面板会显示当前覆盖年份与缺失年份，例如 <code>题库覆盖 2010—2026（17 个年份）</code>。缺年份时按钮直接写明「补 2027」。</li>
+    <li><span class="t">等它跑完</span>：AI 会联网交叉核对多个来源，按题库格式追加题目。<b>更新前会自动备份</b> <code>app/data/questions.js</code> 到 <code>app/data/backups/</code>。通常几分钟。</li>
+    <li><span class="t">自动刷新</span>：网页检测到题库变化后自动重新加载；也可点「重新加载数据」。</li>
+    <li><span class="t">出问题就回退</span>：面板上的「回退到更新前的备份」一键恢复。</li>
+  </ol>
+  <div class="note">
+    <b>也可以不用网页按钮</b>：终端执行 <code>node tools/grade-once.js --update 2027</code>（macOS 可 <code>./update-bank.sh 2027</code>），
+    或直接在智能体会话里说「联网更新考研英语一和英语二题库，补齐 2027 年真题」。
+  </div>
+  <div class="warn">
+    <b>为什么需要联网：</b>最新真题的题目细节（图画内容、图表数据、书信原文）只有公开来源才有，AI 必须联网查证并交叉核对；
+    查不到的细节它会如实标注「不确定」，不会编造。更新完成后建议跑一次 <code>node app/tools/validate.js</code> 确认题库结构完好。
+  </div>
+
+  <h3>11.3 在其他智能体里使用（Codex / Cursor / Claude Code 等）</h3>
+  <p>网页、题库、批改结果都是普通文件，任何能读写本地文件的智能体都能接手。区别只在「评分标准放在哪」：</p>
+  <table>
+    <thead><tr><th style="width:38mm">智能体</th><th>怎么让它读到评分标准</th></tr></thead>
+    <tbody>
+      <tr><td>DSH</td><td>运行 <code>node install.js</code> 会自动装到 <code>~/.dsh/skills/kaoyan-english-tutor/</code>，任何会话都能用</td></tr>
+      <tr><td>Codex</td><td>仓库根目录已放 <code>AGENTS.md</code>，它会被自动读取；也可把 <code>skill/</code> 的内容并进你的 <code>AGENTS.md</code></td></tr>
+      <tr><td>Cursor</td><td>新建规则文件，写入一句：「批改考研英语作文时读 <code>skill/SKILL.md</code> 与其中的 references」</td></tr>
+      <tr><td>Claude Code</td><td>把 <code>skill/SKILL.md</code> 的内容并进 <code>CLAUDE.md</code>，或把 <code>skill/</code> 复制到 <code>.claude/skills/</code></td></tr>
+      <tr><td>任意命令行智能体</td><td><code>node tools/grade-once.js --cmd "your-agent -p {task}"</code>（<code>{task}</code> 会被替换成批改指令）</td></tr>
+    </tbody>
+  </table>
+  <div class="ok">核心只有一句话：<b>读 <code>app/data/state.js</code> 里待批改的提交 → 按 <code>skill/</code> 的标准批改 → 按 <code>skill/references/web_bridge.md</code> 的字段写成 <code>app/data/patches/sub_XXXX.js</code></b>。任何智能体照这句做，网页就能显示结果。</div>
+</section>
+
+</body>
+</html>

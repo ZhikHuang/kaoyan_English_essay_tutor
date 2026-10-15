@@ -1,0 +1,31 @@
+MIT License
+
+Copyright (c) 2026 kaoyan-english-writing contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+附加说明（非许可证条款，仅作事实说明）：
+
+1. 本项目的题库中收录的「考研英语一」写作真题，仅包含考试的题干要求与写作任务描述
+   （题目本身属于公开的考试信息），不含官方参考答案或范文；题目配套的图画与图表
+   均为本项目自行绘制的示意图，不是真题原卷图片。
+2. 模拟题、示意图、网页、工具脚本与评分标准文档均为本项目原创。
+3. 评分档位参考为公开流传的整理版本，非官方阅卷标准，仅供练习参考。

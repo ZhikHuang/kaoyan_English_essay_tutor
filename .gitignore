@@ -1,9 +1,12 @@
-# 用户数据：不要提交自己的作文与照片
+# 用户数据：不要提交自己的作文、照片与批改结果
 app/data/uploads/*
 !app/data/uploads/.gitkeep
 app/data/backups/*
 !app/data/backups/.gitkeep
+app/data/patches/*
+!app/data/patches/.gitkeep
 app/data/pending_submissions.json
+app/data/*.corrupt.bak
 
 # 个人化状态（考试日期、提交记录）：保留模板形态即可
 # 若你 fork 后想把自己的记录一起发布，删掉下面这行

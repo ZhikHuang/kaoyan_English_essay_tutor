@@ -389,6 +389,33 @@ function buildUpdateTask(years){
   ].join('\n');
 }
 
+/* 找到可用的 dsh：① PATH ② 从当前 node 位置反推 DSH 自带运行时 ③ 常见安装位置 */
+function resolveDsh(){
+  const isWin = process.platform === 'win32';
+  const exe = isWin ? 'dsh.cmd' : 'dsh';
+  const probe = spawnSync(isWin ? 'where' : 'which', [exe], { encoding: 'utf8' });
+  if (!probe.error && probe.status === 0) {
+    const first = String(probe.stdout || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean)[0];
+    if (first && fs.existsSync(first)) return first;
+  }
+  const cands = [];
+  let d = path.dirname(process.execPath);
+  for (let i = 0; i < 7; i++) { d = path.dirname(d); cands.push(path.join(d, 'resources', 'runtime', 'cli', 'bin', exe)); }
+  if (process.env.DSH_HOME) cands.push(path.join(path.dirname(process.env.DSH_HOME), 'resources', 'runtime', 'cli', 'bin', exe));
+  if (isWin) {
+    const la = process.env.LOCALAPPDATA || '';
+    const pf = process.env.ProgramFiles || 'C:\\Program Files';
+    const pf86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
+    [pf, pf86].forEach(base => cands.push(path.join(base, 'DSH', 'resources', 'runtime', 'cli', 'bin', exe)));
+    if (la) cands.push(path.join(la, 'Programs', 'DSH', 'resources', 'runtime', 'cli', 'bin', exe));
+  } else {
+    cands.push('/opt/dsh/resources/runtime/cli/bin/' + exe);
+    cands.push('/Applications/DSH.app/Contents/Resources/runtime/cli/bin/' + exe);
+  }
+  for (const c of cands) { if (fs.existsSync(c)) return c; }
+  return null;
+}
+
 /* 结束一个后台任务：Windows 上 shell:true 先起 cmd.exe，直接 kill 只会杀掉 cmd，
    真正的 agent（node/dsh）会残留并继续写补丁 —— 必须连整棵进程树一起结束。 */
 function killTree(child){
@@ -419,17 +446,35 @@ function runAgent(task, kind, timeoutMs){
   else console.log('待批改：' + (pendingInfo().pending.join('、') || '（暂无）'));
   console.log('（这是一个独立的 headless harness 进程，跑完自己退出；不需要另外打开 DSH）');
 
-  // 在 Windows 上用 dsh.cmd（npm 装的命令行入口）；任务词用 env 传入，避免 shell 拼接参数
-  const cmd = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
-  const child = spawn(cmd, ['--profile', 'headless', task], {
+  // 找到可用的 dsh（PATH → DSH 自带运行时 → 常见安装位置）
+  const dshPath = resolveDsh();
+  if (!dshPath) {
+    running = false; runningKind = null;
+    const hint = '找不到 ' + (process.platform === 'win32' ? 'dsh.cmd' : 'dsh') +
+      '。三种做法：① 在 DSH 里打开本文件夹的会话再点按钮；② 把 DSH 的 bin 目录加入 PATH；' +
+      '③ 不依赖命令行——直接在 DSH 对话里说「批改待批改作文」。';
+    last = { at: startedAt, kind: kind, ok: false, code: -1, error: hint };
+    console.log('启动失败：' + hint);
+    return;
+  }
+  console.log('使用的 dsh：' + dshPath);
+  // 任务文字可能含换行与引号，走 stdin 传给 dsh（dsh 支持从 stdin 读任务），避免 cmd.exe 拆坏参数
+  const dshDir = path.dirname(dshPath);
+  const chEnv = Object.assign({}, process.env, {
+    KAOYAN_TASK: task,
+    PATH: dshDir + path.delimiter + (process.env.PATH || '')
+  });
+  const isWin = process.platform === 'win32';
+  const cmd = isWin ? (process.env.ComSpec || 'cmd.exe') : dshPath;
+  const argv = isWin ? ['/d', '/s', '/c', 'dsh.cmd --profile headless'] : ['--profile', 'headless'];
+  const child = spawn(cmd, argv, {
     cwd: ROOT,
     windowsHide: true,
-    stdio: ['ignore', 'pipe', 'pipe'],
-    // Node 24 在 Windows 上启动 .cmd 必须经 shell（否则 EINVAL）。
-    // 任务文字只来自本文件内置指令或网页的固定按钮，不接受外部任意命令，因此没有注入面。
-    shell: process.platform === 'win32',
-    env: Object.assign({}, process.env, { KAOYAN_TASK: task })
+    stdio: ['pipe', 'pipe', 'pipe'],
+    env: chEnv
   });
+  try { child.stdin.write(task); child.stdin.end(); }
+  catch (e) { console.log('写入任务文字失败（可忽略，进程会按空任务退出）：' + String(e.message || e)); }
 
   let out = '';
   const push = (buf) => {

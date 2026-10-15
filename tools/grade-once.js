@@ -74,6 +74,40 @@ function buildCommand(){
   return AGENT + ' ' + JSON.stringify(task);
 }
 
+/* 找到可用的 dsh：
+   ① 先在 PATH 里找（which/where）
+   ② 找不到时，尝试用"当前 node 的安装位置"反推 DSH 自带的 dsh（DPI/DSH 用户常见：node 来自 DSH 自带运行时）
+   ③ 再试几个常见安装位置
+   返回 null 表示确实找不到（调用方给出可执行的人工指引）。 */
+function resolveDsh(){
+  const fs = require('fs');
+  const p = require('path');
+  const isWin = process.platform === 'win32';
+  const exe = isWin ? 'dsh.cmd' : 'dsh';
+  const probe = spawnSync(isWin ? 'where' : 'which', [exe], { encoding: 'utf8' });
+  if (!probe.error && probe.status === 0) {
+    const first = String(probe.stdout || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean)[0];
+    if (first && fs.existsSync(first)) return first;
+  }
+  const cands = [];
+  let d = p.dirname(process.execPath);
+  for (let i = 0; i < 7; i++) { d = p.dirname(d); cands.push(p.join(d, 'resources', 'runtime', 'cli', 'bin', exe)); }
+  const envHome = process.env.DSH_HOME;
+  if (envHome) cands.push(p.join(p.dirname(envHome), 'resources', 'runtime', 'cli', 'bin', exe));
+  if (isWin) {
+    const la = process.env.LOCALAPPDATA || '';
+    const pf = process.env.ProgramFiles || 'C:\\Program Files';
+    const pf86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
+    [pf, pf86].forEach(base => cands.push(p.join(base, 'DSH', 'resources', 'runtime', 'cli', 'bin', exe)));
+    if (la) cands.push(p.join(la, 'Programs', 'DSH', 'resources', 'runtime', 'cli', 'bin', exe));
+  } else {
+    cands.push('/opt/dsh/resources/runtime/cli/bin/' + exe);
+    cands.push('/Applications/DSH.app/Contents/Resources/runtime/cli/bin/' + exe);
+  }
+  for (const c of cands) { if (fs.existsSync(c)) return c; }
+  return null;
+}
+
 console.log('');
 console.log('考研英语（一）（二）· 批改练习台 —— 一次性任务');
 console.log('  工作目录：' + APP);
@@ -83,12 +117,26 @@ console.log('');
 
 let r;
 if (!CMD_TEMPLATE && AGENT === 'dsh') {
-  // 任务文字含换行，走命令行参数在 Windows 上会被 cmd.exe 拆坏；用 stdin 传（dsh 支持从 stdin 读任务）。
-  // Windows 上直接 spawn 'dsh.cmd' 会 EINVAL，所以显式经 cmd.exe 调用。
   const isWin = process.platform === 'win32';
-  const cmd = isWin ? (process.env.ComSpec || 'cmd.exe') : 'dsh';
+  const dshPath = resolveDsh();
+  if (!dshPath) {
+    console.log('❌ 找不到 ' + (isWin ? 'dsh.cmd' : 'dsh') + '。');
+    console.log('   可选做法（任一种）：');
+    console.log('   1) 在 DSH 会话里对 AI 说一句「批改待批改作文」——AI 会读 app/data/pending_submissions.json 与 state.js，');
+    console.log('      这是最省事、不需要命令行 PATH 的方式；');
+    console.log('   2) 把 DSH 的 bin 目录加入 PATH（本机为 D:\\dsh\\resources\\runtime\\cli\\bin），再运行本脚本；');
+    console.log('   3) 用别的智能体：node tools/grade-once.js --cmd "your-agent -p {task}"');
+    process.exit(1);
+  }
+  console.log('  使用的 dsh：' + dshPath);
+  console.log('');
+  // 任务文字含换行，走命令行参数在 Windows 上会被 cmd.exe 拆坏；用 stdin 传（dsh 支持从 stdin 读任务）。
+  // Windows 上直接 spawn '.cmd' 会 EINVAL，所以显式经 cmd.exe 调用；把 dsh 所在目录塞进 PATH，避免引号拼接问题。
+  const dshDir = require('path').dirname(dshPath);
+  const env = Object.assign({}, process.env, { PATH: dshDir + require('path').delimiter + (process.env.PATH || '') });
+  const cmd = isWin ? (process.env.ComSpec || 'cmd.exe') : dshPath;
   const argv = isWin ? ['/d', '/s', '/c', 'dsh.cmd --profile headless'] : ['--profile', 'headless'];
-  r = spawnSync(cmd, argv, { cwd: APP, stdio: ['pipe', 'inherit', 'inherit'], input: task });
+  r = spawnSync(cmd, argv, { cwd: APP, stdio: ['pipe', 'inherit', 'inherit'], input: task, env: env });
 } else {
   r = spawnSync(buildCommand(), { cwd: APP, stdio: 'inherit', shell: true });
 }

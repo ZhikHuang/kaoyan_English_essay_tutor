@@ -100,16 +100,38 @@ if (fs.existsSync(pdir)) {
 fs.mkdirSync(path.join(APP, 'data', 'uploads'), { recursive: true });
 fs.mkdirSync(path.join(APP, 'data', 'backups'), { recursive: true });
 
-/* 真正的批改依赖：命令行里的 dsh（网页批量按钮 / 一键批改.cmd 都靠它启动智能体） */
+/* 真正的批改依赖：命令行里的 dsh（网页批量按钮 / 一键批改.cmd 都靠它启动智能体）
+   先看 PATH，再看 DSH 自带运行时（用户从 DSH 里跑本脚本时就是这种情况）。 */
 const { spawnSync } = require('child_process');
-const dshCmd = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
-const dshProbe = spawnSync(dshCmd, ['--version'], { encoding: 'utf8', shell: process.platform === 'win32' });
-if (!dshProbe.error && dshProbe.status === 0) {
-  ok('批改依赖可用：' + dshCmd + ' ' + String(dshProbe.stdout || '').trim().split('\n')[0]);
+const dshBase = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
+function findDsh(){
+  const probe = spawnSync(process.platform === 'win32' ? 'where' : 'which', [dshBase], { encoding: 'utf8' });
+  if (!probe.error && probe.status === 0) {
+    const first = String(probe.stdout || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean)[0];
+    if (first && fs.existsSync(first)) return first;
+  }
+  const cands = [];
+  let d = path.dirname(process.execPath);
+  for (let i = 0; i < 7; i++) { d = path.dirname(d); cands.push(path.join(d, 'resources', 'runtime', 'cli', 'bin', dshBase)); }
+  if (process.env.DSH_HOME) cands.push(path.join(path.dirname(process.env.DSH_HOME), 'resources', 'runtime', 'cli', 'bin', dshBase));
+  for (const c of cands) { if (fs.existsSync(c)) return c; }
+  return null;
+}
+const dshFound = findDsh();
+// 注意：Node 24 在 Windows 上直接 spawn '.cmd' 会 EINVAL，所以经 cmd.exe 调用（并把它所在目录塞进 PATH）
+const dshProbe = dshFound
+  ? (process.platform === 'win32'
+      ? spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'dsh.cmd --version'], {
+          encoding: 'utf8', env: Object.assign({}, process.env, { PATH: path.dirname(dshFound) + path.delimiter + (process.env.PATH || '') })
+        })
+      : spawnSync(dshFound, ['--version'], { encoding: 'utf8' }))
+  : { error: new Error('not found') };
+if (dshFound && !dshProbe.error && dshProbe.status === 0) {
+  ok('批改依赖可用：' + dshFound + '（' + String(dshProbe.stdout || '').trim().split('\n')[0] + '）');
 } else {
-  warn('在命令行里找不到 ' + dshCmd + '：网页「一键批改」「一键更新题库」和 一键批改.cmd 都会启动失败。');
-  info('  · 在 DSH 里打开本文件夹的会话时通常已可用；若确实不可用，请在 DSH 的终端里运行这些命令，或把 DSH 的 bin 目录加入 PATH。');
-  info('  · 不依赖 dsh 的替代做法：在 DSH 对话里说「批改待批改作文」（AI 会读 data/pending_submissions.json 与 data/state.js）。');
+  warn('找不到 ' + dshBase + '：网页「一键批改」「一键更新题库」和 一键批改.cmd 需要它来启动智能体。');
+  info('  · 不依赖命令行的做法（推荐）：在 DSH 对话里说「批改待批改作文」，AI 会读 app/data/pending_submissions.json 与 state.js。');
+  info('  · 或把 DSH 的 bin 目录加入 PATH 后重试。');
 }
 
 /* ---------- 2. 安装技能到 DSH 用户目录 ---------- */

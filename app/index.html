@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>考研英语一 · 作文与翻译练习台</title>
+<style>
+  :root{
+    --bg:#f6f4ef; --paper:#fffdf9; --ink:#26221d; --ink2:#5b5348; --ink3:#8d8477;
+    --line:#e3ddd1; --accent:#9c3b34; --accent2:#1f4e46; --gold:#b8892f;
+    --must:#b3261e; --mustbg:#fdecea; --opt:#8a6a12; --optbg:#fdf6e3; --ok:#2c6b4f; --okbg:#eaf6f0;
+    --shadow:0 1px 2px rgba(38,34,29,.05),0 8px 24px rgba(38,34,29,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:"Cascadia Mono",Consolas,"Courier New",monospace}
+  .en{font-family:Georgia,"Times New Roman",serif; font-size:15.5px}
+  a{color:var(--accent2)}
+  h1,h2,h3,h4{line-height:1.35; margin:0}
+
+  /* ---------- 布局 ---------- */
+  .wrap{max-width:1180px; margin:0 auto; padding:0 20px 80px}
+  header.top{background:linear-gradient(180deg,#fffdf9,#f9f6f0); border-bottom:1px solid var(--line)}
+  .topinner{max-width:1180px; margin:0 auto; padding:22px 20px 0}
+  .brand{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+  .brand h1{font-size:23px; letter-spacing:.5px}
+  .brand .seal{font-size:12px; color:#fff; background:var(--accent); padding:2px 8px; border-radius:3px; letter-spacing:1px}
+  .brand .sub{color:var(--ink3); font-size:13px}
+  .topmeta{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 14px; font-size:13px; color:var(--ink2)}
+  .chip{border:1px solid var(--line); background:#fff; border-radius:999px; padding:3px 11px; font-size:12.5px; color:var(--ink2)}
+  .chip b{color:var(--ink)}
+  .chip.warn{border-color:#e6c9c4; background:#fdf3f1; color:#8c2f28}
+  nav.tabs{display:flex; gap:4px; flex-wrap:wrap; border-bottom:1px solid var(--line)}
+  nav.tabs button{
+    appearance:none; background:transparent; border:0; border-bottom:2px solid transparent;
+    padding:10px 15px; font-size:14.5px; color:var(--ink2); cursor:pointer; font-family:inherit;
+  }
+  nav.tabs button:hover{color:var(--ink)}
+  nav.tabs button.on{color:var(--accent); border-bottom-color:var(--accent); font-weight:600}
+  nav.tabs .badge{display:inline-block; min-width:18px; padding:0 5px; margin-left:6px; border-radius:9px; background:var(--accent); color:#fff; font-size:11.5px; line-height:18px; text-align:center; font-weight:600}
+
+  /* ---------- 卡片 ---------- */
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow); padding:20px 22px; margin-top:18px}
+  .card>h2{font-size:17px; margin-bottom:4px}
+  .card .hint{color:var(--ink3); font-size:13px; margin:2px 0 14px}
+  .grid{display:grid; gap:16px}
+  @media(min-width:900px){ .g2{grid-template-columns:1fr 1fr} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} }
+  @media(max-width:899px){ .g2,.g3,.g4{grid-template-columns:1fr} }
+
+  .stat{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:14px 16px}
+  .stat .k{font-size:12.5px; color:var(--ink3)}
+  .stat .v{font-size:26px; font-weight:600; letter-spacing:.5px; margin-top:2px}
+  .stat .v small{font-size:13px; font-weight:400; color:var(--ink3)}
+  .stat .f{font-size:12.5px; color:var(--ink3); margin-top:4px}
+
+  /* ---------- 控件 ---------- */
+  button.btn{
+    appearance:none; font-family:inherit; font-size:14px; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:7px; padding:7px 14px;
+  }
+  button.btn:hover{border-color:#cfc6b6; background:#fffcf6}
+  button.btn.primary{background:var(--accent2); border-color:var(--accent2); color:#fff}
+  button.btn.primary:hover{background:#17403a}
+  button.btn.ghost{background:transparent}
+  button.btn:disabled{opacity:.5; cursor:not-allowed}
+  select,input[type=text],input[type=date],textarea{
+    font-family:inherit; font-size:14px; color:var(--ink); background:#fff;
+    border:1px solid var(--line); border-radius:7px; padding:8px 10px; width:100%;
+  }
+  textarea{line-height:1.7; resize:vertical}
+  select:focus,input:focus,textarea:focus{outline:2px solid #dbe7e3; outline-offset:0; border-color:#b9cfc8}
+  label.fld{display:block; margin:12px 0 0}
+  label.fld>span{display:block; font-size:13px; color:var(--ink2); margin-bottom:5px}
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .spacer{flex:1}
+
+  /* ---------- 徽标 ---------- */
+  .pill{display:inline-block; font-size:12px; padding:2px 9px; border-radius:999px; border:1px solid var(--line); background:#fff; color:var(--ink2); white-space:nowrap}
+  .pill.pending{background:#fdf6e3; border-color:#ecdcae; color:#7d5f10}
+  .pill.graded{background:#eaf6f0; border-color:#c4e2d4; color:#245e46}
+  .pill.must{background:var(--mustbg); border-color:#f0c4bf; color:var(--must)}
+  .pill.optional{background:var(--optbg); border-color:#ecdcae; color:var(--opt)}
+  .pill.ok{background:var(--okbg); border-color:#c4e2d4; color:var(--ok)}
+  .pill.k-major{background:#fdf1ef; border-color:#eecdc7; color:#8c2f28}
+  .pill.k-minor{background:#eef4fb; border-color:#cfdff0; color:#2b4f75}
+  .pill.k-translation{background:#f2effa; border-color:#dcd5ef; color:#4a3a7a}
+  .pill.k-drill{background:#eef8f4; border-color:#cbe8dd; color:#25604c}
+  .pill.c-real{background:#fdeeee; border-color:#f0c8c4; color:#a32b22}
+  .pill.c-mock{background:#eff4fa; border-color:#cfdff0; color:#2b4f75}
+  .pill.c-mine{background:#fdf6e3; border-color:#eadfae; color:#7d5f10}
+  .pill.c-en1{background:#eef4fb; border-color:#c9dcf0; color:#1f4e7a}
+  .pill.c-en2{background:#f7eef8; border-color:#e4cfe8; color:#6b3a72}
+  .pill.done{background:#eaf6f0; border-color:#c4e2d4; color:#245e46}
+  .pill.flat{background:#f4f1ea; border-color:#e3ddd1; color:#8d8477}
+  .practice{border:1px solid var(--line); border-radius:8px; background:#fdfbf6; padding:12px 14px; margin:12px 0}
+  .practice .ptitle{font-size:14px; font-weight:600; margin-bottom:4px}
+  .catgrid{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0 4px}
+  .catsum{border:1px solid var(--line); border-radius:8px; padding:8px 14px; background:var(--paper); font-size:13.5px; color:var(--ink2)}
+  .catsum b{font-size:17px; color:var(--ink)}
+  .dup{border:1px solid #ecdcae; background:#fdf9ee; border-radius:8px; padding:10px 12px; margin-top:8px; font-size:13.5px}
+  .dup .drow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:4px 0}
+  .srcline{background:#f7f5ef; border-radius:6px; padding:8px 10px; font-size:13px; color:var(--ink2); margin-top:6px}
+  .srcline .en{font-size:13px}
+  /* 改稿并排对比 */
+  .cmpscroll{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:#fff; margin-top:12px}
+  .cmptable{border-collapse:separate; border-spacing:0; width:100%}
+  .cmptable th,.cmptable td{border-bottom:1px solid var(--line); border-right:1px solid var(--line); padding:10px 12px; vertical-align:top; text-align:left; font-size:13.5px}
+  .cmptable thead th{background:#faf7f1; font-size:13px; min-width:230px; position:sticky; top:0}
+  .cmptable th.cmpleft{background:#faf7f1; min-width:120px; width:120px; position:sticky; left:0; z-index:1; font-size:13px}
+  .cmptable thead th.cmpleft{z-index:2}
+  .cmptable tr:last-child th,.cmptable tr:last-child td{border-bottom:0}
+  .cmpcell{min-width:230px; max-width:340px}
+  .cmpessay{white-space:normal; line-height:1.75; font-family:Georgia,"Times New Roman",serif; font-size:13px; max-height:280px; overflow:auto; background:#fdfcf8; border-radius:6px; padding:8px 10px}
+  .score{font-weight:700; color:var(--accent)}
+  .score.big{font-size:30px}
+
+  /* ---------- 题目 ---------- */
+  .qhead{display:flex; gap:10px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap}
+  .qbody{margin-top:10px; display:grid; gap:16px}
+  @media(min-width:900px){ .qbody.withfig{grid-template-columns:minmax(0,1fr) 380px} }
+  .figurebox{border:1px solid var(--line); border-radius:8px; background:#fff; padding:8px}
+  .figurebox svg{display:block; width:100%; height:auto}
+  .cap{font-size:12px; color:var(--ink3); text-align:center; margin-top:6px}
+  .prompt-en{white-space:pre-wrap; background:#fcfaf5; border-left:3px solid #ddd3c2; padding:12px 14px; border-radius:0 6px 6px 0}
+  .zh{color:var(--ink2); font-size:14.5px}
+  .sent-list{counter-reset:s; margin:8px 0 0; padding:0; list-style:none}
+  .sent-list li{position:relative; padding:6px 0 6px 34px; border-bottom:1px dashed #ece6da; font-family:Georgia,"Times New Roman",serif}
+  .sent-list li:last-child{border-bottom:0}
+  .sent-list li:before{counter-increment:s; content:"[" counter(s) "]"; position:absolute; left:0; top:6px; color:var(--accent); font-size:13px; font-family:inherit}
+
+  /* ---------- 批改展示 ---------- */
+  .essay{white-space:pre-wrap; background:#fff; border:1px solid var(--line); border-radius:8px; padding:14px 16px; font-family:Georgia,"Times New Roman",serif; font-size:15.5px; line-height:2}
+  .essay.rev strong{background:#fff3cf; padding:0 2px; border-radius:3px; font-weight:600}
+  mark.err{border-radius:3px; padding:0 2px; cursor:help}
+  mark.must{background:#ffe0dc; border-bottom:2px solid #b3261e; color:#7a1a14}
+  mark.optional{background:#fdf1cd; border-bottom:2px solid #b8892f}
+  mark.ok{background:#e6f5ec; border-bottom:2px solid #2c6b4f}
+  .notes{margin:0; padding:0; list-style:none}
+  .notes li{border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-bottom:10px; background:#fff}
+  .notes li.must{border-left:4px solid var(--must)}
+  .notes li.optional{border-left:4px solid var(--gold)}
+  .notes li.ok{border-left:4px solid var(--ok)}
+  .notes .orig{font-family:Georgia,"Times New Roman",serif; color:var(--ink2)}
+  .notes .lbl{font-size:12px; color:var(--ink3); margin-right:6px}
+  .notes .rev{font-family:Georgia,"Times New Roman",serif; background:#f7fbf9; border-radius:5px; padding:6px 9px; margin:6px 0}
+  .notes .exp{font-size:14px; color:var(--ink2); white-space:pre-wrap}
+  .dim{display:grid; grid-template-columns:110px 1fr; gap:10px; padding:7px 0; border-bottom:1px dashed #ece6da; font-size:14px}
+  .dim:last-child{border-bottom:0}
+  .kv{font-size:14px; color:var(--ink2)}
+  .kv b{color:var(--ink)}
+  ul.tight{margin:6px 0 0; padding-left:20px}
+  ul.tight li{margin:3px 0}
+  .pttable{width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0}
+  .pttable th,.pttable td{border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top}
+  .pttable th{background:#faf7f1; font-weight:600; color:var(--ink2); font-size:12.5px}
+  .pttable td.c{text-align:center; white-space:nowrap}
+
+  /* ---------- 列表条目 ---------- */
+  .item{border:1px solid var(--line); background:var(--paper); border-radius:10px; margin-bottom:14px; overflow:hidden}
+  .item>.ihead{display:flex; gap:12px; align-items:center; padding:13px 16px; cursor:pointer; flex-wrap:wrap}
+  .item>.ihead:hover{background:#fdfbf6}
+  .item .ititle{font-weight:600; font-size:15px}
+  .item .isub{color:var(--ink3); font-size:12.5px}
+  .item .ibody{border-top:1px solid var(--line); padding:16px}
+  .caret{color:var(--ink3); font-size:12px}
+
+  /* ---------- 错题库 ---------- */
+  .cat{border:1px solid var(--line); border-radius:10px; background:var(--paper); margin-bottom:12px; overflow:hidden}
+  .cat>.chead{display:flex; align-items:center; gap:10px; padding:11px 15px; cursor:pointer}
+  .cat>.chead:hover{background:#fdfbf6}
+  .cat .cnt{font-size:12.5px; color:#fff; background:var(--accent); border-radius:999px; padding:1px 9px}
+  .cat .cbody{padding:0 15px 12px; border-top:1px solid var(--line)}
+  .cat .cbody .notes li{background:#fffdf9}
+
+  /* ---------- 趋势 ---------- */
+  .chart{width:100%; height:230px; background:var(--paper); border:1px solid var(--line); border-radius:10px}
+  .legend{font-size:12.5px; color:var(--ink3); margin-top:6px}
+
+  /* ---------- 提示 ---------- */
+  .note{background:#f4f8f6; border:1px solid #d7e8e1; border-left:4px solid var(--accent2); border-radius:6px; padding:11px 14px; font-size:14px; color:var(--ink2)}
+  .note.warn{background:#fdf7ef; border-color:#ecdcc2; border-left-color:var(--gold)}
+  .empty{color:var(--ink3); text-align:center; padding:34px 10px; font-size:14px}
+  footer{color:var(--ink3); font-size:12.5px; text-align:center; padding:26px 10px 0}
+  .split{display:grid; gap:12px}
+  @media(min-width:900px){ .split{grid-template-columns:1fr 1fr} }
+  .thumb{max-width:180px; border:1px solid var(--line); border-radius:6px; margin-top:8px; display:block}
+  details.det{margin-top:10px; border:1px solid var(--line); border-radius:8px; background:#fff}
+  details.det>summary{cursor:pointer; padding:9px 13px; font-size:14px; color:var(--ink2)}
+  details.det[open]>summary{border-bottom:1px solid var(--line)}
+  details.det>div{padding:12px 14px}
+  .toast{position:fixed; right:20px; bottom:22px; background:var(--ink); color:#fff; padding:10px 16px; border-radius:8px; font-size:13.5px; opacity:0; transform:translateY(8px); transition:.25s; pointer-events:none; z-index:99; max-width:70vw}
+  .toast.on{opacity:1; transform:none}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topinner">
+    <div class="brand">
+      <h1>考研英语一 · 作文与翻译练习台</h1>
+      <span class="seal">kaoyan-english-tutor</span>
+      <span class="sub">提交作文 → AI 按考研标准批改 → 结果自动回填本页</span>
+    </div>
+    <div class="topmeta">
+      <span class="chip">距考试 <b id="cd">—</b></span>
+      <span class="chip">已提交 <b id="m-sub">0</b> 篇</span>
+      <span class="chip">已批改 <b id="m-graded">0</b> 篇</span>
+      <span class="chip">平均得分率 <b id="m-rate">—</b></span>
+      <span class="chip" id="m-sync">数据未加载</span>
+      <span class="spacer"></span>
+      <button class="btn ghost" id="btn-reload">↻ 重新加载数据</button>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-view="board" class="on">总览</button>
+      <button data-view="submit">提交作文<span class="badge" id="b-pending" hidden>0</span></button>
+      <button data-view="results">批改结果</button>
+      <button data-view="bank">题库</button>
+      <button data-view="mistakes">错题与语言点库</button>
+      <button data-view="trend">分数趋势</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section id="view-board"></section>
+  <section id="view-submit" hidden></section>
+  <section id="view-results" hidden></section>
+  <section id="view-bank" hidden></section>
+  <section id="view-mistakes" hidden></section>
+  <section id="view-trend" hidden></section>
+  <footer>
+    评分参考为公开流传的档位整理，<b>非官方阅卷标准</b>，结果仅供练习参考。数据全部保存在本机，不联网。
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   考研英语一练习台 · 前端逻辑
+   数据来源三层合并（优先级从高到低）：
+     1) data/patches/*.json  → AI 写回的批改结果（本次会话内已加载过的缓存）
+     2) localStorage         → 本机新提交/草稿
+     3) data/state.js        → 题库与种子提交
+   ===================================================================== */
+(function(){
+'use strict';
+
+var KIND_LABEL = { major:'大作文 20分', minor:'小作文 10分', translation:'翻译 10分', drill:'长难句专项' };
+var KIND_CLASS = { major:'k-major', minor:'k-minor', translation:'k-translation', drill:'k-drill' };
+var CAT_LABEL = { real:'考研真题', mock:'模拟题', mine:'我的题目' };
+var CAT_CLASS = { real:'c-real', mock:'c-mock', mine:'c-mine' };
+/* 科目：英语一（en1）/ 英语二（en2）—— 题库用 questions[].subject 标记，缺省按英语一 */
+var SUBJ_LABEL = { en1:'英语一', en2:'英语二' };
+var SUBJ_CLASS = { en1:'c-en1', en2:'c-en2' };
+function subjOf(q){
+  if(!q) return 'en1';
+  if(q.subject === 'en2' || q.subject === 'en1') return q.subject;
+  if(/^q_en2_/.test(String(q.id || ''))) return 'en2';
+  return 'en1';
+}
+function subjPill(q){
+  var s = subjOf(q);
+  return '<span class="pill ' + SUBJ_CLASS[s] + '">' + SUBJ_LABEL[s] + '</span>';
+}
+function catOf(q){
+  if(q && q.category) return q.category;
+  if(!q) return 'mock';
+  return (q.year && String(q.year).indexOf('真题') >= 0) ? 'real' : 'mock';
+}
+function catPill(q){
+  var c = catOf(q);
+  return '<span class="pill ' + CAT_CLASS[c] + '">' + CAT_LABEL[c] + '</span>';
+}
+var LS_SUBS = 'kaoyan_subs_v1';
+var LS_PATCH = 'kaoyan_patch_cache_v1';
+var LS_META = 'kaoyan_meta_v1';
+var LS_IMGS = 'kaoyan_imgs_v1';
+var LS_MINEQ = 'kaoyan_mineq_v1';   // 用户自己上传的题目
+var POLL_MS = 8000;
+
+var Store = {
+  seed: { meta:{}, questions:[], completions:[] },
+  subs: [],          // localStorage 提交
+  patches: {},       // id -> patch
+  patchFiles: [],    // 由预扫描得到的补丁文件名
+  imgs: {},          // 本机暂存图片 dataURL
+  syncNote: '数据未加载',
+  lastLoad: null,
+  open: {},          // 折叠状态
+  filter: { results:'all', bank:'all' },
+  markingOn: true
+};
+
+/* ---------------- 工具 ---------------- */
+function $(s, root){ return (root||document).querySelector(s); }
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function nl2br(s){ return esc(s).replace(/\n/g,'<br>'); }
+function rich(s){
+  // 先转义，再把 **加粗** 变成 <strong>，保留换行
+  return esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+}
+function parseTime(t){
+  if(!t) return null;
+  var d = new Date(t);
+  return isNaN(d.getTime()) ? null : d;
+}
+function fmtTime(t){
+  var d = parseTime(t);
+  if(!d) return t || '—';
+  function p(n){ return (n<10?'0':'')+n; }
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function toast(msg){
+  var el = $('#toast'); el.textContent = msg; el.classList.add('on');
+  clearTimeout(el._t); el._t = setTimeout(function(){ el.classList.remove('on'); }, 2600);
+}
+function num(v, d){ var n = parseFloat(v); return isNaN(n) ? (d===undefined?null:d) : n; }
+function pct(v){ return (v==null) ? '—' : (Math.round(v*1000)/10)+'%'; }
+
+function loadLS(key, dflt){
+  try{ var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : dflt; }
+  catch(e){ return dflt; }
+}
+function saveLS(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); return true; }
+  catch(e){ toast('本机存储写入失败：'+e.message); return false; }
+}
+
+/* ---------------- 动态加载外部数据（file:// 可用） ---------------- */
+function injectScript(src, onload, onerror){
+  if(window.__KAOYAN_HARNESS__){ window.__KAOYAN_SCRIPTS = window.__KAOYAN_SCRIPTS || []; window.__KAOYAN_SCRIPTS.push(src); if(onload) onload(); return null; }
+  var s = document.createElement('script');
+  s.src = src + (src.indexOf('?')>=0?'&':'?') + '_t=' + Date.now();
+  s.onload = function(){ if(onload) onload(); };
+  s.onerror = function(){ if(onerror) onerror(); };
+  document.head.appendChild(s);
+  return s;
+}
+/* 补丁以 JS 形式加载（file:// 下 fetch 会被拦截，script 标签才可靠）：
+   每个 data/patches/sub_XXXX.js 会执行 window.__KAOYAN_PATCHES['sub_XXXX'] = {...}
+   探测范围是动态的：已经见过哪些提交编号，就探到这个编号 + 8，
+   所以不会因为"练到第 25 篇"而漏掉补丁；也不需要在加新题时改代码。 */
+var PATCH_IDS = [];
+function rebuildPatchIds(){
+  var max = 0;
+  function note(id){
+    var m = /^sub_(\d+)$/.exec(id || '');
+    if(m) max = Math.max(max, parseInt(m[1], 10));
+  }
+  allCompletions(true).forEach(function(c){ note(c.id); });
+  Object.keys(Store.patches || {}).forEach(note);
+  mineQuestions().forEach(function(q){
+    (q.attempts || []).forEach(function(id){ note(typeof id === 'string' ? id : (id && id.id)); });
+  });
+  Object.keys(Store.imgs || {}).forEach(note);
+  max = Math.max(max, 4);                       // 起步至少探 4 个，方便首次使用
+  var out = [];
+  for(var i = 1; i <= max + 8; i++) out.push('sub_' + ('000'+i).slice(-4));
+  PATCH_IDS = out;
+}
+function scanPatchFiles(){
+  if(window.__KAOYAN_HARNESS__){
+    // 仿真模式：由外部自检脚本负责真正加载补丁文件，这里等待其完成信号
+    window.__KAOYAN_SCRIPTS = window.__KAOYAN_SCRIPTS || [];
+    return (window.__KAOYAN_HARNESS_WAIT__ || Promise.resolve()).then(function(){
+      return Object.keys(window.__KAOYAN_PATCHES || {});
+    });
+  }
+  window.__KAOYAN_PATCHES = {};
+  return new Promise(function(resolve){
+    var i = 0;
+    (function next(){
+      if(i >= PATCH_IDS.length){ resolve(Object.keys(window.__KAOYAN_PATCHES)); return; }
+      var id = PATCH_IDS[i++];
+      var s = document.createElement('script');
+      var done = false;
+      function finish(){ if(done) return; done = true; if(s.parentNode) s.parentNode.removeChild(s); next(); }
+      s.src = 'data/patches/' + id + '.js?_p=' + Date.now();
+      s.onload = finish;
+      s.onerror = finish;          // 文件不存在时静默跳过
+      document.head.appendChild(s);
+      setTimeout(finish, 1200);    // 兜底，避免某个文件卡住整轮扫描
+    })();
+  });
+}
+
+/* 读不到 state.js 时的兜底：直接用 questions.js 的题库 */function initSeedFromBank(){
+  Store.seed = {
+    meta: { updatedAt: new Date().toISOString(), examDate: '' },
+    questions: (window.__KAOYAN_QUESTIONS || []).slice(),
+    completions: []
+  };
+}
+
+function loadData(){
+  return new Promise(function(resolve){
+    Store.seed = { meta:{}, questions:[], completions:[] };
+    window.__KAOYAN_QUESTIONS = [];
+    window.__KAOYAN_STATE = null;
+    window.__KAOYAN_PATCHES = {};
+    window.__KAOYAN_BANK_ERRORS = [];
+    // 每次重新加载都用带时间戳的新 script 标签，绕过 file:// 缓存
+    var s0 = injectScript('data/figures.js', null, function(){});   // 公用示意图库（须先于题库）
+    var s1 = injectScript('data/questions.js', null, function(){}); // 题目文件执行失败时不会中断本页
+    var s2 = injectScript('data/state.js', null, function(){});
+    setTimeout(function(){
+      var st = null;
+      try { st = window.__KAOYAN_STATE; } catch(e){ Store.seedError = String(e.message || e); }
+      if(st){
+        // 题库合并：state.js 与 questions.js 的题目都收，按 id 去重（state.js 优先）。
+        // 这样以后往 questions.js 追加真题/模拟题，页面不用改 state.js 就能看到。
+        var bankList = window.__KAOYAN_QUESTIONS || [];
+        var merged = {}, list = [];
+        (st.questions || []).forEach(function(q){ if(q && q.id && !merged[q.id]){ merged[q.id] = 1; list.push(q); } });
+        bankList.forEach(function(q){ if(q && q.id && !merged[q.id]){ merged[q.id] = 1; list.push(q); } });
+        Store.seed = {
+          meta: st.meta || {},
+          questions: list,
+          completions: st.completions || []
+        };
+        // 保护：题目文件若执行中断（例如引用了不存在的图函数），bankList 为空但文件里其实有题
+        if(!bankList.length) Store.bankError = bankProbe();
+        else Store.bankError = null;
+        Store.syncNote = '数据已加载 · ' + fmtTime(new Date().toISOString());
+      } else { initSeedFromBank(); if(!(window.__KAOYAN_QUESTIONS||[]).length) Store.bankError = bankProbe(); }
+      if(!st) Store.syncNote = '⚠ 未能读取 data/state.js（正在用 data/questions.js 兜底）';
+      if(s0 && s0.parentNode) s0.parentNode.removeChild(s0);
+      if(s1 && s1.parentNode) s1.parentNode.removeChild(s1);
+      if(s2 && s2.parentNode) s2.parentNode.removeChild(s2);
+      // 加载 AI 写回的批改补丁（JS 形式）；探测范围按已见到的编号动态生成
+      rebuildPatchIds();
+      scanPatchFiles().then(function(foundIds){
+        var merged = {};
+        (foundIds||[]).forEach(function(id){ merged[id] = window.__KAOYAN_PATCHES[id]; });
+        Store.patchFiles = foundIds || [];
+        Store.patches = merged;
+        saveLS(LS_PATCH, Store.patches);
+        if(!Store.patchFiles.length && !st){
+          Store.syncNote = '⚠ 未读到 state.js，也未发现任何批改补丁';
+        } else if(Store.patchFiles.length){
+          Store.syncNote = '数据已加载 · 补丁 ' + Store.patchFiles.length + ' 个 · ' + fmtTime(new Date().toISOString());
+        }
+        Store.lastLoad = new Date();
+        renderMeta();
+        render();
+        if(window.__KAOYAN_DIAG) window.__KAOYAN_DIAG.ready = true;
+        resolve();
+      });
+    }, 90);
+  });
+}
+
+/* ---------------- 数据合并 ---------------- */
+function questionById(id){
+  var q = Store.seed.questions.filter(function(x){ return x.id === id; })[0];
+  if(q) return q;
+  var mine = mineQuestions().filter(function(x){ return x.id === id; })[0];
+  if(mine) return mine;
+  var c = allCompletions(true).filter(function(x){ return x.id === id; })[0];
+  return c ? { id:id, title:'（自定义题目）', kind:'major' } : { id:id, title:'（题目已删除）', kind:'major' };
+}
+
+/* ---------------- 题目分类与练习轨迹 ---------------- */
+function allQuestions(){
+  var out = Store.seed.questions.slice();
+  var seen = {};
+  out.forEach(function(q){ seen[q.id] = 1; });
+  mineQuestions().forEach(function(q){ if(!seen[q.id]){ seen[q.id] = 1; out.push(q); } });
+  return out;
+}
+function mineQuestions(){
+  return (loadLS(LS_MINEQ, []) || []).map(function(q){
+    if(!q.category) q.category = 'mine';
+    return q;
+  });
+}
+function attemptsOf(qid){
+  return allCompletions(true).filter(function(c){ return c.questionId === qid; });
+}
+/* 同一篇作文的改稿链：靠 revises（改稿指向）与 draftGroup（同一稿组）双线索串起来 */
+function revisionChain(c){
+  var all = allCompletions(true);
+  var byId = {};
+  all.forEach(function(x){ byId[x.id] = x; });
+  var node = byId[c.id];
+  if(!node) return [c];
+
+  // 找稿组 id：自己带的，或顺着 revises 向上找到第一个带 draftGroup 的祖先
+  var gid = node.draftGroup || null;
+  if(!gid){
+    var up = node, guard0 = 0;
+    while(up && !gid && guard0++ < 50){
+      if(up.draftGroup) gid = up.draftGroup;
+      up = up.revises ? byId[up.revises] : null;
+    }
+  }
+  if(!gid) gid = node.revises || node.id;        // 老数据没有稿组时，用链首 id 当组标识
+
+  // 组成员：组首本身、组内成员、直接改稿、以及"改稿的改稿"
+  var members = all.filter(function(x){
+    if(x.id === gid) return true;
+    if(x.draftGroup === gid) return true;
+    if(x.revises === gid) return true;
+    return all.some(function(y){ return y.id === x.revises && (y.id === gid || y.draftGroup === gid); });
+  });
+  members.sort(function(a,b){
+    var na = a.draftNo || (a.id === gid ? 1 : 0), nb = b.draftNo || (b.id === gid ? 1 : 0);
+    if(na !== nb) return na - nb;
+    return String(a.submittedAt).localeCompare(String(b.submittedAt));
+  });
+  if(members.length >= 2) return members;
+  if(!isRevision(node)) return [node];           // 确实是独立一篇
+  return members.length ? members : [node];
+}
+/* 与某篇有关联的所有稿件（含"后来在这个问题上再练"的独立篇） */
+function relatedChain(c){
+  var chain = revisionChain(c);
+  var seen = {};
+  chain.forEach(function(x){ seen[x.id] = 1; });
+  var frontier = chain.slice();
+  var guard = 0;
+  while(frontier.length && guard++ < 200){
+    var cur = frontier.shift();
+    var kids = allCompletions(true).filter(function(x){
+      return x.revises === cur.id && !seen[x.id] && (seen[x.id] = 1);
+    });
+    kids.forEach(function(k){ chain.push(k); frontier.push(k); });
+  }
+  chain.sort(function(a,b){ return String(a.submittedAt).localeCompare(String(b.submittedAt)); });
+  return chain;
+}
+function draftNoOf(c){ return c.draftNo || null; }
+function isRevision(c){ return !!(c.revises || c.draftNo); }
+function isSameQuestion(prev, cur){
+  if(!prev || !cur) return false;
+  if(prev.questionId !== cur.questionId) return false;
+  if(prev.ownPrompt && cur.ownPrompt) return similarity(prev.ownPrompt, cur.ownPrompt) >= 0.4;
+  return true;
+}
+function chainLabel(c){
+  var ch = revisionChain(c);
+  if(ch.length < 2) return '';
+  for(var i=0;i<ch.length;i++){ if(ch[i].id === c.id) return '第 ' + (i+1) + ' 稿'; }
+  return '';
+}
+function practiceStats(qid){
+  var list = attemptsOf(qid);
+  var graded = list.filter(function(c){ return c.status === 'graded' && c.grading; });
+  var rates = graded.map(rateOf).filter(function(r){ return r != null; });
+  var avg = rates.length ? rates.reduce(function(a,b){ return a+b; },0)/rates.length : null;
+  var best = rates.length ? Math.max.apply(null, rates) : null;
+  var last = list.length ? list[0] : null;
+  return { total:list.length, graded:graded.length, pending:list.length-graded.length,
+           avg:avg, best:best, last:last, list:list };
+}
+function practiceBadge(qid){
+  var s = practiceStats(qid);
+  if(!s.total) return '<span class="pill flat">未练习</span>';
+  return '<span class="pill done">已练 ' + s.total + ' 次</span>' +
+         (s.pending ? '<span class="pill pending">待批改 ' + s.pending + '</span>' : '') +
+         (s.avg != null ? '<span class="pill">均分率 ' + pct(s.avg) + '</span>' : '');
+}
+function practicePanel(q){
+  var s = practiceStats(q.id);
+  var h = '<div class="practice"><div class="ptitle">练习与改稿记录　' + practiceBadge(q.id) + '</div>';
+  if(!s.total){
+    h += '<div class="hint" style="margin:6px 0 0">这道题还没有练习记录。</div></div>';
+    return h;
+  }
+  h += '<div class="kv" style="margin:6px 0 8px">累计 <b>' + s.total + '</b> 次提交' +
+       (s.graded ? '，已批改 <b>' + s.graded + '</b> 次' : '') +
+       (s.avg != null ? '，平均得分率 <b>' + pct(s.avg) + '</b>' : '') +
+       (s.best != null ? '，最好 <b>' + pct(s.best) + '</b>' : '') + '</div>';
+  h += '<table class="pttable"><thead><tr><th>提交</th><th>稿次</th><th>时间</th><th class="c">得分</th><th class="c">状态</th><th class="c">操作</th></tr></thead><tbody>';
+  s.list.forEach(function(c){
+    var sc = (c.status==='graded' && c.grading) ? (c.grading.score + ' / ' + c.grading.fullScore) : '—';
+    var lbl = chainLabel(c);
+    h += '<tr><td class="mono">' + esc(c.id) + '</td>'
+       + '<td>' + (lbl ? '<b>' + esc(lbl) + '</b>' : (isRevision(c) ? '改稿' : '<span class="isub">独立一篇</span>')) + '</td>'
+       + '<td>' + fmtTime(c.submittedAt) + '</td>'
+       + '<td class="c">' + esc(sc) + '</td>'
+       + '<td class="c">' + (c.status==='graded' ? '<span class="pill graded">已批改</span>' : '<span class="pill pending">待批改</span>') + '</td>'
+       + '<td class="c"><button class="btn ghost" data-open-sub="' + esc(c.id) + '">看批改</button>'
+       + ' <button class="btn ghost" data-revisions="' + esc(c.id) + '">对比</button></td></tr>';
+  });
+  h += '</tbody></table>';
+  // 同一篇作文的改稿链 → 一键总览 / 对比
+  var chains = [];
+  s.list.forEach(function(c){
+    if(!isRevision(c)) return;
+    var ch = revisionChain(c);
+    if(ch.length < 2) return;
+    var head = ch[0].id;
+    if(!chains.some(function(g){ return g.head === head; })) chains.push({ head:head, list:ch });
+  });
+  if(chains.length){
+    h += '<div class="note" style="margin-top:10px"><b>同一篇作文的改稿链</b>'
+       + '<div class="hint" style="margin-top:4px">点「总览对比」可以把这条链上的每一稿并排看：分数变化、当时的问题、哪些问题改了、哪些还在。</div>';
+    chains.forEach(function(g){
+      var first = g.list[0];
+      h += '<div class="row" style="margin-top:8px">'
+         + '<span class="pill done">' + g.list.length + ' 稿</span>'
+         + '<span class="mono">' + g.list.map(function(x){ return x.id; }).join(' → ') + '</span>'
+         + '<button class="btn primary" data-revisions="' + esc(first.id) + '">总览对比（' + g.list.length + ' 稿）</button>'
+         + '<span class="isub">' + (first.grading ? ('首稿 ' + first.grading.score + '/' + first.grading.fullScore) : '首稿待批改') + '</span></div>';
+    });
+    h += '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+/* 同一篇作文所有稿件的并排对比 */
+function revisionsView(anchorId){
+  var anchor = allCompletions(true).filter(function(c){ return c.id === anchorId; })[0];
+  if(!anchor) return '<div class="card"><div class="empty">找不到这条记录。</div></div>';
+  var chain = relatedChain(anchor);
+  var q = questionById(anchor.questionId);
+  var h = '<div class="card"><h2>改稿总览：' + esc(q.title) + '</h2>'
+        + '<div class="hint">同一次练习的每一稿并排对照。每一列是<b>那一稿提交时的作文</b>，下方是那一稿的批改结论。'
+        + (chain.length < 2 ? '目前这里只有 1 稿；在提交页把新一篇标为「修改稿」后，两稿就会并排出现在这里。' : '')
+        + '</div>'
+        + '<div class="row"><button class="btn ghost" data-close-rev="1">← 返回批改结果</button>'
+        + '<span class="isub">共 ' + chain.length + ' 稿</span></div>';
+
+  // 分数趋势一句话
+  var done = chain.filter(function(c){ return c.status==='graded' && c.grading; });
+  if(done.length >= 2){
+    var a = done[0], b = done[done.length-1];
+    var ra = rateOf(a), rb = rateOf(b);
+    h += '<div class="note" style="margin-top:10px">' + esc(a.id) + ' → ' + esc(b.id) + '：'
+       + a.grading.score + '/' + a.grading.fullScore + ' → <b>' + b.grading.score + '/' + b.grading.fullScore + '</b>'
+       + (ra != null && rb != null ? '（得分率 ' + pct(ra) + ' → <b>' + pct(rb) + '</b>，'
+          + (rb > ra ? '提升 ' + pct(rb-ra) : (rb < ra ? '下降 ' + pct(ra-rb) : '持平')) + '）' : '')
+       + '</div>';
+  } else if(done.length === 1){
+    h += '<div class="note" style="margin-top:10px">目前只有 1 稿有批改结果，等其它稿批改后即可对比进步曲线。</div>';
+  }
+
+  h += '<div class="cmpscroll"><table class="cmptable"><thead><tr><th class="cmpleft">内容</th>';
+  chain.forEach(function(c, i){
+    var no = c.draftNo || (i + 1);
+    h += '<th>第 ' + no + ' 稿　<span class="mono">' + esc(c.id) + '</span>'
+       + (c.status==='graded' && c.grading ? '　<span class="score">' + c.grading.score + '/' + c.grading.fullScore + '</span>' : '　<span class="isub">待批改</span>')
+       + '<div class="isub">' + fmtTime(c.submittedAt) + (c.grading && c.grading.wordCount ? '　' + c.grading.wordCount + ' 词' : '') + '</div></th>';
+  });
+  h += '</tr></thead><tbody>';
+
+  // 行：作文原文
+  h += '<tr><th class="cmpleft">作文原文<br><span class="isub">（本稿内容）</span></th>';
+  chain.forEach(function(c){
+    h += '<td class="cmpcell"><div class="cmpessay">' + esc(c.essayText || '（无文字内容）').replace(/\n/g,'<br>') + '</div>'
+       + (c.imagePath ? '<div class="isub">照片：' + esc(c.imagePath) + '</div>' : '') + '</td>';
+  });
+  h += '</tr>';
+
+  // 行：必须修改的错误（逐条）
+  h += '<tr><th class="cmpleft">【必须修改】<br><span class="isub">（本稿被指出的问题）</span></th>';
+  chain.forEach(function(c){
+    var notes = (c.grading && c.grading.sentenceNotes || []).filter(function(n){ return n.level === 'must'; });
+    var h2 = '';
+    if(notePending(c)) h2 = '<span class="isub">待批改</span>';
+    else if(!notes.length) h2 = '<span class="pill ok">无必须修改</span>';
+    else { h2 = '<ol class="tight" style="padding-left:18px;margin:0">';
+      notes.forEach(function(n){ h2 += '<li style="margin:5px 0">' + esc(shorten(n.issue || n.original || '', 90)) + '</li>'; });
+      h2 += '</ol>'; }
+    h += '<td class="cmpcell">' + h2 + '</td>';
+  });
+  h += '</tr>';
+
+  // 行：翻译/专项的采分点得分
+  var hasSent = chain.some(function(c){ return c.grading && (c.grading.sentences||[]).length; });
+  if(hasSent){
+    h += '<tr><th class="cmpleft">逐句得分<br><span class="isub">（翻译/专项）</span></th>';
+    chain.forEach(function(c){
+      var ss = (c.grading && c.grading.sentences) || [];
+      if(!ss.length){ h += '<td class="cmpcell"><span class="isub">—</span></td>'; return; }
+      var t = '<table class="pttable" style="margin:0"><tbody>';
+      ss.forEach(function(s){ t += '<tr><td>第 ' + esc(s.no) + ' 句</td><td class="c">' + s.score + '</td></tr>'; });
+      t += '</tbody></table>';
+      h += '<td class="cmpcell">' + t + '</td>';
+    });
+    h += '</tr>';
+  }
+
+  // 行：复盘重点（AI 给的优先改进项）
+  h += '<tr><th class="cmpleft">复盘重点<br><span class="isub">（下一步练什么）</span></th>';
+  chain.forEach(function(c){
+    var ps = (c.grading && c.grading.review && c.grading.review.priority) || [];
+    var h2 = notePending(c) ? '<span class="isub">待批改</span>'
+           : (ps.length ? '<ol class="tight" style="padding-left:18px;margin:0">' + ps.map(function(p){ return '<li style="margin:5px 0">' + esc(shorten(p, 110)) + '</li>'; }).join('') + '</ol>'
+                        : '<span class="isub">—</span>');
+    h += '<td class="cmpcell">' + h2 + '</td>';
+  });
+  h += '</tr>';
+
+  // 行：改了什么（与上一稿比，问题是否还在）
+  h += '<tr><th class="cmpleft">与上一稿相比<br><span class="isub">（问题是否已解决）</span></th>';
+  chain.forEach(function(c, i){
+    if(i === 0){ h += '<td class="cmpcell"><span class="isub">（首稿）</span></td>'; return; }
+    var prev = chain[i-1], cur = c;
+    var pIssues = ((prev.grading && prev.grading.sentenceNotes) || []).filter(function(n){ return n.level==='must'; });
+    var cIssues = ((cur.grading && cur.grading.sentenceNotes) || []).filter(function(n){ return n.level==='must'; });
+    if(notePending(cur) || notePending(prev)){ h += '<td class="cmpcell"><span class="isub">待批改</span></td>'; return; }
+    var t = '';
+    if(!pIssues.length){ t += '<div class="isub">上一稿没有必须修改的错误。</div>'; }
+    else {
+      var still = [], fixed = [];
+      pIssues.forEach(function(p){
+        var ptxt = (p.issue || '') + ' ' + (p.original || '');
+        var stillHere = cIssues.some(function(n){
+          return overlapKeywords(ptxt, (n.issue || '') + ' ' + (n.original || ''));
+        });
+        (stillHere ? still : fixed).push(p);
+      });
+      t += '<div class="kv">已解决 <b style="color:var(--ok)">' + fixed.length + '</b> / ' + pIssues.length + ' 项</div>';
+      if(still.length){
+        t += '<div class="isub" style="margin-top:4px">仍然存在：</div><ol class="tight" style="padding-left:18px;margin:0">';
+        still.forEach(function(n){ t += '<li style="margin:4px 0">' + esc(shorten(n.issue || n.original || '', 80)) + '</li>'; });
+        t += '</ol>';
+      }
+      if(fixed.length){
+        t += '<details class="det" style="margin-top:6px"><summary>看已解决的 ' + fixed.length + ' 项</summary><ol class="tight" style="padding-left:18px;margin:0">';
+        fixed.forEach(function(n){ t += '<li style="margin:4px 0">' + esc(shorten(n.issue || n.original || '', 80)) + '</li>'; });
+        t += '</ol></details>';
+      }
+    }
+    h += '<td class="cmpcell">' + t + '</td>';
+  });
+  h += '</tr>';
+
+  // 行：修改后全文
+  h += '<tr><th class="cmpleft">修改后全文<br><span class="isub">（AI 给的改后版本）</span></th>';
+  chain.forEach(function(c){
+    h += '<td class="cmpcell"><div class="cmpessay">'
+       + (notePending(c) ? '<span class="isub">待批改</span>' : rich(c.grading.revisedEssay || '（无）'))
+       + '</div></td>';
+  });
+  h += '</tr>';
+
+  // 行：操作
+  h += '<tr><th class="cmpleft">操作</th>';
+  chain.forEach(function(c){
+    h += '<td class="cmpcell"><div class="row">'
+       + '<button class="btn ghost" data-open-sub="' + esc(c.id) + '">看完整批改</button>'
+       + '<button class="btn ghost" data-edit-draft="' + esc(c.id) + '">基于本稿改一版</button>'
+       + '</div></td>';
+  });
+  h += '</tr>';
+  h += '</tbody></table></div>'
+     + '<div class="hint" style="margin-top:8px">「已解决 / 仍然存在」是按问题描述的关键词自动比对的，供参考；以每稿的【必须修改】清单为准。</div>'
+     + '</div>';
+  return h;
+}
+function notePending(c){ return !(c.status === 'graded' && c.grading); }
+function shorten(s, n){ s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; }
+function overlapKeywords(a, b){
+  var ta = normTokens(a), tb = normTokens(b);
+  if(!ta.length || !tb.length) return false;
+  var set = {}; tb.forEach(function(w){ set[w] = 1; });
+  var hit = ta.filter(function(w){ return set[w]; }).length;
+  return hit / ta.length >= 0.34;
+}
+
+/* ---------------- 题目重复识别 ---------------- */
+var STOP_EN = { the:1,a:1,an:1,and:1,or:1,of:1,to:1,in:1,on:1,for:1,with:1,you:1,your:1,write:1,essay:1,words:1,
+                should:1,your:1,about:1,that:1,this:1,is:1,are:1,be:1,it:1,as:1,at:1,by:1,from:1,drawing:1,
+                following:1,describe:1,explain:1,give:1,comments:1,briefly:1,intended:1,meaning:1,paragraph:1,
+                letter:1,email:1,notice:1,suppose:1,university:1,students:1,student:1,do:1,not:1,use:1,own:1,name:1,
+                instead:1,points:1,words:1,answer:1,sheet:1,neatly:1,write:1,please:1,translate:1,chinese:1 };
+function normTokens(s){
+  var t = String(s || '').toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, ' ').trim();
+  if(!t) return [];
+  var out = [];
+  // 英文/数字：按词，过滤停用词与纯数字
+  t.replace(/[a-z][a-z0-9]*|\d+/g, function(w){
+    if(/^\d+$/.test(w) || w.length < 2 || STOP_EN[w]) return '';
+    out.push(w);
+    return '';
+  });
+  // 中文：按字（中文没有词边界，按字才能反映"改写"的重叠度）
+  t.replace(/[\u4e00-\u9fa5]+/g, function(run){
+    for(var i = 0; i < run.length; i++) out.push(run.charAt(i));
+    return '';
+  });
+  return out;
+}
+function bigrams(tokens){
+  var set = {};
+  for(var i=0;i<tokens.length-1;i++) set[tokens[i]+'|'+tokens[i+1]] = 1;
+  return set;
+}
+function simComponent(aTokens, bTokens){
+  if(aTokens.length < 4 || bTokens.length < 4) return 0;
+  var A = {}, B = {};
+  aTokens.forEach(function(w){ A[w] = 1; });
+  bTokens.forEach(function(w){ B[w] = 1; });
+  var ka = Object.keys(A), inter = 0, uni = {};
+  ka.forEach(function(w){ uni[w] = 1; if(B[w]) inter++; });
+  Object.keys(B).forEach(function(w){ uni[w] = 1; });
+  var jac = inter / Object.keys(uni).length;
+  var GA = bigrams(aTokens), GB = bigrams(bTokens);
+  var gk = Object.keys(GA), gi = 0, gu = {};
+  gk.forEach(function(g){ gu[g] = 1; if(GB[g]) gi++; });
+  Object.keys(GB).forEach(function(g){ gu[g] = 1; });
+  var dice = (gk.length + Object.keys(GB).length) ? (2*gi / (gk.length + Object.keys(GB).length)) : 0;
+  // 覆盖率：a 中有多少比例的 token 能在 b 里找到（对"自带题目"这种短文本 + 长题库条目更敏感）
+  var cover = 0, hit = 0;
+  Object.keys(A).forEach(function(w){ if(B[w]) hit++; });
+  cover = hit / ka.length;
+  return { max: Math.max(jac, dice), cover: cover };
+}
+function similarity(a, b){
+  var r = simComponent(normTokens(a), normTokens(b));
+  return r.max;
+}
+/* 找相似题目：Jaccard/二元组相似度 或 覆盖率（自带题目较短时靠覆盖率兜底）
+   注意：两侧都必须用经过停用词过滤的 token（normTokens），否则重叠率会被 and / the / write 这类词拉偏。 */
+function findSimilarQuestions(text, topN){
+  var mine = normTokens(text);
+  var scored = allQuestions().map(function(q){
+    var blob = [q.title, q.promptTextZh, q.promptZh, q.promptEn, q.passage].filter(Boolean).join(' \n ');
+    var r = simComponent(mine, normTokens(blob));
+    // 0.6×覆盖率 + 0.4×二元组相似度：既照顾"自带题目较短"，也照顾"改写同一道题"
+    var score = 0.6 * r.cover + 0.4 * r.max;
+    return { q:q, score: score, raw:r.max, cover:r.cover };
+  }).filter(function(x){ return x.score >= 0.45; });   // 实测：无关题目 ≤0.40，同一道题的改写 ≥0.53
+  scored.sort(function(a,b){
+    if(Math.abs(b.score - a.score) > 0.02) return b.score - a.score;
+    // 分数接近时优先归并到真题，其次模拟题
+    var rank = { real:0, mock:1, mine:2 };
+    var ra = rank[catOf(a.q)] == null ? 3 : rank[catOf(a.q)];
+    var rb = rank[catOf(b.q)] == null ? 3 : rank[catOf(b.q)];
+    if(ra !== rb) return ra - rb;
+    return b.score - a.score;
+  });
+  return scored.slice(0, topN || 3);
+}
+/* 自动归并阈值：明显是同一道题时才自动挂到已有题下面
+   实测校准（中文改写描述 vs 无关题目）：同一道题 0.53—0.81；无关题目 0.33—0.40。取 0.55。 */
+function bestDuplicate(text){
+  var hits = findSimilarQuestions(text, 1);
+  if(!hits.length) return null;
+  var h = hits[0];
+  return (h.score >= 0.55) ? h : null;
+}
+function nextMineQuestionId(){
+  var max = 0;
+  mineQuestions().forEach(function(q){
+    var m = /q_mine_(\d+)/.exec(q.id||''); if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  return 'q_mine_' + ('00'+(max+1)).slice(-3);
+}
+function patchOf(id){ return Store.patches[id] || null; }
+
+function applyPatch(c){
+  var p = patchOf(c.id);
+  if(!p) return c;
+  var merged = {};
+  for(var k in c) merged[k] = c[k];
+  if(p.status) merged.status = p.status;
+  if(p.gradedAt) merged.gradedAt = p.gradedAt;
+  if(p.grading) merged.grading = p.grading;
+  return merged;
+}
+function allCompletions(includeGraded){
+  var out = [], seen = {};
+  function push(c){
+    if(!c || !c.id || seen[c.id]) return;
+    seen[c.id] = 1; out.push(applyPatch(c));
+  }
+  Store.subs.forEach(push);
+  Store.seed.completions.forEach(push);
+  // 只有补丁、没有原始提交的情况（例如提交只存在别的浏览器里）
+  Object.keys(Store.patches).forEach(function(id){
+    if(seen[id]) return;
+    var p = Store.patches[id];
+    push({ id:id, questionId:p.questionId||'', submittedAt:p.gradedAt||'', status:'graded',
+           essayText:p.essayText||'', note:'', imagePath:'' });
+  });
+  out.sort(function(a,b){
+    var ta = parseTime(a.submittedAt), tb = parseTime(b.submittedAt);
+    if(ta && tb) return tb - ta;
+    return String(b.id).localeCompare(String(a.id));
+  });
+  if(!includeGraded) out = out.filter(function(c){ return c.status !== 'graded'; });
+  return out;
+}
+function gradedList(){
+  return allCompletions(true).filter(function(c){ return c.status === 'graded' && c.grading; });
+}
+function pendingList(){
+  return allCompletions(true).filter(function(c){ return c.status !== 'graded'; });
+}
+
+/* ---------------- 统计 ---------------- */
+function stats(){
+  var g = gradedList();
+  var rateSum = 0, n = 0;
+  g.forEach(function(c){
+    var s = num(c.grading.score), f = num(c.grading.fullScore);
+    if(s!=null && f){ rateSum += s/f; n++; }
+  });
+  return {
+    submitted: allCompletions(true).length,
+    graded: g.length,
+    pending: pendingList().length,
+    avgRate: n ? rateSum/n : null
+  };
+}
+function scoreOf(c){ return num(c.grading && c.grading.score); }
+function fullOf(c){ return num(c.grading && c.grading.fullScore, 0) || 0; }
+function rateOf(c){ var f = fullOf(c); return f ? scoreOf(c)/f : null; }
+
+/* ---------------- 错题/语言点聚合 ---------------- */
+var CAT_RULES = [
+  { name:'主谓一致', kw:['主谓一致','第三人称单数','谓语单复数','单数三连','the number of','each of','neither of'] },
+  { name:'时态与语态', kw:['时态','进行时','完成时','被动','语态','tense'] },
+  { name:'名词与冠词', kw:['冠词','可数','不可数','名词','单复数','article','countab','a / an','复数'] },
+  { name:'词性与搭配', kw:['词性','搭配','collocation','介词误用','形容词','副词','短语动词'] },
+  { name:'从句与句法', kw:['定语从句','关系词','从句','倒装','平行结构','非谓语','悬垂','语序','强调句'] },
+  { name:'代词与指代', kw:['指代','pronoun','代词','指谁','还原'] },
+  { name:'拼写与标点', kw:['拼写','标点','错别字','大小写'] },
+  { name:'内容与审题', kw:['审题','偏题','要点','漏译','完整性','切题','内容点'] },
+  { name:'结构与衔接', kw:['衔接','连贯','过渡','段落','结构','层次'] },
+  { name:'其他', kw:[] }
+];
+function categorize(text){
+  var t = String(text||'').toLowerCase();
+  for(var i=0;i<CAT_RULES.length;i++){
+    var r = CAT_RULES[i];
+    for(var j=0;j<r.kw.length;j++){
+      if(t.indexOf(String(r.kw[j]).toLowerCase()) >= 0) return r.name;
+    }
+  }
+  return '其他';
+}
+function mistakeEntries(){
+  var out = [];
+  gradedList().forEach(function(c){
+    var g = c.grading, q = questionById(c.questionId);
+    (g.sentenceNotes||[]).forEach(function(sn, idx){
+      if(sn.level === 'must' || sn.level === 'optional'){
+        var blob = (sn.issue||'') + ' ' + (sn.explain||'');
+        out.push({
+          key: c.id + '#' + idx, subId: c.id, when: c.gradedAt || c.submittedAt,
+          qTitle: q.title, kind: q.kind, level: sn.level,
+          cat: categorize(blob), original: sn.original||'', issue: sn.issue||'',
+          revised: sn.revised||'', explain: sn.explain||''
+        });
+      }
+    });
+    (g.sentences||[]).forEach(function(s, idx){
+      (s.errors||[]).forEach(function(e, j){
+        out.push({
+          key: c.id + '#s' + idx + '-' + j, subId: c.id, when: c.gradedAt || c.submittedAt,
+          qTitle: q.title, kind: q.kind, level:'must',
+          cat: categorize(e), original: s.original||'', issue: e, revised: s.revised||'', explain:''
+        });
+      });
+    });
+    ((g.review && g.review.priority) || []).forEach(function(p, idx){
+      out.push({
+        key: c.id + '#p' + idx, subId: c.id, when: c.gradedAt || c.submittedAt,
+        qTitle: q.title, kind: q.kind, level:'priority',
+        cat: categorize(p), original:'', issue:p, revised:'', explain:''
+      });
+    });
+  });
+  out.sort(function(a,b){
+    var ta = parseTime(a.when), tb = parseTime(b.when);
+    return (tb&&ta) ? tb-ta : 0;
+  });
+  return out;
+}
+function expressionEntries(){
+  var out = [];
+  gradedList().forEach(function(c){
+    var q = questionById(c.questionId);
+    ((c.grading && c.grading.expressions) || []).forEach(function(e){
+      out.push({ subId:c.id, when:c.gradedAt||c.submittedAt, qTitle:q.title, phrase:e.phrase||'', meaning:e.meaning||'', usage:e.usage||'' });
+    });
+  });
+  return out;
+}
+
+/* ---------------- 高亮原句错误 ---------------- */
+function buildMarkMap(c){
+  var map = [], notes = (c.grading && c.grading.sentenceNotes) || [];
+  notes.forEach(function(sn){
+    if(!sn.original) return;
+    var frag = String(sn.original).trim();
+    // 若批改给出的"原句"与作文不同（例如译文），尝试取其前 6 个词做锚点
+    map.push({ find: frag, level: sn.level || 'must', issue: sn.issue || '', revised: sn.revised || '' });
+    var words = frag.split(/\s+/);
+    if(words.length > 5){
+      map.push({ find: words.slice(0,5).join(' '), level: sn.level || 'must', issue: sn.issue || '', revised: sn.revised || '' });
+    }
+  });
+  map.sort(function(a,b){ return b.find.length - a.find.length; });
+  return map;
+}
+function renderEssayMarked(text, grade){
+  var raw = String(text||'');
+  if(!Store.markingOn || !grade) return '<div class="essay">' + nl2br(raw) + '</div>';
+  var map = buildMarkMap({ grading: grade });
+  if(!map.length) return '<div class="essay">' + nl2br(raw) + '</div>';
+  var parts = [{ t:'text', v:raw }];
+  map.forEach(function(m){
+    var next = [];
+    parts.forEach(function(p){
+      if(p.t !== 'text' || !m.find || p.v.indexOf(m.find) < 0){ next.push(p); return; }
+      var i = p.v.indexOf(m.find);
+      if(i > 0) next.push({ t:'text', v:p.v.slice(0,i) });
+      next.push({ t:'mark', v:p.v.slice(i, i+m.find.length), level:m.level, issue:m.issue, revised:m.revised });
+      var rest = p.v.slice(i+m.find.length);
+      if(rest) next.push({ t:'text', v:rest });
+    });
+    parts = next;
+  });
+  return '<div class="essay">' + parts.map(function(p){
+    if(p.t === 'text') return nl2br(p.v);
+    var tip = (p.level === 'ok' ? '可保留' : (p.level === 'optional' ? '【可选优化】' : '【必须修改】')) + ' ' + (p.issue || '') + (p.revised ? ' → ' + p.revised : '');
+    return '<mark class="err ' + esc(p.level) + '" title="' + esc(tip) + '">' + esc(p.v) + '</mark>';
+  }).join('') + '</div>';
+}
+
+/* ---------------- 渲染：总览 ---------------- */
+function renderBoard(){
+  var st = stats(), g = gradedList(), pend = pendingList();
+  var el = $('#view-board');
+  var recent = g.slice(0,5);
+  var ents = mistakeEntries().filter(function(e){ return e.level === 'must'; });
+  var topCat = {};
+  ents.forEach(function(e){ topCat[e.cat] = (topCat[e.cat]||0)+1; });
+  var catRank = Object.keys(topCat).sort(function(a,b){ return topCat[b]-topCat[a]; }).slice(0,5);
+
+  var html = '';
+  html += '<div class="grid g4" style="margin-top:18px">';
+  html += statCard('累计提交', st.submitted+' <small>篇</small>', '含大作文 / 小作文 / 翻译');
+  html += statCard('AI 已批改', st.graded+' <small>篇</small>', st.pending ? ('还有 '+st.pending+' 篇待批改') : '暂无待批改');
+  html += statCard('平均得分率', pct(st.avgRate), '只统计已批改的正式题目');
+  html += statCard('最高分', (function(){
+        var best = null; g.forEach(function(c){ if(rateOf(c)!=null && (best==null || rateOf(c)>best)) best = rateOf(c); });
+        return best==null ? '—' : pct(best);
+      })(), '按得分率排序');
+  html += '</div>';
+
+  if(pend.length){
+    html += '<div class="card"><h2>待批改（'+pend.length+'）</h2><div class="hint">这些作文已提交，等待 AI 批改。回到对话里对我说一句「<b>批改待批改作文</b>」即可。</div>';
+    pend.forEach(function(c){ html += submissionItem(c, false); });
+    html += '</div>';
+  }
+
+  html += '<div class="card"><h2>最近批改</h2><div class="hint">点击条目展开完整批改内容。</div>';
+  if(!recent.length){ html += '<div class="empty">还没有批改结果。先到「提交作文」写一篇，再让 AI 批改。</div>'; }
+  recent.forEach(function(c){ html += submissionItem(c, true); });
+  html += '</div>';
+
+  html += '<div class="grid g2" style="margin-top:0">';
+  // 题库练习进度（分三类）
+  var Q = allQuestions(), doneQ = 0, byCat = { real:[0,0], mock:[0,0], mine:[0,0] };
+  Q.forEach(function(q){
+    var c = catOf(q), practiced = practiceStats(q.id).total > 0;
+    byCat[c][1]++; if(practiced){ byCat[c][0]++; doneQ++; }
+  });
+  html += '<div class="card"><h2>题库练习进度</h2><div class="hint">按三类统计：已练习 / 总题数。</div>'
+       +  '<table class="pttable"><thead><tr><th>类别</th><th class="c">已练</th><th class="c">总题数</th><th class="c">进度</th></tr></thead><tbody>';
+  ['real','mock','mine'].forEach(function(c){
+    var d = byCat[c];
+    html += '<tr><td>' + CAT_LABEL[c] + '</td><td class="c">' + d[0] + '</td><td class="c">' + d[1] + '</td>'
+         +  '<td class="c">' + (d[1] ? Math.round(d[0]/d[1]*100) + '%' : '—') + '</td></tr>';
+  });
+  html += '</tbody></table><div class="kv" style="margin-top:8px">合计已练习 <b>' + doneQ + '</b> / ' + Q.length + ' 道'
+       +  '<button class="btn ghost" style="margin-left:10px" data-view-link="bank">去题库 →</button></div></div>';
+
+  html += '<div class="card"><h2>当前最需要治的问题</h2><div class="hint">按【必须修改】条目的出现频次自动聚合。</div>';
+  if(!catRank.length){ html += '<div class="empty">暂无数据</div>'; }
+  else{
+    html += '<ul class="tight">';
+    catRank.forEach(function(c){ html += '<li><b>'+esc(c)+'</b> —— 出现 '+topCat[c]+' 次</li>'; });
+    html += '</ul><div class="hint" style="margin-top:10px">到「错题与语言点库」可以看到每条的具体原句与改法。</div>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="card"><h2>快速开始</h2><ol class="tight" style="font-size:14px">'
+       +  '<li>到「题库」按 <b>考研真题 / 模拟题 / 我的题目</b> 三类挑一道；点开可以看到<b>练过几次、每次的作文与得分</b>。</li>'
+       +  '<li>在「提交作文」里粘贴作文正文（同一道题可以反复练，记录会累加在同一道题下面）。</li>'
+       +  '<li>手里有别的题目？用「提交作文 → <b>上传自己的题目</b>」，把题目和作文一起交；若与真题/模拟题重复，会自动归并到那道题下面。</li>'
+       +  '<li>回到对话说「批改待批改作文」，AI 会逐句批改并写回本页；手写照片先存到 <span class="mono">data/uploads/</span> 再填文件名。</li>'
+       +  '<li>本页每 8 秒自动检查一次，也可以点右上角「重新加载数据」。</li></ol>'
+       +  '<div class="note" style="margin-top:12px">批改结果由 AI 写成 <span class="mono">data/patches/sub_xxxx.js</span>；本页刷新后自动合并显示。</div>'
+       +  '</div>';
+  el.innerHTML = html;
+  bindItems(el);
+}
+function statCard(k,v,f){
+  return '<div class="stat"><div class="k">'+esc(k)+'</div><div class="v">'+v+'</div><div class="f">'+esc(f)+'</div></div>';
+}
+
+/* ---------------- 渲染：提交列表项 ---------------- */
+function pillFor(c){
+  var p = c.status === 'graded' ? '<span class="pill graded">已批改</span>' : '<span class="pill pending">待批改</span>';
+  var q = questionById(c.questionId);
+  var k = '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(KIND_LABEL[q.kind]||q.kind)+'</span>';
+  return k + ' ' + p;
+}
+function submissionItem(c, openByDefault){
+  var q = questionById(c.questionId);
+  var isOpen = Store.open[c.id] === undefined ? !!openByDefault : !!Store.open[c.id];
+  var rate = rateOf(c);
+  var head = '<div class="ihead" data-toggle="'+esc(c.id)+'">'
+    + '<span class="caret">'+(isOpen?'▾':'▸')+'</span>'
+    + '<span class="ititle">'+esc(q.title)+'</span>'
+    + pillFor(c)
+    + (rate!=null ? '<span class="score">'+scoreOf(c)+' / '+fullOf(c)+' <span style="color:var(--ink3);font-weight:400">('+pct(rate)+')</span></span>' : '')
+    + '<span class="spacer"></span>'
+    + '<span class="isub">'+esc(c.id)+' · 提交 '+fmtTime(c.submittedAt)+'</span>'
+    + '</div>';
+  var body = '';
+  if(isOpen){
+    body = '<div class="ibody">' + renderSubmissionDetail(c, q) + '</div>';
+  }
+  return '<div class="item" data-id="'+esc(c.id)+'">'+head+body+'</div>';
+}
+function bindItems(root){
+  root.querySelectorAll('[data-toggle]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var id = el.getAttribute('data-toggle');
+      Store.open[id] = !(Store.open[id] === undefined ? false : Store.open[id]);
+      render();
+    });
+  });
+  root.querySelectorAll('[data-cat]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var k = el.getAttribute('data-cat');
+      Store.open['cat_'+k] = !Store.open['cat_'+k];
+      render();
+    });
+  });
+  root.querySelectorAll('[data-view-link]').forEach(function(el){
+    el.addEventListener('click', function(){ switchView(el.getAttribute('data-view-link')); });
+  });
+  root.querySelectorAll('[data-open-sub]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var id = el.getAttribute('data-open-sub');
+      Store.open[id] = true; switchView('results');
+    });
+  });
+  // 「总览对比」：同一篇作文的所有稿件并排看
+  root.querySelectorAll('[data-revisions]').forEach(function(el){
+    el.addEventListener('click', function(){
+      Store.compare = el.getAttribute('data-revisions');
+      switchView('results');
+      toast('已打开改稿总览');
+    });
+  });
+  root.querySelectorAll('[data-close-rev]').forEach(function(el){
+    el.addEventListener('click', function(){ Store.compare = null; render(); });
+  });
+  // 「基于本稿改一版」：把这一稿填回提交页
+  root.querySelectorAll('[data-edit-draft]').forEach(function(el){
+    el.addEventListener('click', function(){
+      var id = el.getAttribute('data-edit-draft');
+      var c = allCompletions(true).filter(function(x){ return x.id === id; })[0];
+      if(!c){ toast('找不到这一稿'); return; }
+      Store.draftQuestionId = c.questionId;
+      Store.draftText = c.essayText || '';
+      Store.prefillEdit = { revises:id, ownPrompt:c.ownPrompt || '' };
+      saveLS(LS_META, { draftText:Store.draftText, draftQuestionId:Store.draftQuestionId, prefillEdit:Store.prefillEdit });
+      switchView('submit');
+      toast('已把 ' + id + ' 的内容填回提交页，改完直接提交（会作为修改稿挂在同一篇下面）');
+    });
+  });
+}
+
+/* ---------------- 渲染：单条提交详情 ---------------- */
+function renderSubmissionDetail(c, q){
+  var h = '';
+  var st = practiceStats(q.id);
+  var nth = 0;
+  st.list.forEach(function(x, i){ if(x.id === c.id) nth = i + 1; });
+  // 题目
+  h += '<details class="det" open><summary>题目：'+esc(q.title)+'　' + catPill(q)
+     + '<span class="isub">'+esc(q.source||'')+'</span></summary><div>'
+     +   renderQuestionBody(q, true)
+     +   '<div class="hint" style="margin-top:8px">这道题累计练习 <b>'+st.total+'</b> 次，本篇是第 <b>'+nth+'</b> 次提交。'
+     +   (st.total > 1 ? '全部 ' + st.total + ' 次记录见上方表格。' : '') + '</div>'
+     + '</div></details>';
+  // 我的作文 / 译文
+  h += '<details class="det" open><summary>我的作文'+(c.imagePath?'（含手写照片）':'')+'</summary><div>';
+  if(c.ownPrompt){
+    h += '<div class="srcline"><b>我自己提供的题目原文：</b>' + nl2br(c.ownPrompt) + '</div>';
+  }
+  if(c.imagePath){
+    h += '<div class="kv">手写照片：<span class="mono">'+esc(c.imagePath)+'</span>'
+       + (Store.imgs[c.id] ? ' <button class="btn ghost" data-open-sub="'+esc(c.id)+'">（本机暂存预览见下）</button>' : '')
+       + '</div>';
+    if(Store.imgs[c.id]) h += '<img class="thumb" src="'+Store.imgs[c.id]+'" alt="手写作文照片">';
+  }
+  if(c.essayText){
+    h += '<div class="row" style="margin-bottom:8px"><button class="btn ghost" data-mark="'+esc(c.id)+'">'
+       + (Store.markingOn?'关闭':'开启')+'错误高亮</button>'
+       + '<span class="isub">红色=必须修改　黄色=可选优化　绿色=可保留</span></div>';
+    h += renderEssayMarked(c.essayText, c.grading);
+  } else {
+    h += '<div class="empty">（本篇没有文字内容，可能是照片提交）</div>';
+  }
+  if(c.note) h += '<div class="note warn" style="margin-top:10px">我的附加要求：'+esc(c.note)+'</div>';
+  h += '</div></details>';
+
+  if(c.status !== 'graded' || !c.grading){
+    h += '<div class="note">等待批改：回到对话里对我说「<b>批改待批改作文</b>」（或指定「批改 '+esc(c.id)+'」）。</div>';
+    return h;
+  }
+  h += renderGrading(c.grading, c);
+  return h;
+}
+
+function renderGrading(g, c){
+  var h = '';
+  var rate = (num(g.fullScore) ? num(g.score)/num(g.fullScore) : null);
+  h += '<div class="card" style="margin-top:14px;background:#fdfbf6"><h2>AI 批改结果</h2>'
+     + '<div class="row" style="margin:6px 0 12px">'
+     + '<span class="score big">'+ (num(g.score)==null?'—':g.score) +'</span>'
+     + '<span class="kv">/ '+ (g.fullScore==null?'—':g.fullScore) +' 分'
+     + (rate!=null ? '（得分率 '+pct(rate)+'）' : '') + '</span>'
+     + '<span class="pill">'+esc(g.band||'')+'</span>'
+     + (g.wordCount ? '<span class="pill">原文 '+g.wordCount+' 词</span>' : '')
+     + (g.revisedWordCount ? '<span class="pill">改后 '+g.revisedWordCount+' 词</span>' : '')
+     + '<span class="spacer"></span><span class="isub">批改时间 '+fmtTime(c.gradedAt)+'</span>'
+     + '</div>';
+  if(g.wordCountNote) h += '<div class="kv" style="margin-bottom:8px">词数核查：'+esc(g.wordCountNote)+'</div>';
+  if(g.summary) h += '<div class="essay" style="font-family:inherit;font-size:14.5px;line-height:1.85">'+rich(g.summary)+'</div>';
+
+  if((g.dimensions||[]).length){
+    h += '<h3 style="font-size:15px;margin:16px 0 4px">分项评价</h3>';
+    g.dimensions.forEach(function(d){
+      h += '<div class="dim"><div><b>'+esc(d.name)+'</b><br><span class="isub">'+esc(d.level||'')+'</span></div><div>'+rich(d.comment||'')+'</div></div>';
+    });
+  }
+  if(g.structureNotes){
+    h += '<h3 style="font-size:15px;margin:16px 0 4px">句子主干与结构图解</h3>'
+       + '<div class="essay mono" style="font-family:\'Cascadia Mono\',Consolas,monospace;font-size:13.5px;line-height:1.8">'+esc(g.structureNotes)+'</div>';
+  }
+  /* 逐句批改 */
+  var notes = g.sentenceNotes || [];
+  if(notes.length){
+    var must = notes.filter(function(n){ return n.level==='must'; });
+    h += '<h3 style="font-size:15px;margin:18px 0 6px">逐句批改　<span class="isub">'+notes.length+' 句　'
+       + '<span class="pill must">必须修改 '+must.length+'</span> '
+       + '<span class="pill optional">可选优化 '+notes.filter(function(n){return n.level==='optional';}).length+'</span> '
+       + '<span class="pill ok">可保留 '+notes.filter(function(n){return n.level==='ok'||!n.level;}).length+'</span></span></h3>';
+    h += '<ul class="notes">';
+    notes.forEach(function(n){
+      var lv = n.level || 'ok';
+      var lbl = lv==='must' ? '【必须修改】' : (lv==='optional' ? '【可选优化】' : '【可保留】');
+      h += '<li class="'+esc(lv)+'"><span class="pill '+esc(lv)+'">'+lbl+'</span> '
+         + '<span class="lbl">我的原句</span><div class="orig">'+esc(n.original||'')+'</div>';
+      if(n.issue) h += '<div style="margin-top:6px"><span class="lbl">问题</span>'+rich(n.issue)+'</div>';
+      if(n.revised && n.revised !== n.original) h += '<div class="rev"><span class="lbl">修改句</span>'+rich(n.revised)+'</div>';
+      if(n.explain) h += '<div class="exp" style="margin-top:8px">'+rich(n.explain)+'</div>';
+      h += '</li>';
+    });
+    h += '</ul>';
+  }
+  /* 翻译逐句 */
+  if((g.sentences||[]).length){
+    h += '<h3 style="font-size:15px;margin:18px 0 6px">逐句批改（翻译采分点）</h3>';
+    g.sentences.forEach(function(s){
+      h += '<div class="item" style="margin-bottom:12px"><div class="ihead" style="cursor:default">'
+         + '<span class="ititle">第 '+esc(s.no||'')+' 句</span>'
+         + '<span class="score">'+ (num(s.score)==null?'—':s.score) +' / 2</span>'
+         + '<span class="spacer"></span><span class="isub">'+(s.points?('采分点 '+s.points.length+' 个'):'')+'</span></div>'
+         + '<div class="ibody" style="padding:12px 16px">'
+         + '<div class="orig en" style="font-family:Georgia,serif;color:var(--ink2)">'+esc(s.original||'')+'</div>';
+      if((s.points||[]).length){
+        h += '<table class="pttable"><thead><tr><th>采分点（英文）</th><th>应表达的意思</th><th>分值</th><th>得分</th></tr></thead><tbody>';
+        s.points.forEach(function(p){
+          h += '<tr><td class="en">'+esc(p.en||'')+'</td><td>'+esc(p.meaning||'')+'</td>'
+             + '<td class="c">'+esc(p.score==null?'':p.score)+'</td>'
+             + '<td class="c" style="color:'+(num(p.got)>=num(p.score)?'var(--ok)':'var(--must)')+'">'+esc(p.got==null?'':p.got)+'</td></tr>';
+        });
+        h += '</tbody></table>';
+      }
+      if((s.errors||[]).length){
+        h += '<div style="margin-top:6px"><span class="lbl">错误与结构分析</span><ul class="tight">';
+        s.errors.forEach(function(e){ h += '<li>'+rich(e)+'</li>'; });
+        h += '</ul></div>';
+      }
+      if(s.revised) h += '<div class="rev"><span class="lbl">修改译文</span>'+rich(s.revised)+'</div>';
+      if(s.comment) h += '<div class="exp" style="margin-top:6px">'+rich(s.comment)+'</div>';
+      h += '</div></div>';
+    });
+  }
+  /* 修改后全文 */
+  if(g.revisedEssay){
+    h += '<h3 style="font-size:15px;margin:18px 0 6px">修改后全文　<span class="isub">加粗处为主要修改</span></h3>'
+       + '<div class="essay rev">'+rich(g.revisedEssay)+'</div>';
+  }
+  /* 表达积累 */
+  if((g.expressions||[]).length){
+    h += '<h3 style="font-size:15px;margin:18px 0 6px">表达积累（考场可复现）</h3><ul class="notes">';
+    g.expressions.forEach(function(e){
+      h += '<li><div class="en" style="font-weight:600">'+esc(e.phrase||'')+'</div>'
+         + '<div class="kv">'+esc(e.meaning||'')+'</div>'
+         + '<div class="exp" style="font-size:13.5px">'+rich(e.usage||'')+'</div></li>';
+    });
+    h += '</ul>';
+  }
+  /* 复盘 */
+  if(g.review){
+    h += '<h3 style="font-size:15px;margin:18px 0 6px">复盘与下一步</h3>';
+    if((g.review.priority||[]).length){
+      h += '<div class="kv" style="margin-bottom:4px"><b>最需要优先改进的 '+g.review.priority.length+' 个问题</b></div><ol class="tight" style="font-size:14px">';
+      g.review.priority.forEach(function(p){ h += '<li>'+rich(p)+'</li>'; });
+      h += '</ol>';
+    }
+    if(g.review.framework){
+      h += '<details class="det" style="margin-top:10px"><summary>写作/翻译框架与可替换句式</summary><div class="exp">'+rich(g.review.framework)+'</div></details>';
+    }
+  }
+  /* 每次作文注意事项 */
+  h += '<div class="note warn" style="margin-top:14px"><b>本篇注意事项（下次动笔前先看这三条）</b><ol class="tight" style="margin-top:6px">';
+  var tips = [];
+  var mustNotes = (g.sentenceNotes||[]).filter(function(n){ return n.level==='must'; });
+  mustNotes.slice(0,3).forEach(function(n){ tips.push(esc(n.issue||'')); });
+  ((g.review && g.review.priority) || []).forEach(function(p){ if(tips.length<3) tips.push(rich(p)); });
+  if(!tips.length) tips.push('本篇没有发现必须修改的错误，保持当前的语言准确度，下一步可以尝试更丰富的论证细节。');
+  tips.forEach(function(t){ h += '<li>'+t+'</li>'; });
+  h += '</ol></div>';
+  h += '</div>';
+  return h;
+}
+
+/* ---------------- 渲染：题目 ---------------- */
+function renderQuestionBody(q, compact){
+  var s = practiceStats(q.id);
+  var h = '';
+  h += '<div class="qhead"><div><div class="row" style="margin-bottom:6px">'
+     + subjPill(q)
+     + catPill(q)
+     + '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(KIND_LABEL[q.kind]||q.kind)+'</span>'
+     + (q.year?'<span class="pill">'+esc(q.year)+'</span>':'')
+     + (q.words?'<span class="pill">字数 '+esc(q.words)+'</span>':'')
+     + (q.difficulty?'<span class="pill">难度 '+'★'.repeat(Math.max(0,Math.min(5,q.difficulty)))+'</span>':'')
+     + practiceBadge(q.id)
+     + '</div></div></div>';
+  h += '<div class="qbody'+(q.figure?' withfig':'')+'">';
+  h += '<div>';
+  if(q.promptTextZh) h += '<div class="srcline"><b>题干文字说明：</b>' + nl2br(q.promptTextZh) + '</div>';
+  if(q.promptZh) h += '<div class="zh" style="margin:10px 0"><b>题目要求（中文）：</b><br>'+nl2br(q.promptZh)+'</div>';
+  if(q.promptEn) h += '<div class="prompt-en en">'+esc(q.promptEn)+'</div>';
+  if(q.passage) h += '<div style="margin-top:10px"><div class="lbl">英文原文（划线句已编号）：</div><div class="essay en" style="font-size:15px;line-height:1.9">'+esc(q.passage)+'</div></div>';
+  if((q.sentences||[]).length){
+    h += '<div class="lbl" style="margin-top:10px">需要翻译/处理的句子：</div><ol class="sent-list">';
+    q.sentences.forEach(function(x){ h += '<li>'+esc(x)+'</li>'; });
+    h += '</ol>';
+  }
+  if((q.hints||[]).length){
+    h += '<details class="det" style="margin-top:10px"><summary>写作/翻译提示（'+q.hints.length+' 条）</summary><ul class="tight">';
+    q.hints.forEach(function(x){ h += '<li>'+esc(x)+'</li>'; });
+    h += '</ul></details>';
+  }
+  if(!compact){
+    h += '<div class="row" style="margin-top:12px"><button class="btn primary" data-pick="'+esc(q.id)+'">用这道题写一篇 →</button></div>';
+  }
+  h += '</div>';
+  if(q.figure){
+    h += '<div><div class="figurebox">'+q.figure+'<div class="cap">本站自绘示意图（非真题原图，真题原图请以试卷为准）</div></div></div>';
+  }
+  h += '</div>';
+  // 练习轨迹：练过几次、每次的提交与得分
+  h += practicePanel(q);
+  return h;
+}
+
+/* ---------------- 渲染：提交页 ---------------- */
+function renderSubmit(){
+  var el = $('#view-submit');
+  var qs = allQuestions();
+  var cur = Store.draftQuestionId || (qs[0] && qs[0].id) || '';
+  var h = '';
+  h += '<div class="card"><h2>提交一篇作文 / 译文</h2>'
+     + '<div class="hint">写完提交后，回到对话里说「批改待批改作文」，AI 就会批改并写回本页。本页草稿自动保存在本机浏览器里，关掉再打开也不会丢。</div>'
+     + '<label class="fld"><span>1. 选择题目（按科目与类别分组）</span><select id="sel-q">';
+  ['en1','en2'].forEach(function(sj){
+    var subjQs = qs.filter(function(x){ return subjOf(x) === sj; });
+    if(!subjQs.length) return;
+    h += '<optgroup label="━━ ' + SUBJ_LABEL[sj] + '（' + subjQs.length + ' 题）━━">';
+    ['real','mock','mine'].forEach(function(cat){
+      var group = subjQs.filter(function(x){ return catOf(x) === cat; });
+      if(!group.length) return;
+      group.forEach(function(q){
+        var st = practiceStats(q.id);
+        h += '<option value="'+esc(q.id)+'"'+(q.id===cur?' selected':'')+'>'
+           + esc('　' + CAT_LABEL[cat] + '｜' + KIND_LABEL[q.kind] + '｜' + q.title + (st.total ? '　[练过 '+st.total+' 次]' : '　[未练习]'))
+           + '</option>';
+      });
+    });
+    h += '</optgroup>';
+  });
+  h += '</select></label>';
+  var q = qs.filter(function(x){ return x.id===cur; })[0];
+  if(q) h += '<div style="margin-top:14px">'+renderQuestionBody(q, true)+'</div>';
+  h += '<label class="fld"><span>2. 粘贴我的作文正文（英文）—— 手写稿可以跳过这里，用下面的「3. 手写照片」交同一次作文的另一种形式</span>'
+     + '<textarea id="ta-essay" rows="12" placeholder="把作文正文粘贴到这里……"></textarea></label>';
+  h += '<label class="fld"><span>3. 手写照片（可选，与第 2 项是同一次作文，交一种即可）：选好照片后点「保存到 data/uploads/」，路径会自动填好</span>'
+     + '<input type="file" id="in-img" accept="image/*"></label>'
+     + '<div class="row" style="margin-top:8px"><span class="isub" id="img-note">未选择照片</span><button class="btn" id="btn-save-img" hidden>保存到 data/uploads/</button></div>'
+     + '<label class="fld"><span>4. 图片相对路径（选择照片后自动填写；也能手填，如 <span class="mono">data/uploads/手写01.jpg</span>）</span>'
+     + '<input type="text" id="in-imgpath" placeholder="data/uploads/"></label>'
+     + '<div class="note" style="margin-top:10px"><b>照片怎么交给我：</b>点「选择照片」→ 点「保存到 data/uploads/」（浏览器会问保存位置，选到本文件夹里的 <span class="mono">data\\uploads\\</span>，文件名已帮你起好）→ 提交。'
+     + '也可以完全不用网页：直接把照片发到 DSH 对话里，我转录后批改（转录保留你原来的拼写与语法错误）。</div>'
+     + '<label class="fld"><span>5. 附加要求（可选，例如「重点看时态」「讲解要更细」）</span>'
+     + '<input type="text" id="in-note" placeholder="重点帮我看……"></label>';
+  // 这一篇是不是"上一篇的修改稿"→ 决定能否并排对比改稿
+  var prevs = attemptsOf(cur);
+  var pre = Store.prefillEdit || {};
+  if(pre.ownPrompt) h += '<div class="srcline"><b>我自己提供的题目原文：</b>' + nl2br(pre.ownPrompt) + '</div>';
+  h += '<label class="fld"><span>6. 这一篇和这道题的关系（决定能不能并排对比改稿）</span><select id="in-revises">'
+     + '<option value="">独立一篇（这道题的第 ' + (prevs.length + 1) + ' 次练习）</option>';
+  if(prevs.length){
+    h += '<optgroup label="是下面某一篇的修改稿（挂在同一篇作文下面，可并排对比）">';
+    prevs.forEach(function(p){
+      var sc = (p.status === 'graded' && p.grading) ? (p.grading.score + '/' + p.grading.fullScore) : '待批改';
+      var lbl = chainLabel(p);
+      h += '<option value="' + esc(p.id) + '"' + (pre.revises === p.id ? ' selected' : '') + '>'
+         + esc((lbl ? lbl + '　' : '') + p.id + '　' + fmtTime(p.submittedAt) + '　' + sc) + '</option>';
+    });
+    h += '</optgroup>';
+  }
+  h += '</select></label>';
+  if(prevs.length){
+    h += '<div class="note" style="margin-top:8px"><b>想留下改稿记录：</b>把这一篇标成上一次的「修改稿」。'
+       + '之后在「批改结果」或题库里点「<b>总览对比</b>」，就能把每一稿的作文、得分、【必须修改】清单、以及哪些问题已经改好并排看。</div>';
+  }
+  // 已经练过这道题 → 明确告知这是"再一次练习"
+  if(q && practiceStats(q.id).total){
+    h += '<div class="note" style="margin-top:12px"><b>这是这道题的第 '+(practiceStats(q.id).total+1)+' 次练习。</b>'
+       + '提交后会挂在同一个题目下，题库里能看到每次的作文与得分。'
+       + (q.category==='real'||q.category==='mock' ? '（如果你手里的题目其实和这道题重复，AI 批改时会自动归并过来，不会重复建题。）' : '')
+       + '</div>';
+  }
+  h += '<div class="row" style="margin-top:16px">'
+     + '<button class="btn primary" id="btn-submit">提交，等待 AI 批改</button>'
+     + '<button class="btn" id="btn-save">只保存草稿</button>'
+     + '<button class="btn ghost" id="btn-clear">清空输入</button>'
+     + '<span class="spacer"></span><span class="isub">即将分配编号 <b class="mono">' + esc(nextSubId()) + '</b></span></div>';
+  // 提交后要做什么：把指令直接给出来，可一键复制
+  h += '<div class="note" id="submit-guide" style="margin-top:14px">'
+     + '<b>提交之后：</b>回到 DSH 对话窗口，发一句下面这句话即可（可复制）。'
+     + '<div class="row" style="margin-top:8px"><code id="guide-cmd" style="flex:1; background:#fff; border:1px solid var(--line); border-radius:6px; padding:8px 10px">批改待批改作文</code>'
+     + '<button class="btn" id="btn-copy-cmd">复制</button>'
+     + '<button class="btn ghost" data-view-link="board">看待批改</button></div>'
+     + (Store.lastSubmit ? '<div class="kv" style="margin-top:8px">刚提交：<b class="mono">' + esc(Store.lastSubmit) + '</b></div>' : '')
+     + '</div>';
+  // 一键批改（需要本地批改服务）
+  h += '<div style="margin-top:12px">' + gradePanelHtml() + '</div></div>';
+
+  /* ===== 上传自己的题目 ===== */
+  h += '<div class="card" id="card-myq"><h2>上传自己的题目（题目 + 作文一起交）</h2>'
+     + '<div class="hint">把<b>题目原文和你写的作文一起</b>贴进来。AI 会先判断这道题是否就是题库里的某道<b>考研真题</b>或<b>模拟题</b>：'
+     + '如果是同一道题，就把你的作文与批改结果<b>归并到那道题下面</b>（练习次数 +1，不新建题）；确实是一道新题，才会新建到「我的题目」类别里。</div>'
+     + '<label class="fld"><span>这道题怎么处理</span><select id="myq-mode">'
+     + '<option value="new">这是一道新题 → 归档到「我的题目」类别</option>'
+     + '<option value="link">和题库里已有的题重复 → 挂到那道题下面（在下面选）</option>'
+     + '</select></label>'
+     + '<label class="fld"><span>题目原文（中文题干 / 英文题干 / 图画文字说明，有多少贴多少）</span>'
+     + '<textarea id="myq-prompt" rows="5" placeholder="例如：Directions: Write an essay of 160-200 words based on the following drawing..." ></textarea></label>'
+     + '<div id="dup-box" class="dup" hidden></div>'
+     + '<div id="link-box" hidden><label class="fld"><span>挂到哪道题下面</span><select id="myq-link"></select></label></div>'
+     + '<label class="fld"><span>我的作文正文</span>'
+     + '<textarea id="myq-essay" rows="8" placeholder="把作文正文粘贴到这里……"></textarea></label>'
+     + '<label class="fld"><span>这道题属于哪一类</span><select id="myq-kind">'
+     + '<option value="major">大作文（图画/漫画，20 分）</option>'
+     + '<option value="minor">小作文（书信/通知，10 分）</option>'
+     + '<option value="translation">翻译（5 个划线句，10 分）</option>'
+     + '<option value="drill">长难句专项</option>'
+     + '</select></label>'
+     + '<div class="row" style="margin-top:16px">'
+     + '<button class="btn primary" id="btn-myq-submit">提交题目与作文</button>'
+     + '<button class="btn ghost" id="btn-myq-clear">清空</button>'
+     + '<span class="spacer"></span><span class="isub">批改完成后，题库里这道题会显示练习次数与每次作文</span></div></div>';
+
+  h += '<div class="card"><h2>本机提交记录</h2><div class="hint">这里的提交保存在浏览器 localStorage；批改结果由 AI 写入 data/patches/ 后，本页刷新即可显示。</div>';
+  var subs = allCompletions(true);
+  if(!subs.length) h += '<div class="empty">还没有任何提交。</div>';
+  subs.forEach(function(c){ h += submissionItem(c, false); });
+  h += '</div>';
+  el.innerHTML = h;
+
+  /* ===== 常规提交的事件 ===== */
+  var ta = $('#ta-essay'); if(ta) ta.value = Store.draftText || '';
+  function saveDraft(){
+    Store.draftText = ta ? ta.value : '';
+    saveLS(LS_META, {draftText:Store.draftText, draftQuestionId:Store.draftQuestionId});
+  }
+  ta && ta.addEventListener('input', saveDraft);
+  var sel = $('#sel-q');
+  sel && sel.addEventListener('change', function(){
+    saveDraft(); Store.draftQuestionId = sel.value;
+    saveLS(LS_META, {draftText:Store.draftText, draftQuestionId:Store.draftQuestionId}); render();
+  });
+  $('#btn-save') && $('#btn-save').addEventListener('click', function(){ saveDraft(); toast('草稿已保存在本机'); });
+  $('#btn-clear') && $('#btn-clear').addEventListener('click', function(){
+    if(ta) ta.value=''; Store.draftText=''; saveLS(LS_META,{draftText:'',draftQuestionId:sel?sel.value:''}); toast('已清空输入');
+  });
+  $('#in-img') && $('#in-img').addEventListener('change', function(){
+    var f = this.files && this.files[0]; if(!f) return;
+    var ext = (f.name.match(/\.[a-z0-9]+$/i) || ['.jpg'])[0];
+    var target = 'data/uploads/' + nextSubId() + ext;      // 用即将分配的编号命名，省得提交后改名
+    Store.tmpImgName = target;
+    var fr = new FileReader();
+    fr.onload = function(){
+      Store.tmpImg = fr.result;
+      var note = $('#img-note');
+      if(note) note.textContent = '已选择：' + f.name + '　→　将存为 ' + target;
+      var prev = $('#img-prev');
+      if(!prev){ prev = document.createElement('img'); prev.id='img-prev'; prev.className='thumb'; note.parentNode.parentNode.insertBefore(prev, note.parentNode.nextSibling); }
+      prev.src = fr.result;
+      var path = $('#in-imgpath'); if(path) path.value = target;   // 自动填路径
+      var save = $('#btn-save-img'); if(save) save.hidden = false;
+      toast('照片已载入；点「保存到 data/uploads/」落到文件夹里即可');
+    };
+    fr.readAsDataURL(f);
+  });
+  $('#btn-save-img') && $('#btn-save-img').addEventListener('click', function(){
+    if(!Store.tmpImg){ toast('请先选择照片'); return; }
+    var name = (Store.tmpImgName || ('data/uploads/' + nextSubId() + '.jpg')).split('/').pop();
+    var a = document.createElement('a');
+    a.href = Store.tmpImg; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('已导出 ' + name + '；请保存到本文件夹的 data\\uploads\\ 里');
+  });
+  // 一键批改面板的事件
+  var gradeBtn = $('#btn-grade');
+  gradeBtn && gradeBtn.addEventListener('click', triggerGrade);
+  var helperRefresh = $('#btn-helper-refresh');
+  helperRefresh && helperRefresh.addEventListener('click', function(){ checkHelper(); });
+  if(!Store.helperChecked){ Store.helperChecked = true; checkHelper(); }
+  $('#btn-submit') && $('#btn-submit').addEventListener('click', function(){
+    var rev = $('#in-revises');
+    doSubmit(ta.value, sel.value, rev ? rev.value : '');
+  });
+  // 提交后的指令：一键复制
+  var copyBtn = $('#btn-copy-cmd');
+  copyBtn && copyBtn.addEventListener('click', function(){
+    var txt = ($('#guide-cmd') && $('#guide-cmd').textContent) || '批改待批改作文';
+    function done(){ toast('已复制：' + txt + '　→ 回到 DSH 粘贴发送即可'); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done, function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){
+      try{
+        var t = document.createElement('textarea'); t.value = txt;
+        document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done();
+      }catch(e){ toast('复制失败，请手动选中文字复制'); }
+    }
+  });
+
+  /* ===== 上传自己的题目：事件 ===== */
+  var myPrompt = $('#myq-prompt'), myEssay = $('#myq-essay'), myMode = $('#myq-mode'),
+      myKind = $('#myq-kind'), myLink = $('#myq-link'), dupBox = $('#dup-box'), linkBox = $('#link-box');
+  // 目标题目下拉（只列真题与模拟题，方便归并）
+  [['real','考研真题'],['mock','模拟题']].forEach(function(cat){
+    var g = qs.filter(function(x){ return catOf(x) === cat; });
+    if(!g.length) return;
+    var og = '<optgroup label="'+cat[1]+'">';
+    g.forEach(function(x){ og += '<option value="'+esc(x.id)+'">'+esc(KIND_LABEL[x.kind]+'｜'+x.title)+'</option>'; });
+    og += '</optgroup>';
+    if(myLink) myLink.insertAdjacentHTML('beforeend', og);
+  });
+  function refreshDup(){
+    if(!myPrompt || !dupBox) return;
+    myMode.value = 'new';   // 改了题目文字就回到"新题"模式，避免误挂
+    if(linkBox) linkBox.hidden = true;
+    var text = myPrompt.value;
+    if(text.trim().length < 12){ dupBox.hidden = true; dupBox.innerHTML = ''; return; }
+    var hits = findSimilarQuestions(text, 3);
+    if(!hits.length){
+      dupBox.hidden = false;
+      dupBox.innerHTML = '<b>没有找到相似的已有题目</b>，将作为新题归档到「我的题目」。'
+        + '<div class="hint" style="margin-top:4px">如果你确定它和某道真题/模拟题是同一道，把「这道题怎么处理」改成"和题库里已有的题重复"，手动选择目标题目。</div>';
+      return;
+    }
+    var s = '<b>发现 ' + hits.length + ' 道相似题目</b>（可能是同一道题，请确认是否归并）：';
+    hits.forEach(function(x){
+      s += '<div class="drow"><span class="pill '+CAT_CLASS[catOf(x.q)]+'">'+CAT_LABEL[catOf(x.q)]+'</span>'
+         + '<span>' + esc(x.q.title) + '</span>'
+         + '<span class="isub">相似度 ' + Math.round(x.score*100) + '%</span>'
+         + '<button class="btn ghost" data-dup-link="' + esc(x.q.id) + '">就是这一道 → 归并</button></div>';
+    });
+    s += '<div class="hint" style="margin-top:4px">点「归并」后，你的作文与批改结果会挂到那道题下面，练习次数 +1；否则按新题处理。</div>';
+    dupBox.hidden = false;
+    dupBox.innerHTML = s;
+    dupBox.querySelectorAll('[data-dup-link]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var id = b.getAttribute('data-dup-link');
+        if(myLink){ myLink.value = id; myMode.value = 'link'; }
+        if(linkBox) linkBox.hidden = false;
+        toast('已设为归并到该题；提交后练习次数 +1');
+      });
+    });
+  }
+  var dupTimer = null;
+  myPrompt && myPrompt.addEventListener('input', function(){
+    clearTimeout(dupTimer); dupTimer = setTimeout(refreshDup, 300);
+  });
+  myMode && myMode.addEventListener('change', function(){
+    if(linkBox) linkBox.hidden = (myMode.value !== 'link');
+    if(myMode.value === 'new' && myPrompt) refreshDup();
+  });
+  $('#btn-myq-clear') && $('#btn-myq-clear').addEventListener('click', function(){
+    if(myPrompt) myPrompt.value = ''; if(myEssay) myEssay.value = '';
+    if(dupBox){ dupBox.hidden = true; dupBox.innerHTML = ''; } if(linkBox) linkBox.hidden = true;
+    toast('已清空');
+  });
+  $('#btn-myq-submit') && $('#btn-myq-submit').addEventListener('click', function(){
+    doSubmitOwnQuestion({
+      prompt: myPrompt ? myPrompt.value : '', essay: myEssay ? myEssay.value : '',
+      mode: myMode ? myMode.value : 'new', kind: myKind ? myKind.value : 'major',
+      linkId: myLink ? myLink.value : ''
+    });
+  });
+
+  bindItems(el);
+  el.querySelectorAll('[data-pick]').forEach(function(b){
+    b.addEventListener('click', function(){ Store.draftQuestionId = b.getAttribute('data-pick'); render(); toast('已选择该题，继续粘贴作文即可'); });
+  });
+}
+
+function nextSubId(){
+  var max = 0;
+  allCompletions(true).forEach(function(c){
+    var m = /sub_(\d+)/.exec(c.id||''); if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  Object.keys(Store.patches).forEach(function(id){
+    var m = /sub_(\d+)/.exec(id||''); if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  max = Math.max(max, Object.keys(Store.imgs).length);
+  return 'sub_' + ('000'+(max+1)).slice(-4);
+}
+function doSubmit(text, qid, revisesId){
+  if(!text || !text.trim()){ toast('请先粘贴作文正文（图片提交请填写图片路径后告知 AI）'); return; }
+  var id = nextSubId();
+  var c = {
+    id: id, questionId: qid, submittedAt: new Date().toISOString(), status: 'pending',
+    essayText: text, note: $('#in-note') ? $('#in-note').value : '',
+    imagePath: $('#in-imgpath') ? $('#in-imgpath').value : ''
+  };
+  // 改稿关系：标为某篇的修改稿 → 同一篇作文下可并排对比
+  if(revisesId){
+    var prev = allCompletions(true).filter(function(x){ return x.id === revisesId; })[0];
+    if(prev && isSameQuestion(prev, c)){
+      c.revises = prev.id;
+      c.draftGroup = prev.draftGroup || prev.id;
+      var sibs = allCompletions(true).filter(function(x){ return x.draftGroup === c.draftGroup || x.id === c.draftGroup; });
+      var maxNo = 0;
+      sibs.forEach(function(x){ if(x.draftNo) maxNo = Math.max(maxNo, x.draftNo); });
+      c.draftNo = maxNo + 1;
+    } else {
+      toast('这一篇与所选上一篇不是同一道题，已按独立一篇记录');
+    }
+  }
+  if(Store.tmpImg){ Store.imgs[id] = Store.tmpImg; saveLS(LS_IMGS, Store.imgs); }
+  Store.subs.push(c);
+  saveLS(LS_SUBS, Store.subs);
+  Store.lastSubmit = id;
+  Store.draftText = ''; Store.tmpImg = null; Store.tmpImgName = null; Store.prefillEdit = null;
+  saveLS(LS_META, {draftText:'', draftQuestionId:qid, prefillEdit:null});
+  toast('已提交 ' + id + (c.revises ? ('（' + revisesId + ' 的修改稿）') : '') + '。回到对话说「批改待批改作文」');
+  render();
+}
+
+/* 上传自己的题目：题目 + 作文一起交 */
+function doSubmitOwnQuestion(input){
+  var promptText = (input.prompt || '').trim();
+  var essay = (input.essay || '').trim();
+  if(!promptText){ toast('请先粘贴题目原文（题目和作文要一起交）'); return; }
+  if(!essay){ toast('还要粘贴你的作文正文——题目和作文要一起交给我'); return; }
+  var qid = '';
+  if(input.mode === 'link' && input.linkId){
+    qid = input.linkId;
+  } else {
+    // 二次判重：即使页面没提示，也再检查一次，避免重复建题
+    var dup = bestDuplicate(promptText);
+    if(dup){
+      qid = dup.q.id;
+      toast('与已有题目「'+dup.q.title+'」高度相似，已归并到那道题下面');
+    }
+  }
+  if(!qid){
+    qid = nextMineQuestionId();
+    var mine = mineQuestions();
+    mine.push({
+      id: qid, category: 'mine', kind: input.kind || 'major',
+      source: '我自己上传的题目', year: '我的题目',
+      title: '我的题目：' + promptText.replace(/\s+/g,' ').slice(0, 26) + (promptText.length > 26 ? '…' : ''),
+      promptZh: promptText, promptTextZh: promptText,
+      words: (input.kind === 'minor' ? '100' : (input.kind === 'major' ? '160-200' : '')),
+      tags: ['我的题目'], addedAt: new Date().toISOString()
+    });
+    saveLS(LS_MINEQ, mine);
+  }
+  var id = nextSubId();
+  var c = {
+    id: id, questionId: qid, submittedAt: new Date().toISOString(), status: 'pending',
+    essayText: essay, note: (input.mode === 'link' ? '（我上传的题目与题库中该题重复，请归并到这道题下面批改）' : '（这道题是我自己提供的，题目与作文一起提交）'),
+    imagePath: '', ownPrompt: promptText
+  };
+  Store.subs.push(c);
+  saveLS(LS_SUBS, Store.subs);
+  Store.lastSubmit = id;
+  toast('已提交 '+id+'（题目已'+(input.mode==='link'?'归并到已有题目':'归档到「我的题目」')+'）。回到对话说「批改待批改作文」');
+  render();
+}
+
+/* ---------------- 渲染：批改结果 ---------------- */
+function renderResults(){
+  var el = $('#view-results');
+  var all = allCompletions(true);
+  var f = Store.filter.results;
+  var list = all.filter(function(c){
+    if(f==='all') return true;
+    if(f==='pending') return c.status!=='graded';
+    if(f==='major') return questionById(c.questionId).kind==='major';
+    if(f==='minor') return questionById(c.questionId).kind==='minor';
+    if(f==='translation') return questionById(c.questionId).kind==='translation';
+    if(f==='drill') return questionById(c.questionId).kind==='drill';
+    if(f==='graded') return c.status==='graded';
+    return true;
+  });
+  var h = '<div class="card"><h2>批改结果</h2><div class="hint">每条都包含：题目 / 我的作文（错误高亮）/ 逐句批改 / 修改后全文 / 表达积累 / 本篇注意事项。</div>'
+    + '<div class="row">';
+  [['all','全部'],['pending','待批改'],['graded','已批改'],['major','大作文'],['minor','小作文'],['translation','翻译'],['drill','长难句专项']].forEach(function(x){
+    h += '<button class="btn'+(f===x[0]?' primary':'')+'" data-filter="'+x[0]+'">'+x[1]+'</button>';
+  });
+  h += '<span class="spacer"></span><span class="isub">显示 '+list.length+' / '+all.length+' 篇</span></div></div>';
+  if(Store.compare){
+    h += revisionsView(Store.compare);
+  }
+  if(!list.length) h += '<div class="card"><div class="empty">没有符合条件的记录。</div></div>';
+  list.forEach(function(c){ h += '<div class="card" style="padding:0">'+submissionItem(c, true)+'</div>'; });
+  el.innerHTML = h;
+  el.querySelectorAll('[data-filter]').forEach(function(b){
+    b.addEventListener('click', function(){ Store.filter.results = b.getAttribute('data-filter'); render(); });
+  });
+  el.querySelectorAll('[data-mark]').forEach(function(b){
+    b.addEventListener('click', function(){ Store.markingOn = !Store.markingOn; render(); });
+  });
+  bindItems(el);
+}
+
+/* ---------------- 批改辅助服务（可选）：网页内一键批改 ----------------
+   需要在项目文件夹里跑 `node tools/grade-helper.js`（或双击 启动批改服务.cmd）。
+   它只在本机 127.0.0.1 上听一个端口，按按钮时启动一次独立的 headless harness 去批改。
+   没启动时，本页一切功能照旧，只是显示手动方式。 */
+var HELPER_URL = 'http://127.0.0.1:8787';
+
+function helperHintHtml(){
+  return '<div class="note" style="margin-top:12px"><b>批改方式（当前：手动）</b>'
+       + '<div style="margin-top:6px">我没有检测到本地批改服务。两种办法都能拿到批改：</div>'
+       + '<ol class="tight" style="margin-top:6px">'
+       + '<li>双击文件夹里的 <b>一键批改.cmd</b>（跑完自动关闭）；或</li>'
+       + '<li>双击 <b>启动批改服务.cmd</b> 让本页出现「一键批改」按钮；它常驻一个小服务，'
+       + '每次点按钮才启动一次独立的批改进程（不打开 DSH 界面，也不用先开着 DSH）。</li>'
+       + '</ol></div>';
+}
+function checkHelper(){
+  Store.helper = { state: 'checking' };
+  render();
+  if(typeof fetch !== 'function'){ Store.helper = { state:'off' }; render(); return; }
+  var ctl = (typeof AbortController === 'function') ? new AbortController() : null;
+  var timer = ctl ? setTimeout(function(){ ctl.abort(); }, 2500) : null;
+  fetch(HELPER_URL + '/ping', { signal: ctl ? ctl.signal : undefined, cache:'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(timer) clearTimeout(timer);
+      Store.helper = { state:'on', info:j };
+      render();
+    })
+    .catch(function(){
+      if(timer) clearTimeout(timer);
+      Store.helper = { state:'off' };
+      render();
+    });
+}
+function triggerGrade(){
+  if(typeof fetch !== 'function'){ toast('这个浏览器不支持，请用 一键批改.cmd'); return; }
+  var btn = $('#btn-grade');
+  if(btn){ btn.disabled = true; btn.textContent = '正在启动批改…'; }
+  fetch(HELPER_URL + '/grade', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ task: '批改待批改作文' }) })
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(!j.ok){ toast('未启动：' + (j.error || '未知原因')); if(btn){ btn.disabled = false; btn.textContent = '一键批改'; } return; }
+      toast('已启动批改（' + (j.pending || []).join('、') + '）。批改完成后本页会自动显示。');
+      helperPollUntilDone();
+    })
+    .catch(function(e){
+      toast('连接批改服务失败：' + e.message);
+      if(btn){ btn.disabled = false; btn.textContent = '一键批改'; }
+    });
+}
+function helperPollUntilDone(){
+  if(typeof fetch !== 'function') return;
+  var tries = 0;
+  var t = setInterval(function(){
+    tries++;
+    fetch(HELPER_URL + '/status', { cache:'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.running){
+          if(tries % 10 === 1) toast('AI 正在批改中…（保持服务窗口开着）');
+          return;
+        }
+        clearInterval(t);
+        toast(j && j.last && j.last.ok ? '批改完成，正在刷新结果' : '批改进程已结束，检查一下是否有新补丁');
+        Store.patches = {}; Store.filter.helperDone = true;
+        loadData().then(function(){ renderMeta(); render(); });
+      })
+      .catch(function(){ if(tries > 200) clearInterval(t); });
+  }, 3000);
+}
+function gradePanelHtml(){
+  var h = Store.helper || { state:'checking' };
+  var pend = pendingList();
+  if(h.state === 'on'){
+    var busy = h.info && h.info.running;
+    return '<div class="note" id="grade-panel" style="margin-top:12px; border-left-color:#2c6b4f">'
+      + '<b>批改服务已连接</b>（127.0.0.1:8787）'
+      + '<div class="kv" style="margin-top:6px">待批改 <b>' + pend.length + '</b> 篇'
+      + (busy ? '　<b style="color:#8a6a12">AI 正在批改中…</b>' : '') + '</div>'
+      + '<div class="row" style="margin-top:10px">'
+      + '<button class="btn primary" id="btn-grade"' + (busy || !pend.length ? ' disabled' : '') + '>'
+      + (busy ? '正在批改…' : (pend.length ? '一键批改（' + pend.length + ' 篇）' : '暂无待批改')) + '</button>'
+      + '<button class="btn ghost" id="btn-helper-refresh">重新检测服务</button>'
+      + '<span class="isub">点按钮后由本地服务启动一次批改进程，跑完自动更新本页</span></div></div>';
+  }
+  return helperHintHtml()
+       + '<div class="row" style="margin-top:10px"><button class="btn ghost" id="btn-helper-refresh">重新检测服务</button>'
+       + '<span class="isub">' + (h.state === 'checking' ? '正在检测…' : '未检测到（不影响其它功能）') + '</span></div>';
+}
+
+/* 题库文件"执行中断"探测：options 里出现语法错误/未定义函数时，整份文件会中断，
+   于是 window.__KAOYAN_QUESTIONS 为空、页面上题目数为 0 —— 用真实文件内容做一次诊断 */
+function bankProbe(){
+  try{
+    var req = (typeof XMLHttpRequest === 'function') ? new XMLHttpRequest() : null;
+    if(!req) return null;
+    req.open('GET', 'data/questions.js', false);      // 同步读，仅在数据加载阶段用一次
+    req.send(null);
+    var txt = req.responseText || '';
+    var ids = (txt.match(/id:\s*'[^']+'/g) || []).length;
+    if(ids < 3) return null;                          // 文件本身没题，不算错误
+    var errs = (window.__KAOYAN_BANK_ERRORS && window.__KAOYAN_BANK_ERRORS.length)
+      ? window.__KAOYAN_BANK_ERRORS[0] : null;
+    return {
+      ids: ids,
+      message: errs || '题目文件执行中断（常见原因：题目里调用了图库里不存在的函数，如 F.xxx 未定义）'
+    };
+  }catch(e){ return null; }
+}
+/* 题库加载异常时的醒目提示 */
+function bankErrorBanner(){
+  var be = Store.bankError;
+  if(!be) return '';
+  return '<div class="card" style="border-color:#f0c8c4; background:#fdf1ef"><h2 style="color:#b3261e">⚠ 题库没有加载出来</h2>'
+    + '<div class="hint">文件 <span class="mono">data/questions.js</span> 里大约有 <b>' + be.ids + '</b> 道题，'
+    + '但网页一道都没读到 —— 说明这个文件在执行到一半时中断了。</div>'
+    + '<div class="note warn" style="margin-top:8px"><b>诊断：</b>' + esc(be.message) + '</div>'
+    + '<div class="kv" style="margin-top:8px"><b>怎么修：</b>'
+    + '<ol class="tight" style="margin-top:4px">'
+    + '<li>在 DSH 里说一句「题库加载失败，帮我修 questions.js」；或</li>'
+    + '<li>运行 <span class="mono">node tools/validate.js</span> 看具体报错；或</li>'
+    + '<li>把 <span class="mono">data/questions.js</span> 恢复到上次备份（每次更新前建议复制一份）。</li>'
+    + '</ol></div>'
+    + '<div class="row" style="margin-top:10px"><button class="btn" id="btn-bank-reload2">重新加载数据</button>'
+    + '<span class="isub">常见原因：题目里调用了 <span class="mono">data/figures.js</span> 中不存在的函数名。</span></div></div>';
+}
+
+/* ---------------- 题库一键更新（需要本地辅助服务） ----------------
+   机制：网页把「要补哪些年份」发给本地服务 → 服务启动一次独立 agent →
+   agent 联网核查最新真题、按格式补进 data/questions.js、跑自检 →
+   网页检测到题库内容变化后自动重新加载。 */
+function bankInfo(){
+  var years = { en1: [], en2: [] };
+  allQuestions().forEach(function(q){
+    if(catOf(q) !== 'real') return;
+    var m = /(\d{4})/.exec(String(q.year || ''));
+    if(!m) return;
+    var s = subjOf(q);
+    if(years[s] && years[s].indexOf(parseInt(m[1], 10)) < 0) years[s].push(parseInt(m[1], 10));
+  });
+  var now = new Date().getFullYear();
+  var BASELINE = 2010;
+  function stat(arr){
+    arr.sort(function(a, b){ return a - b; });
+    var need = [];
+    if(arr.length) for(var y = arr[arr.length-1] + 1; y <= now; y++) need.push(y);
+    else for(var y2 = BASELINE; y2 <= now; y2++) need.push(y2);
+    return { years: arr, min: arr[0] || null, max: arr[arr.length-1] || null, count: arr.length,
+             need: need, empty: arr.length === 0, upToDate: need.length === 0 };
+  }
+  var en1 = stat(years.en1), en2 = stat(years.en2);
+  var need = [];
+  en1.need.concat(en2.need).forEach(function(y){ if(need.indexOf(y) < 0) need.push(y); });
+  need.sort(function(a, b){ return a - b; });
+  var mins = [en1.min, en2.min].filter(function(v){ return v != null; });
+  var maxs = [en1.max, en2.max].filter(function(v){ return v != null; });
+  return { nowYear: now, en1: en1, en2: en2, need: need, upToDate: en1.upToDate && en2.upToDate,
+           min: mins.length ? Math.min.apply(null, mins) : null,
+           max: maxs.length ? Math.max.apply(null, maxs) : null };
+}
+/* 题库指纹：用于检测 agent 更新完成 */
+function bankFingerprint(){
+  var qs = allQuestions().filter(function(q){ return catOf(q) === 'real'; });
+  return 'real:' + qs.length + '|' + bankInfo().max + '|' + qs.map(function(q){ return q.id; }).sort().join(',');
+}
+function checkBankUpdate(){
+  Store.bankInfo = undefined;
+  render();
+  if(typeof fetch !== 'function'){ Store.bankInfo = false; render(); return; }
+  fetch(HELPER_URL + '/bank', { cache: 'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(j){ Store.bankInfo = j; render(); })
+    .catch(function(){ Store.bankInfo = false; render(); });
+}
+function triggerBankUpdate(yearsOverride){
+  if(typeof fetch !== 'function'){ toast('这个浏览器不支持，请回 DSH 说一句「更新题库」'); return; }
+  var info = bankInfo();
+  if(!yearsOverride && info.upToDate){
+    toast('题库已覆盖到 ' + info.max + ' 年，未发现缺失年份');
+    return;
+  }
+  var btn = $('#btn-bank-update');
+  if(btn){ btn.disabled = true; btn.textContent = '正在启动…'; }
+  fetch(HELPER_URL + '/update', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(yearsOverride ? { years: yearsOverride } : {})
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(!j.ok){ toast('未启动：' + (j.error || '未知原因')); render(); return; }
+      Store.updateWatcher = { years: j.years, startedAt: Date.now(), fp: bankFingerprint() };
+      toast('已启动题库更新：正在核查 ' + (j.years || []).join('、') + ' 年真题（需要几分钟）');
+      pollBankUpdate();
+    })
+    .catch(function(e){
+      toast('连接辅助服务失败：' + e.message + '（先双击 启动批改服务.cmd）');
+      render();
+    });
+}
+function pollBankUpdate(){
+  if(typeof fetch !== 'function') return;
+  var tries = 0;
+  var t = setInterval(function(){
+    tries++;
+    fetch(HELPER_URL + '/status', { cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.running){ if(tries % 20 === 1) toast('AI 正在联网核查并补题…（保持服务窗口开着）'); return; }
+        clearInterval(t);
+        var changed = Store.updateWatcher && Store.updateWatcher.fp !== bankFingerprint();
+        Store.updateWatcher = null;
+        toast(changed ? '题库已更新，正在重新加载' : '更新流程结束（是否补到题请看服务窗口输出）');
+        render();
+        if(changed){ Store.patches = {}; loadData().then(function(){ renderMeta(); render(); }); }
+      })
+      .catch(function(){ if(tries > 400) clearInterval(t); });
+  }, 4000);
+}
+function updatePanelHtml(){
+  var info = bankInfo();
+  function subjLine(name, s){
+    var range = s.count ? (s.min + '—' + s.max + '（' + s.count + ' 个年份）') : '尚未收录';
+    var needTxt = s.upToDate ? '已是最新' : (s.empty ? '缺 ' + s.need.length + ' 个年份（' + s.need[0] + '—' + s.need[s.need.length-1] + '）' : '缺 ' + s.need.join('、'));
+    return '<div class="row" style="margin:4px 0"><span class="pill ' + (s.upToDate ? 'done' : 'pending') + '">' + name + '</span>'
+         + '<span class="kv">' + range + '</span><span class="isub">' + needTxt + '</span></div>';
+  }
+  var h = '<div class="card"><h2>一键更新题库（英语一 + 英语二）</h2>'
+    + '<div class="hint">点按钮后，本地 agent 会<b>自己联网核查</b>最新公布的考研英语<b>一</b>与英语<b>二</b>真题主观题'
+    + '（英语一：大作文 + 小作文；英语二：图表大作文 + 小作文 + 整段翻译），按题库格式补进 <span class="mono">data/questions.js</span>，'
+    + '并跑一次自检；完成后本页自动重新加载。每年 12 月考研结束后，次年年初点一次即可。</div>';
+  h += '<div style="margin:10px 0">';
+  h += subjLine('英语一', info.en1);
+  h += subjLine('英语二', info.en2);
+  h += '<div class="row" style="margin-top:6px">'
+    + (info.upToDate
+        ? '<span class="pill done">两个科目都已是最新</span>'
+        : '<span class="pill pending">共缺 ' + info.need.length + ' 个年份待补：' + info.need.join('、') + '</span>')
+    + '</div></div>';
+
+  var st = Store.bankInfo;
+  if(st === undefined){
+    h += '<div class="note">正在询问本地辅助服务…</div>';
+  } else if(st === false){
+    h += '<div class="note"><b>当前无法一键更新（本地辅助服务未启动）。</b>两种办法：'
+       + '<ol class="tight" style="margin-top:6px">'
+       + '<li>双击文件夹里的 <b>启动批改服务.cmd</b>，回到本页点「重新询问」；</li>'
+       + '<li>或直接在 DSH 对话里说：<b>联网更新考研英语一和英语二题库，补齐 ' + (info.need.length ? info.need.join('、') + ' 年' : '最新年份') + ' 真题</b>。</li>'
+       + '</ol></div>';
+    h += '<div class="row" style="margin-top:10px"><button class="btn" id="btn-bank-refresh">重新询问</button></div>';
+  } else {
+    var busy = !!st.running;
+    var btnTxt;
+    if(busy) btnTxt = '正在更新中…';
+    else if(info.upToDate) btnTxt = '检查并补齐之后的年份';
+    else {
+      var parts = [];
+      if(!info.en1.upToDate) parts.push('英语一 ' + (info.en1.empty ? info.en1.need.length + ' 年' : info.en1.need.join('、')));
+      if(!info.en2.upToDate) parts.push('英语二 ' + (info.en2.empty ? info.en2.need.length + ' 年' : info.en2.need.join('、')));
+      btnTxt = '一键更新题库（补：' + parts.join('；') + '）';
+    }
+    h += '<div class="row" style="margin-top:10px">'
+       + '<button class="btn primary" id="btn-bank-update"' + (busy ? ' disabled' : '') + '>' + btnTxt + '</button>'
+       + '<button class="btn ghost" id="btn-bank-refresh">重新询问</button>'
+       + '<span class="isub">更新通常需要几分钟（要联网核查多个来源）</span></div>';
+    if(busy) h += '<div class="note" style="margin-top:10px">AI 正在联网核查并补题，请保持辅助服务窗口开着；完成后本页会自动重新加载。</div>';
+    h += '<details class="det" style="margin-top:10px"><summary>也可以指定要补的年份</summary><div>'
+       + '<div class="row"><input type="text" id="in-update-years" placeholder="例如 2027,2028" style="max-width:220px">'
+       + '<button class="btn" id="btn-bank-update-years">只补这些年份</button></div>'
+       + '<div class="hint" style="margin-top:6px">用于手动补某一届，或题库缺了中间年份时精确补齐；AI 仍会先查重。</div>'
+       + '</div></details>';
+    h += '<div class="row" style="margin-top:8px">'
+       + '<button class="btn ghost" id="btn-bank-restore">回退到更新前的备份</button>'
+       + '<span class="isub">每次更新前自动把 <span class="mono">data/questions.js</span> 备份到 <span class="mono">data/backups/</span>（保留最近 10 份）'
+       + (st && st.last && st.last.backupName ? '，本次备份：<b class="mono">' + esc(st.last.backupName) + '</b>' : '') + '</span></div>';
+    if(st.last && st.last.kind === 'update'){
+      h += '<div class="kv" style="margin-top:8px">上次更新：' + (st.last.ok ? '成功' : '失败（退出码 ' + st.last.code + '）')
+         + '，结束于 ' + fmtTime(st.last.endedAt || st.last.at)
+         + (st.last.bank ? '；当时题库覆盖 ' + (st.last.bank.min || '?') + '—' + (st.last.bank.max || '?') : '') + '</div>';
+    }
+  }
+  h += '</div>';
+  return h;
+}
+
+/* ---------------- 渲染：题库 ---------------- */
+function renderBank(){
+  var el = $('#view-bank');
+  var qs = allQuestions();
+  var f = Store.filter.bank;
+  var subj = Store.filter.subject || 'all';        // all / en1 / en2
+  var list = qs.filter(function(q){
+    if(subj !== 'all' && subjOf(q) !== subj) return false;
+    if(f === 'all') return true;
+    if(f === 'practiced') return practiceStats(q.id).total > 0;
+    if(f === 'unpracticed') return practiceStats(q.id).total === 0;
+    if(f === 'real' || f === 'mock' || f === 'mine') return catOf(q) === f;
+    return q.kind === f;
+  });
+  var counts = { real:0, mock:0, mine:0, practiced:0, total:qs.length, en1:0, en2:0 };
+  qs.forEach(function(q){
+    counts[catOf(q)]++;
+    counts[subjOf(q)]++;
+    if(practiceStats(q.id).total > 0) counts.practiced++;
+  });
+
+  var h = '<div class="card"><h2>题库</h2>'
+    + '<div class="hint">题库分三级查看：<b>科目</b>（英语一 / 英语二）→ <b>三类</b>（考研真题 / 模拟题 / 我的题目）→ 题型。'
+    + '真题按年份收录，模拟题由 AI 原创并配内嵌 SVG 示意图。'
+    + '点开任意一道题，能看到它<b>是否练过、练过几次、每次的作文与得分</b>。</div>'
+    + '<div class="catgrid">'
+    +   '<div class="catsum">英语一 <b>' + counts.en1 + '</b> 道</div>'
+    +   '<div class="catsum">英语二 <b>' + counts.en2 + '</b> 道</div>'
+    +   '<div class="catsum">考研真题 <b>' + counts.real + '</b> 道</div>'
+    +   '<div class="catsum">模拟题 <b>' + counts.mock + '</b> 道</div>'
+    +   '<div class="catsum">我的题目 <b>' + counts.mine + '</b> 道</div>'
+    +   '<div class="catsum">已练习过 <b>' + counts.practiced + '</b> / ' + counts.total + ' 道</div>'
+    + '</div>'
+    + '<div class="row" style="margin-top:12px"><span class="isub" style="margin-right:4px">科目</span>';
+  [['all','全部'],['en1','英语一'],['en2','英语二']].forEach(function(x){
+    h += '<button class="btn'+(subj===x[0]?' primary':'')+'" data-subjfilter="'+x[0]+'">'+x[1]+'</button>';
+  });
+  h += '</div><div class="row" style="margin-top:8px"><span class="isub" style="margin-right:4px">类别</span>';
+  [['all','全部'],['real','考研真题'],['mock','模拟题'],['mine','我的题目'],['practiced','练过的'],['unpracticed','没练过的']].forEach(function(x){
+    h += '<button class="btn'+(f===x[0]?' primary':'')+'" data-qfilter="'+x[0]+'">'+x[1]+'</button>';
+  });
+  h += '</div><div class="row" style="margin-top:8px"><span class="isub" style="margin-right:4px">题型</span>';
+  [['major','大作文'],['minor','小作文'],['translation','翻译'],['drill','长难句专项']].forEach(function(x){
+    h += '<button class="btn'+(f===x[0]?' primary':'')+'" data-qfilter="'+x[0]+'">'+x[1]+'</button>';
+  });
+  h += '<span class="spacer"></span><span class="isub">显示 '+list.length+' 题</span></div></div>';
+
+  // 一键更新题库（放在题库顶部，便于每年更新一次）
+  h += bankErrorBanner();
+  h += updatePanelHtml();
+
+  if(!list.length) h += '<div class="card"><div class="empty">没有符合条件的题目。' +
+    (f==='mine' ? '到「提交作文 → 上传自己的题目」添加一道。' : '') + '</div></div>';
+  list.forEach(function(q){
+    var open = !!Store.open['q_'+q.id];
+    var st = practiceStats(q.id);
+    h += '<div class="item"><div class="ihead" data-toggle="q_'+esc(q.id)+'">'
+       + '<span class="caret">'+(open?'▾':'▸')+'</span>'
+       + '<span class="ititle">'+esc(q.title)+'</span>'
+       + subjPill(q)
+       + catPill(q)
+       + '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(KIND_LABEL[q.kind]||q.kind)+'</span>'
+       + practiceBadge(q.id)
+       + '<span class="spacer"></span><span class="isub">'+esc(q.source||'')+'</span></div>';
+    if(open) h += '<div class="ibody">'+renderQuestionBody(q, false)+'</div>';
+    h += '</div>';
+  });
+  el.innerHTML = h;
+  el.querySelectorAll('[data-qfilter]').forEach(function(b){
+    b.addEventListener('click', function(){ Store.filter.bank = b.getAttribute('data-qfilter'); render(); });
+  });
+  el.querySelectorAll('[data-subjfilter]').forEach(function(b){
+    b.addEventListener('click', function(){ Store.filter.subject = b.getAttribute('data-subjfilter'); render(); });
+  });
+  bindItems(el);
+  el.querySelectorAll('[data-pick]').forEach(function(b){
+    b.addEventListener('click', function(){
+      Store.draftQuestionId = b.getAttribute('data-pick'); switchView('submit');
+      toast('已选择该题，去粘贴作文吧');
+    });
+  });
+  // 一键更新题库的交互
+  var up = $('#btn-bank-update');
+  up && up.addEventListener('click', function(){ triggerBankUpdate(null); });
+  var upYears = $('#btn-bank-update-years');
+  upYears && upYears.addEventListener('click', function(){
+    var raw = ($('#in-update-years') && $('#in-update-years').value) || '';
+    var years = raw.split(/[^0-9]+/).map(function(s){ return parseInt(s, 10); })
+                   .filter(function(y){ return y >= 2000 && y <= 2100; });
+    if(!years.length){ toast('请填写年份，例如 2027,2028'); return; }
+    triggerBankUpdate(years);
+  });
+  var rl2 = $('#btn-bank-reload2');
+  rl2 && rl2.addEventListener('click', function(){ loadData().then(function(){ renderMeta(); render(); }); });
+  var rf = $('#btn-bank-refresh');
+  rf && rf.addEventListener('click', function(){ checkBankUpdate(); });
+  var rs = $('#btn-bank-restore');
+  rs && rs.addEventListener('click', function(){
+    if(typeof fetch !== 'function') return;
+    if(!confirm('确定把题库回退到最近一次备份吗？（覆盖 data/questions.js）')) return;
+    fetch(HELPER_URL + '/restore', { method: 'POST' })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        toast(j.ok ? ('已回退到 ' + j.restored) : ('回退失败：' + (j.error || '')));
+        if(j.ok){ Store.patches = {}; loadData().then(function(){ renderMeta(); render(); }); }
+      })
+      .catch(function(e){ toast('连接辅助服务失败：' + e.message); });
+  });
+  // 首次进入题库时自动询问一次服务状态
+  if(Store.bankInfo === undefined && !Store.bankAsked){
+    Store.bankAsked = true;
+    setTimeout(function(){
+      if(typeof fetch !== 'function'){ Store.bankInfo = false; render(); return; }
+      fetch(HELPER_URL + '/bank', { cache:'no-store' })
+        .then(function(r){ return r.json(); })
+        .then(function(j){ Store.bankInfo = j; if(currentView === 'bank') render(); })
+        .catch(function(){ Store.bankInfo = false; if(currentView === 'bank') render(); });
+    }, 120);
+  }
+}
+
+/* ---------------- 渲染：错题库 ---------------- */
+function renderMistakes(){
+  var el = $('#view-mistakes');
+  var ents = mistakeEntries();
+  var must = ents.filter(function(e){ return e.level==='must'; });
+  var opt  = ents.filter(function(e){ return e.level==='optional'; });
+  var exps = expressionEntries();
+  var h = '<div class="grid g4" style="margin-top:18px">'
+    + statCard('必须修改条目', must.length+' <small>条</small>', '来自所有已批改作文')
+    + statCard('可选优化条目', opt.length+' <small>条</small>', '进阶表达与地道性')
+    + statCard('积累表达', exps.length+' <small>条</small>', '考场可复现的句式与搭配')
+    + statCard('涉及篇数', gradedList().length+' <small>篇</small>', '自动汇总，无需手抄')
+    + '</div>';
+
+  var groups = {};
+  ents.forEach(function(e){ (groups[e.cat] = groups[e.cat] || []).push(e); });
+  var cats = Object.keys(groups).sort(function(a,b){ return groups[b].length - groups[a].length; });
+
+  h += '<div class="card"><h2>错误类型分布</h2><div class="hint">按语法/内容类别自动归类（关键词匹配），点击展开具体条目。</div>';
+  if(!cats.length) h += '<div class="empty">还没有批改数据。</div>';
+  cats.forEach(function(cat){
+    var open = !!Store.open['cat_'+cat];
+    var list = groups[cat];
+    var m = list.filter(function(x){return x.level==='must';}).length;
+    h += '<div class="cat"><div class="chead" data-cat="'+esc(cat)+'">'
+       + '<span class="caret">'+(open?'▾':'▸')+'</span><b>'+esc(cat)+'</b>'
+       + '<span class="cnt">'+list.length+'</span>'
+       + '<span class="isub">必须修改 '+m+' 条</span></div>';
+    if(open){
+      h += '<div class="cbody"><ul class="notes">';
+      list.forEach(function(e){
+        h += '<li class="'+esc(e.level==='priority'?'optional':e.level)+'">'
+           + '<span class="pill '+esc(e.level==='priority'?'optional':e.level)+'">'
+           + (e.level==='must'?'【必须修改】':(e.level==='priority'?'【复盘重点】':'【可选优化】'))+'</span> '
+           + '<span class="isub">'+esc(e.subId)+' · '+esc(e.qTitle)+' · '+fmtTime(e.when)+'</span>';
+        if(e.original) h += '<div class="orig" style="margin-top:4px">'+esc(e.original)+'</div>';
+        h += '<div style="margin-top:5px"><span class="lbl">问题</span>'+rich(e.issue)+'</div>';
+        if(e.revised) h += '<div class="rev"><span class="lbl">改法</span>'+rich(e.revised)+'</div>';
+        if(e.explain) h += '<details class="det" style="margin-top:6px"><summary>为什么错 / 怎么自查</summary><div class="exp">'+rich(e.explain)+'</div></details>';
+        h += '</li>';
+      });
+      h += '</ul></div>';
+    }
+    h += '</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="card"><h2>表达积累库</h2><div class="hint">历次批改中 AI 挑出的实用表达，考前直接刷。</div>';
+  if(!exps.length) h += '<div class="empty">暂无积累。</div>';
+  else {
+    h += '<ul class="notes">';
+    exps.forEach(function(e){
+      h += '<li><div class="en" style="font-weight:600">'+esc(e.phrase)+'</div>'
+         + '<div class="kv">'+esc(e.meaning)+'</div>'
+         + '<div class="exp" style="font-size:13.5px">'+rich(e.usage)+'</div>'
+         + '<div class="isub" style="margin-top:4px">'+esc(e.qTitle)+' · '+fmtTime(e.when)+'</div></li>';
+    });
+    h += '</ul>';
+  }
+  h += '</div>';
+
+  h += '<div class="card"><h2>导出 / 备份</h2><div class="hint">把本机提交导出为 JSON 文件，便于交给 AI 或备份。</div>'
+    + '<div class="row"><button class="btn" id="btn-export">导出本机提交 JSON</button>'
+    + '<button class="btn ghost" id="btn-wipe">清除本机草稿与图片缓存</button></div>'
+    + '<div class="note" style="margin-top:12px">AI 读取提交有两条路：① 你直接在本对话粘贴作文；② 把导出的 JSON 另存为 <span class="mono">data/pending_submissions.json</span> 并告诉我。批改结果一律写在 <span class="mono">data/patches/</span>。</div></div>';
+
+  el.innerHTML = h;
+  bindItems(el);
+  $('#btn-export') && $('#btn-export').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify({meta:{exportedAt:new Date().toISOString()}, completions:allCompletions(true)}, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'pending_submissions.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('已导出 pending_submissions.json —— 放进 data/ 目录后告诉我文件名即可');
+  });
+  $('#btn-wipe') && $('#btn-wipe').addEventListener('click', function(){
+    if(!confirm('确定清除本机保存的提交草稿与图片缓存？已批改结果（data/patches）不受影响。')) return;
+    localStorage.removeItem(LS_SUBS); localStorage.removeItem(LS_IMGS); localStorage.removeItem(LS_META);
+    Store.subs = []; Store.imgs = {}; toast('已清除本机缓存'); render();
+  });
+}
+
+/* ---------------- 渲染：趋势 ---------------- */
+function renderTrend(){
+  var el = $('#view-trend');
+  var g = gradedList().slice().reverse(); // 时间正序
+  var series = g.map(function(c){
+    return { label: c.id, title: questionById(c.questionId).title, rate: rateOf(c),
+             score: scoreOf(c), full: fullOf(c), when: c.gradedAt||c.submittedAt,
+             kind: questionById(c.questionId).kind };
+  }).filter(function(x){ return x.rate != null; });
+
+  var h = '<div class="card"><h2>分数趋势</h2><div class="hint">按批改时间排列的得分率曲线。大作文 / 小作文 / 翻译满分不同，统一换算成得分率更可比。</div>';
+  if(series.length < 2){
+    h += '<div class="empty">至少需要 2 篇已批改记录才能画曲线（当前 '+series.length+' 篇）。</div>';
+  } else {
+    h += chartSvg(series);
+  }
+  h += '</div>';
+
+  h += '<div class="card"><h2>逐篇明细</h2>';
+  if(!series.length) h += '<div class="empty">暂无已批改记录。</div>';
+  else{
+    h += '<table class="pttable"><thead><tr><th>提交</th><th>题目</th><th class="c">得分</th><th class="c">得分率</th><th>批改时间</th></tr></thead><tbody>';
+    series.slice().reverse().forEach(function(x){
+      h += '<tr><td class="mono">'+esc(x.label)+'</td><td>'+esc(x.title)+'</td>'
+         + '<td class="c">'+x.score+' / '+x.full+'</td>'
+         + '<td class="c"><b>'+pct(x.rate)+'</b></td><td>'+fmtTime(x.when)+'</td></tr>';
+    });
+    h += '</tbody></table>';
+    var avg = series.reduce(function(a,b){return a+b.rate;},0)/series.length;
+    var last = series.slice(-3);
+    var lastAvg = last.reduce(function(a,b){return a+b.rate;},0)/last.length;
+    h += '<div class="note" style="margin-top:12px">总体平均得分率 <b>'+pct(avg)+'</b>；最近 3 次 <b>'+pct(lastAvg)+'</b>。'
+       + (lastAvg > avg ? '近期呈上升趋势，继续保持并逐步提高论证深度。' : '近期与总体持平或略低，建议回看「错题与语言点库」里出现次数最多的类别，做一次专项清理。')
+       + '</div>';
+  }
+  h += '</div>';
+  el.innerHTML = h;
+  bindItems(el);
+}
+function chartSvg(series){
+  var W = 900, H = 230, padL = 46, padR = 18, padT = 18, padB = 34;
+  var n = series.length;
+  var xs = function(i){ return padL + (W-padL-padR) * (n===1?0.5:i/(n-1)); };
+  var ys = function(r){ return padT + (H-padT-padB) * (1-r); };
+  var s = '<svg class="chart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">';
+  [0,0.25,0.5,0.75,1].forEach(function(r){
+    s += '<line x1="'+padL+'" y1="'+ys(r)+'" x2="'+(W-padR)+'" y2="'+ys(r)+'" stroke="#ece6da" stroke-width="1"/>'
+      +  '<text x="'+(padL-8)+'" y="'+(ys(r)+4)+'" text-anchor="end" font-size="11" fill="#8d8477">'+(r*100)+'%</text>';
+  });
+  var pts = series.map(function(x,i){ return xs(i)+','+ys(x.rate); });
+  s += '<polyline points="'+pts.join(' ')+'" fill="none" stroke="#1f4e46" stroke-width="2.5"/>';
+  series.forEach(function(x,i){
+    s += '<circle cx="'+xs(i)+'" cy="'+ys(x.rate)+'" r="4.5" fill="#fff" stroke="#9c3b34" stroke-width="2.5"/>';
+    var showLabel = n <= 12 || i % Math.ceil(n/12) === 0;
+    if(showLabel) s += '<text x="'+xs(i)+'" y="'+(H-12)+'" text-anchor="middle" font-size="10.5" fill="#8d8477">'+esc(String(x.label).replace('sub_',''))+'</text>';
+    s += '<title>'+esc(x.label+' '+x.title+'：'+x.score+'/'+x.full+' = '+pct(x.rate))+'</title>';
+  });
+  s += '</svg><div class="legend">横轴为提交编号（正序），纵轴为得分率；鼠标悬停数据点可看题目与分数。</div>';
+  return s;
+}
+
+/* ---------------- 顶栏与视图切换 ---------------- */
+function renderMeta(){
+  var st = stats();
+  $('#m-sub').textContent = st.submitted;
+  $('#m-graded').textContent = st.graded;
+  $('#m-rate').textContent = pct(st.avgRate);
+  var el = $('#m-sync');
+  el.textContent = Store.syncNote;
+  el.className = 'chip' + (Store.syncNote.indexOf('⚠') === 0 ? ' warn' : '');
+  var b = $('#b-pending');
+  if(st.pending > 0){ b.hidden = false; b.textContent = st.pending; } else { b.hidden = true; }
+  var exam = Store.seed.meta && Store.seed.meta.examDate;
+  var d = exam ? new Date(exam+'T00:00:00') : null;
+  if(d && !isNaN(d.getTime())){
+    var days = Math.ceil((d - new Date()) / 86400000);
+    $('#cd').textContent = days > 0 ? (days + ' 天（' + exam + '）') : '已过 ' + (-days) + ' 天';
+  } else { $('#cd').textContent = '未设置'; }
+}
+var currentView = 'board';
+function switchView(v){
+  var extra = '';
+  var qi = String(v || '').indexOf('?');
+  if(qi >= 0){ extra = v.slice(qi+1); v = v.slice(0, qi); }
+  if(['board','submit','results','bank','mistakes','trend'].indexOf(v) < 0) v = 'board';
+  currentView = v;
+  // 支持 index.html#bank?open=q_mock_01_major / #results?compare=sub_0001 直接展开
+  var mo = /(?:^|&)open=([^&]+)/.exec(extra);
+  var mc = /(?:^|&)compare=([^&]+)/.exec(extra);
+  if(mc) Store.compare = decodeURIComponent(mc[1]);
+  function applyOpen(){
+    if(!mo) return;
+    var key = decodeURIComponent(mo[1]);
+    if(Store.seed.questions.some(function(x){ return x.id === key; })) Store.open['q_' + key] = true;
+    else Store.open[key] = true;
+  }
+  applyOpen();
+  try{
+    var want = '#' + v + (extra ? '?' + extra : '');
+    if(location.hash !== want) location.hash = want;
+  }catch(e){}
+  $('#tabs').querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-view') === v); });
+  ['board','submit','results','bank','mistakes','trend'].forEach(function(k){
+    var el = $('#view-'+k); if(el) el.hidden = (k !== v);
+  });
+  renderMeta();
+  render();
+  // 进入视图后再展开一次：覆盖"该条目已经被渲染过"的情况
+  if(mo){ applyOpen(); render(); }
+}
+function render(){
+  if(currentView==='board') renderBoard();
+  else if(currentView==='submit') renderSubmit();
+  else if(currentView==='results') renderResults();
+  else if(currentView==='bank') renderBank();
+  else if(currentView==='mistakes') renderMistakes();
+  else if(currentView==='trend') renderTrend();
+  bindItems(document);
+}
+
+/* ---------------- 启动 ---------------- */
+function boot(){
+  Store.subs = loadLS(LS_SUBS, []) || [];
+  Store.imgs = loadLS(LS_IMGS, {}) || {};
+  Store.patches = loadLS(LS_PATCH, {}) || {};   // 上次会话已读到的补丁（file:// 下 fetch 受限时仍可用）
+  var meta = loadLS(LS_META, {}) || {};
+  Store.draftText = meta.draftText || '';
+  Store.draftQuestionId = meta.draftQuestionId || '';
+  Store.prefillEdit = meta.prefillEdit || null;
+
+  $('#tabs').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-view]');
+    if(b) switchView(b.getAttribute('data-view'));
+  });
+  $('#btn-reload').addEventListener('click', function(){
+    Store.syncNote = '正在重新加载…'; renderMeta();
+    loadData().then(function(){ toast('数据已重新加载'); });
+  });
+  // 兼容总览/其它视图里的「去题库 →」类链接
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target.closest('[data-view-link]') : null;
+    if(t){ e.preventDefault(); switchView(t.getAttribute('data-view-link')); }
+  });
+
+  loadData().then(function(){
+    // 支持用 URL hash 直接打开某个视图（如 index.html#bank），也便于自动截图验证
+    var hash = (location.hash || '').replace('#','');
+    if(hash) switchView(hash);
+    window.addEventListener('hashchange', function(){
+      switchView((location.hash||'').replace('#',''));
+    });
+    // 自动轮询：检测 AI 写回的新补丁
+    setInterval(function(){
+      if(document.hidden) return;
+      var before = {};
+      Object.keys(Store.patches).forEach(function(id){ before[id] = Store.patches[id]; });
+      scanPatchFiles().then(function(foundIds){
+        var after = {};
+        (foundIds||[]).forEach(function(id){ after[id] = window.__KAOYAN_PATCHES[id]; });
+        var changed = false;
+        Object.keys(after).forEach(function(id){
+          if(!before[id] || JSON.stringify(before[id]) !== JSON.stringify(after[id])) changed = true;
+        });
+        Object.keys(before).forEach(function(id){ if(!after[id]) { after[id] = before[id]; } });
+        Store.patchFiles = foundIds || Store.patchFiles || [];
+        Store.patches = after;
+        saveLS(LS_PATCH, Store.patches);
+        if(changed){
+          toast('检测到新的批改结果，已更新');
+          Store.syncNote = '数据已加载 · 补丁 ' + Store.patchFiles.length + ' 个 · ' + fmtTime(new Date().toISOString());
+          renderMeta(); render();
+        }
+      });
+    }, POLL_MS);
+  });
+}
+
+// 本地文件模式：script 标签加载可用，fetch 不可用（补丁已改为 JS 形式）
+if(location.protocol === 'file:'){
+  Store.syncNote = '本地文件模式（file://）';
+}
+// 诊断出口：供离线自检脚本读取内部状态（不影响正常使用）
+window.__KAOYAN_DIAG = {
+  ready: false,
+  get store(){ return Store; },
+  // 供离线自检脚本驱动渲染：diag.render('board') / diag.renderOpen('bank','q_mock_01_major')
+  render: function(v){ switchView(v || 'board'); return ''; },
+  renderOpen: function(v, key){
+    switchView(v);
+    if(key){
+      var isQ = Store.seed.questions.some(function(x){ return x.id === key; });
+      Store.open[isQ ? 'q_' + key : key] = true;
+      render();
+    }
+    return '';
+  },
+  get html(){
+    var out = {};
+    ['board','submit','results','bank','mistakes','trend'].forEach(function(k){
+      var el = $('#view-' + k);
+      out[k] = el ? el.innerHTML : '';
+    });
+    return out;
+  },
+  get resolved(){
+    return allCompletions(true).map(function(c){
+      var q = questionById(c.questionId);
+      return { id:c.id, questionId:c.questionId, qTitle:q.title, kind:q.kind, status:c.status,
+               essayLen:(c.essayText||'').length, score: scoreOf(c) };
+    });
+  },
+  get seedQuestions(){ return Store.seed.questions.length; },
+  get patchFiles(){ return Store.patchFiles; },
+  // 新增：分类统计 / 练习次数 / 相似题识别，供自检使用
+  get categories(){
+    var c = { real:0, mock:0, mine:0 };
+    allQuestions().forEach(function(q){ c[catOf(q)]++; });
+    return c;
+  },
+  practiceCount: function(qid){ return practiceStats(qid).total; },
+  setDraftQuestion: function(qid){ Store.draftQuestionId = qid; render(); return qid; },
+  // 供自检模拟批改服务：注入 helper 状态或直接触发检测
+  setHelper: function(state, info){ Store.helper = { state: state, info: info || null }; render(); },
+  checkHelper: function(){ checkHelper(); },
+  similarity: function(a, b){ return similarity(a, b); },
+  findSimilar: function(text){ return findSimilarQuestions(text, 3).map(function(x){ return { id:x.q.id, score:x.score }; }); },
+  bestDuplicate: function(text){ var h = bestDuplicate(text); return h ? { id:h.q.id, score:h.score } : null; },
+  // 供自检：改稿链与对比视图
+  chainOf: function(id){
+    var c = allCompletions(true).filter(function(x){ return x.id === id; })[0];
+    if(!c) return [];
+    return relatedChain(c).map(function(x){ return x.id; });
+  },
+  addDraft: function(sub){
+    var c = { id:sub.id, questionId:sub.questionId, submittedAt:sub.submittedAt || new Date().toISOString(),
+              status:'pending', essayText:sub.essayText || 'draft', note:'', imagePath:'',
+              revises:sub.revises || undefined, draftGroup:sub.draftGroup || undefined, draftNo:sub.draftNo || undefined };
+    Store.subs.push(c); return c.id;
+  },
+  renderCompare: function(id){
+    Store.compare = id;
+    currentView = 'results';
+    ['board','submit','results','bank','mistakes','trend'].forEach(function(k){
+      var el = $('#view-' + k); if(el) el.hidden = (k !== 'results');
+    });
+    render();
+    return window.__KAOYAN_DIAG ? window.__KAOYAN_DIAG.html.results : '';
+  },
+  get currentView(){ return currentView; },
+  // 供自检：临时塞一条高编号提交，验证补丁探测范围会跟着放大
+  testHighSubId: function(id){
+    Store.subs.push({ id:id, questionId:'q_test_high', submittedAt:new Date().toISOString(), status:'pending', essayText:'x' });
+    rebuildPatchIds();
+    var run = PATCH_IDS.slice();
+    Store.subs.pop();
+    rebuildPatchIds();
+    return run;
+  }
+};
+window.__KAOYAN_SCRIPTS = [];
+var _appendChild = document.head.appendChild.bind(document.head);
+document.head.appendChild = function(el){
+  if(el && el.tagName === 'SCRIPT'){ window.__KAOYAN_SCRIPTS.push(el.src); }
+  return _appendChild(el);
+};
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+})();
+</script>
+</body>
+</html>

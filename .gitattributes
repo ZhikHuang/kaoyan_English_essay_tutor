@@ -1,0 +1,8 @@
+# 统一换行符，避免 Windows 用户提交/检出时把 .sh 变成 CRLF（macOS/Linux 会报 bad interpreter）
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.ico binary

@@ -20,7 +20,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
@@ -32,6 +32,9 @@ const PORT = parseInt(argValue('--port', '8787'), 10);
 const TASK = argValue('--task', '批改待批改作文');
 const STATE_FILE = path.join(ROOT, 'data', 'state.js');
 const QUESTIONS_FILE = path.join(ROOT, 'data', 'questions.js');
+// 网页里的提交只存在浏览器 localStorage，浏览器无法直接写盘；所以网页会把"待批改/已批改"的提交
+// 推送到本服务，由本服务落盘成 pending_submissions.json —— 这样批改服务与 AI 都能读到。
+const PENDING_FILE = path.join(ROOT, 'data', 'pending_submissions.json');
 
 let running = false;          // 同一时间只允许一次任务
 let runningKind = null;       // 'grade' 或 'update'
@@ -48,11 +51,12 @@ function bankYears(subject){
   const src = readQuestionSource();
   const en1 = [], en2 = [];
   let m;
-  const re1 = /id:\s*'q_real_(\d{4})_(?!en2)[a-z]+'/g;
+  // 同时接受单引号与双引号的 id 写法（AI 直接追加 BANK.push 时两种都可能出现）
+  const re1 = /id:\s*['"]q_real_(\d{4})_(?!en2)[a-z]+['"]/g;
   while ((m = re1.exec(src)) !== null) en1.push(parseInt(m[1], 10));
-  const re2a = /id:\s*'q_en2_(\d{4})_[a-z]+'/g;
+  const re2a = /id:\s*['"]q_en2_(\d{4})_[a-z]+['"]/g;
   while ((m = re2a.exec(src)) !== null) en2.push(parseInt(m[1], 10));
-  const re2b = /id:\s*'q_real_(\d{4})_en2_[a-z]+'/g;
+  const re2b = /id:\s*['"]q_real_(\d{4})_en2_[a-z]+['"]/g;
   while ((m = re2b.exec(src)) !== null) en2.push(parseInt(m[1], 10));
   const uniq = a => [...new Set(a)].sort((x, y) => x - y);
   const pick = subject === 'en1' ? en1 : (subject === 'en2' ? en2 : [...en1, ...en2]);
@@ -100,10 +104,47 @@ function updateNeeds(){
   };
 }
 
-/* 统计 state.js 里的待批改提交（与网页同一套数据） */
-function pendingInfo(){
+/* 读取网页推送过来的提交（data/pending_submissions.json）。
+   格式兼容两种：{ meta:{...}, completions:[...] } 或直接 [ ... ] */
+function readPendingFile(){
+  try {
+    if (!fs.existsSync(PENDING_FILE)) return { meta: null, completions: [] };
+    const j = JSON.parse(fs.readFileSync(PENDING_FILE, 'utf8'));
+    const arr = Array.isArray(j) ? j : (Array.isArray(j && j.completions) ? j.completions : []);
+    return { meta: (j && j.meta) || null, completions: arr.filter(c => c && c.id) };
+  } catch (e) { return { meta: null, completions: [], error: String(e.message || e) }; }
+}
+
+/* 网页推送提交：按 id 合并（新的覆盖旧的），并把补丁已存在的提交视为已批改 */
+function mergePendingSubmissions(incoming){
+  const cur = readPendingFile();
+  const byId = new Map();
+  cur.completions.forEach(c => byId.set(c.id, c));
+  const ids = [];
+  (incoming || []).forEach(c => {
+    if (!c || typeof c.id !== 'string' || !/^sub_\d+$/.test(c.id)) return;
+    byId.set(c.id, c);
+    ids.push(c.id);
+  });
+  const merged = [...byId.values()].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  const out = {
+    meta: Object.assign({}, cur.meta || {}, {
+      updatedAt: new Date().toISOString(),
+      source: '考研英语作文练习台（网页自动同步）'
+    }),
+    completions: merged
+  };
+  fs.mkdirSync(path.dirname(PENDING_FILE), { recursive: true });
+  fs.writeFileSync(PENDING_FILE, JSON.stringify(out, null, 2), 'utf8');
+  const pend = pendingIds();
+  return { ok: true, received: ids.length, total: merged.length, pending: pend.pending, all: pend.all, graded: pend.graded };
+}
+
+/* 统一判定"待批改"：state.js 里的提交 + 网页推送的提交，去掉已有补丁的 */
+function pendingIds(){
   const src = readText(STATE_FILE);
-  const ids = [...src.matchAll(/id:\s*['"](sub_\d+)['"]/g)].map(m => m[1]);
+  const fromState = [...src.matchAll(/id:\s*['"](sub_\d+)['"]/g)].map(m => m[1]);
+  const fromWeb = readPendingFile().completions.map(c => c.id);
   const graded = new Set();
   const pdir = path.join(ROOT, 'data', 'patches');
   if (fs.existsSync(pdir)) {
@@ -112,8 +153,47 @@ function pendingInfo(){
       if (m) graded.add(f.replace('.js', ''));
     }
   }
-  const pending = ids.filter(id => !graded.has(id));
-  return { total: ids.length, graded: graded.size, pending };
+  const all = [...new Set([...fromState, ...fromWeb])];
+  return { all, pending: all.filter(id => !graded.has(id)), graded: [...graded] };
+}
+
+/* 启动时写一份快照，让 AI（读 pending_submissions.json 的技能/工具）也能看到全部提交 */
+function snapshotToPendingFile(){
+  try {
+    const info = pendingIds();
+    const cur = readPendingFile();
+    if (cur.completions.length || !info.all.length) return { ok: true, skipped: true };
+    const out = {
+      meta: { updatedAt: new Date().toISOString(), source: 'grade-helper 启动快照（来自 data/state.js）' },
+      completions: cur.completions
+    };
+    fs.mkdirSync(path.dirname(PENDING_FILE), { recursive: true });
+    fs.writeFileSync(PENDING_FILE, JSON.stringify(out, null, 2), 'utf8');
+    return { ok: true, snapshot: true };
+  } catch (e) { return { ok: false, error: String(e.message || e) }; }
+}
+
+/* 统计 state.js 里的待批改提交（与网页同一套数据） */
+function pendingInfo(){
+  const p = pendingIds();
+  return { total: p.all.length, graded: p.graded.length, pending: p.pending };
+}
+
+/* 读请求体：超过上限时也要给客户端一个明确响应（旧实现直接 destroy，会让 fetch 永久挂起） */
+const BODY_LIMIT = 4 * 1024 * 1024;
+function readBody(req, res, cb){
+  let body = '';
+  let aborted = false;
+  req.on('data', c => {
+    body += c;
+    if (body.length > BODY_LIMIT && !aborted) {
+      aborted = true;
+      json(res, 413, { ok: false, error: '请求体超过 ' + Math.round(BODY_LIMIT / 1048576) + 'MB 上限' });
+      req.destroy();
+    }
+  });
+  req.on('end', () => { if (!aborted) cb(body); });
+  req.on('error', () => { if (!aborted) { aborted = true; json(res, 400, { ok: false, error: '请求读取失败' }); } });
 }
 
 function json(res, code, obj){
@@ -140,6 +220,24 @@ const server = http.createServer((req, res) => {
     json(res, 200, pendingInfo());
     return;
   }
+  if (url === '/submissions') {          // 网页启动/提交后把本机提交推送到这里落盘
+    if (req.method === 'POST') {
+      readBody(req, res, (body) => {
+        try {
+          const j = JSON.parse(body || '{}');
+          const r = mergePendingSubmissions(Array.isArray(j) ? j : j.completions);
+          console.log('已接收网页提交 ' + r.received + ' 条（本机共 ' + r.total + ' 条，待批改 ' + r.pending.length + ' 条）');
+          json(res, 200, r);
+        } catch (e) {
+          json(res, 400, { ok: false, error: '提交内容不是合法 JSON：' + String(e.message || e) });
+        }
+      });
+      return;
+    }
+    const cur = readPendingFile();
+    json(res, 200, { ok: true, total: cur.completions.length, completions: cur.completions, pending: pendingIds().pending });
+    return;
+  }
   if (url === '/bank') {                      // 题库年份覆盖情况（网页「一键更新」面板用）
     json(res, 200, updateNeeds());
     return;
@@ -153,15 +251,21 @@ const server = http.createServer((req, res) => {
 
     const info = pendingInfo();
     if (info.pending.length === 0) {
-      json(res, 200, { ok: false, error: '没有待批改的作文（data/state.js 里的提交都已有补丁）' });
+      const hint = '没有待批改的作文。可能原因：① 网页里的提交还没同步到本机（请刷新网页，或在网页「提交作文」页点一下「一键批改」，网页会自动把本机提交推送过来）；'
+        + '② 这些提交已经有补丁（data/patches/）了；③ data/state.js 与 data/pending_submissions.json 里确实没有待批改的提交。';
+      json(res, 200, { ok: false, error: hint });
       return;
     }
-    // 允许网页覆盖任务文字（例如"只批改 sub_0003"）
-    let body = '';
-    req.on('data', c => { body += c; if (body.length > 4000) req.destroy(); });
-    req.on('end', () => {
+    // 任务文字：网页不传就用「服务端启动参数」（即 node .../grade-helper.js --task "..."）；
+    // 网页若要指定，需显式传 pageTask。这样 CLI 的 --task 不会被网页默认值覆盖。
+    readBody(req, res, (body) => {
       let task = TASK;
-      try { const j = JSON.parse(body || '{}'); if (j && typeof j.task === 'string' && j.task.trim()) task = j.task.trim(); } catch (e) {}
+      let pageTask = '';
+      try {
+        const j = JSON.parse(body || '{}');
+        if (j && typeof j.pageTask === 'string' && j.pageTask.trim()) pageTask = j.pageTask.trim().slice(0, 2000);
+      } catch (e) {}
+      if (pageTask) task = pageTask;
       runAgent(task, 'grade');
       json(res, 200, { ok: true, started: true, task, pending: info.pending });
     });
@@ -169,9 +273,7 @@ const server = http.createServer((req, res) => {
   }
   if (url === '/update' && req.method === 'POST') {   // 一键更新题库：让 agent 自己联网查最新真题并补进题库
     if (running) { json(res, 409, { ok: false, error: '已经有一次任务在进行中（' + runningKind + '），请等它结束' }); return; }
-    let body = '';
-    req.on('data', c => { body += c; if (body.length > 4000) req.destroy(); });
-    req.on('end', () => {
+    readBody(req, res, (body) => {
       let years = [];
       try { const j = JSON.parse(body || '{}'); if (Array.isArray(j.years)) years = j.years.filter(y => Number.isInteger(y)); } catch (e) {}
       const need = updateNeeds();
@@ -192,9 +294,13 @@ const server = http.createServer((req, res) => {
   }
   if (url === '/browser') {          // 换一个浏览器打开练习台（辅助服务顺手提供，方便）
     const idx = path.join(ROOT, 'index.html');
-    if (!fs.existsSync(idx)) { json(res, 404, { ok: false }); return; }
+    if (!fs.existsSync(idx)) { json(res, 404, { ok: false, error: '找不到 app/index.html' }); return; }
+    // 本服务不托管静态文件，所以直接把浏览器引到磁盘上的 file:// 地址
+    const fileUrl = 'file:///' + idx.replace(/\\/g, '/').replace(/^\//, '');
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end('<meta http-equiv="refresh" content="0;url=../index.html">');
+    res.end('<!doctype html><meta charset="utf-8"><title>打开练习台</title>'
+      + '<p>正在打开练习台…</p><p><a href="' + fileUrl + '">' + fileUrl + '</a></p>'
+      + '<script>location.replace(' + JSON.stringify(fileUrl) + ')</script>');
     return;
   }
   json(res, 404, { ok: false, error: 'unknown endpoint' });
@@ -255,11 +361,12 @@ function buildUpdateTask(years){
     '  · 小作文（Part A，10 分，约 100 词）：id 用 q_en2_<年份>_minor',
     '  · 翻译（15 分）：**整段英译汉**（不是划线句），id 用 q_en2_<年份>_translation；字段 passage 放英文原文（可放按句拆开的版本），sentences 放需要翻译的句子，hints 里注明"整段翻译，15 分"。',
     '',
-    '【C. 写在哪里（重要）】本仓库的题库文件 data/questions.js 由生成器产出，直接改它会被下次生成覆盖，所以要改数据源：',
+    '【C. 写在哪里（重要）】你的工作目录是 app/，题库文件 data/questions.js 由生成器产出，直接改它会被下次生成覆盖，所以要改数据源：',
     '  · 英语一：编辑 tools/gen-questions.js 里的 MAJOR 数组（大作文）与 MINOR 数组（小作文），照表中已有条目的写法追加；',
     '  · 英语二：编辑 tools/en2-data.js 里的 EN2_MAJOR / EN2_MINOR / EN2_TRANS 三个数组；',
+    '  · 模拟题与长难句专项的数据源是 tools/mock-data.js（与本次更新无关，不要改）；',
     '  · 改完后运行 `node tools/gen-questions.js` 重新生成 data/questions.js（它会自动带上 subject 与 id 规则）。',
-    '  若题库已改成手工追加（questions.js 里直接有题目对象、且没有对应的生成器条目），那就直接往 data/questions.js 末尾追加 BANK.push({...})。',
+    '  注意：这个仓库的题库**只能**通过"改数据源 + 重新生成"来加真题；直接往 data/questions.js 追加，下次生成时会被丢弃。',
     '',
     '【D. 每条题目必须包含的字段】照已有题目的写法：',
     '  subject（英语一填 "en1"，英语二填 "en2"）、category:"real"、kind（major/minor/translation）、',
@@ -271,15 +378,25 @@ function buildUpdateTask(years){
     '  **不要自己发明图函数名**；若确实需要新图型，必须同时在 data/figures.js 里定义并挂到 window.__KAOYAN_FIG，否则题库会整体加载失败。',
     '',
     '【E. 纪律】',
-    '  1. 只允许修改 tools/gen-questions.js、tools/en2-data.js、data/questions.js（必要时 data/figures.js）。不要动 index.html、state.js、patches/、其它 tools/。',
+    '  1. 只允许修改 tools/gen-questions.js、tools/en2-data.js（必要时 data/figures.js）；mock-data.js 与 data/questions.js 由生成器负责，不要手改。不要动 index.html、state.js、patches/、其它 tools/。',
     '  2. 只增不改：不要修改已有年份的题目或它们的 id，也不要改生成器里已有的条目。',
     '  3. 追加前先查重：某年某题型已存在就跳过并说明。',
     '  4. 不要分析网页或脚本实现，不要修其它 bug，不要增加本次任务之外的题目。',
     '  5. 查不到的年份或细节如实说"查不到/不确定"，不要编造。',
-    '  6. 写完运行 `node tools/validate.js` 确认通过（有 FAIL 就改好再跑）。',
+    '  6. 写完运行 `node tools/validate.js` 确认"结果：全部通过"（有 FAIL 就改好再跑）。',
     '',
     '【F. 汇报】最后用 8 行以内说明：英语一新增了哪几年哪几道、英语二新增了哪几年哪几道、来源链接、哪些细节不确定。',
   ].join('\n');
+}
+
+/* 结束一个后台任务：Windows 上 shell:true 先起 cmd.exe，直接 kill 只会杀掉 cmd，
+   真正的 agent（node/dsh）会残留并继续写补丁 —— 必须连整棵进程树一起结束。 */
+function killTree(child){
+  if (!child || child.killed) return;
+  if (process.platform === 'win32' && child.pid) {
+    try { spawnSync('taskkill', ['/pid', String(child.pid), '/T', '/F'], { stdio: 'ignore' }); } catch (e) {}
+  }
+  try { child.kill(); } catch (e) {}
 }
 
 /* 启动一次独立的 headless agent 任务（批改 or 更新题库） */
@@ -326,7 +443,7 @@ function runAgent(task, kind, timeoutMs){
   const limit = timeoutMs || 15 * 60 * 1000;
   const timer = setTimeout(() => {
     console.log('!! 超过 ' + Math.round(limit / 60000) + ' 分钟仍未结束，终止本次' + (isUpdate ? '更新' : '批改'));
-    try { child.kill(); } catch (e) {}
+    killTree(child);
   }, limit);
 
   child.on('error', (err) => {
@@ -358,8 +475,9 @@ function runAgent(task, kind, timeoutMs){
 
 server.listen(PORT, '127.0.0.1', () => {
   const u = updateNeeds();
+  snapshotToPendingFile();
   console.log('');
-  console.log('  考研英语一 · 本地辅助服务已启动');
+  console.log('  考研英语（一）（二）· 本地辅助服务已启动');
   console.log('  ------------------------------------------------');
   console.log('  地址：http://127.0.0.1:' + PORT + '   （只监听本机，不联网）');
   console.log('  工作目录：' + ROOT);
@@ -368,14 +486,16 @@ server.listen(PORT, '127.0.0.1', () => {
     (u.upToDate ? '已是最新' : '缺 ' + u.need.join('、') + '（可在网页点「一键更新题库」）'));
   console.log('');
   console.log('  保持这个窗口开着，然后在网页上点「一键批改」或「一键更新题库」。');
-  console.log('  结束：按 Ctrl+C，或双击 停止批改服务.cmd');
+  console.log('  结束：按 Ctrl+C，或双击 stop-helper.cmd');
   console.log('');
 });
 server.on('error', (e) => {
   if (e && e.code === 'EADDRINUSE') {
     console.log('端口 ' + PORT + ' 已被占用：可能服务已经在运行了。');
-    console.log('直接用网页上的「一键批改」即可；若要换端口：node tools/grade-helper.js --port 8899');
+    console.log('直接用网页上的「一键批改」即可；若要换端口，请同时改网页里的 HELPER_URL（app/index.html 顶部）。');
+    process.exitCode = 1;
   } else {
     console.log('服务启动失败：' + (e && e.message));
+    process.exitCode = 1;
   }
 });

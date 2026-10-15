@@ -21,9 +21,14 @@ function staticChecks(){
     try { new Function(src); ok('第 ' + (i+1) + ' 段语法通过（' + src.length + ' 字符）'); }
     catch (e) { bad('第 ' + (i+1) + ' 段语法错误：' + e.message); }
   });
-  const openTags = (html.match(/<script/g) || []).length;
-  const closeTags = (html.match(/<\/script>/g) || []).length;
-  openTags === closeTags ? ok('script 标签配对 ' + openTags + '/' + closeTags) : bad('script 标签不配对');
+  // 只统计真正的标签：跳过 HTML 注释与 JS 字符串里的 "<script"（例如 createElement('script')）
+  const tagged = html.replace(/<!--[\s\S]*?-->/g, ' ')
+                     .replace(/'(?:[^'\\]|\\.)*'/g, "''")
+                     .replace(/"(?:[^"\\]|\\.)*"/g, '""');
+  const openTags = (tagged.match(/<script(?=[\s>])/g) || []).length;
+  const closeTags = (tagged.match(/<\/script\s*>/g) || []).length;
+  openTags === closeTags ? ok('script 标签配对 ' + openTags + '/' + closeTags)
+                         : bad('script 标签不配对（开 ' + openTags + ' / 闭 ' + closeTags + '）');
   ['data/state.js', 'data/questions.js', 'data/figures.js'].forEach(p => {
     html.includes(p) ? ok('引用了 ' + p) : bad('未引用 ' + p);
   });
@@ -60,11 +65,27 @@ function staticChecks(){
     if (!en2Years.length) bad('题库里没有英语二题目（应覆盖 2010—2026）');
     else if (missingEn2.length) bad('英语二缺题 ' + missingEn2.length + ' 道：' + missingEn2.slice(0, 8).join('、') + (missingEn2.length > 8 ? ' …' : ''));
     else ok('英语二覆盖 ' + en2Years[0] + '—' + en2Years[en2Years.length - 1] + '，共 ' + en2Years.length + ' 届 × 大作文/小作文/翻译齐全');
-    // 英语一：翻译为 5 个划线句；英语二整段翻译不要求划线句
+    // 英语一完整性（此前只校验英语二，删光 34 道英语一真题也能"全部通过"，这里补上）
+    const en1Years = [...new Set(qs.filter(q => q.subject !== 'en2')
+      .map(q => (String(q.year || '').match(/\d{4}/) || [''])[0]).filter(Boolean))].sort();
+    const missingEn1 = [];
+    for (let y = 2010; y <= 2026; y++) {
+      for (const k of ['major', 'minor']) {
+        if (!qs.some(q => q.id === 'q_real_' + y + '_' + k)) missingEn1.push(y + '/' + k);
+      }
+    }
+    if (!en1Years.length) bad('题库里没有英语一题目（应覆盖 2010—2026 大作文 + 小作文）');
+    else if (missingEn1.length) bad('英语一缺题 ' + missingEn1.length + ' 道：' + missingEn1.slice(0, 8).join('、') + (missingEn1.length > 8 ? ' …' : ''));
+    else ok('英语一覆盖 ' + en1Years[0] + '—' + en1Years[en1Years.length - 1] + '，共 ' + en1Years.length + ' 届 × 大作文/小作文齐全');
+    // 英语一：翻译为 5 个划线句；英语二整段翻译要给英文原文（passage），并按句拆分
     qs.filter(q => q.kind === 'translation').forEach(q => {
       const n = (q.sentences || []).length;
       if (q.subject === 'en2') {
-        ok(q.id + ' 英语二整段翻译（' + (q.promptTextZh || '').slice(0, 18) + '…，按句拆分为 ' + n + ' 句，可为 0）');
+        const hasPassage = !!(q.passage || '').trim();
+        const hasSentences = Array.isArray(q.sentences) && q.sentences.length > 0;
+        if (!hasPassage && !hasSentences) bad(q.id + ' 英语二整段翻译缺少英文原文（passage/sentences 都为空，学生没有可翻译的内容）');
+        else if (!hasPassage) bad(q.id + ' 英语二整段翻译缺 passage（只有按句拆分版，页面无法显示整段原文）');
+        else ok(q.id + ' 英语二整段翻译：原文 ' + (q.passage || '').length + ' 字符 / 按句拆分为 ' + n + ' 句');
       } else {
         n === 5 ? ok(q.id + ' 划线句 5 句') : bad(q.id + ' 划线句数量=' + n);
       }

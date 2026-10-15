@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
 cd /d "%~dp0"
-title 考研英语一 · 辅助服务（这个窗口要一直开着）
+title 考研英语（一）（二）· 辅助服务（这个窗口要一直开着）
 where node >nul 2>nul
 if errorlevel 1 (
   echo.

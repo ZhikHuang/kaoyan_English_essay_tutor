@@ -20,7 +20,7 @@ user-invocable: true
 
 ## 一、执行流程
 
-1. **读取待办**：读 `data/state.js`，找 `status:"pending"` 的提交（`S.completions` 数组）；网页里新提交只存在浏览器 localStorage，需要时让用户导出 `data/pending_submissions.json`，或让用户直接把作文粘贴过来。
+1. **读取待办**（按优先级）：① `app/data/pending_submissions.json` —— 网页在本机辅助服务（`start-helper.cmd`）在线时会**自动**把 localStorage 里的提交同步到这里，这是最全的一份；② `app/data/state.js` 的 `completions`，找 `status:"pending"` 的提交。两份按 `id` 去重，已有 `data/patches/sub_XXXX.js` 的视为已批改。若两处都没有对待批改内容，**不要直接回复"没有待批改的作文"**，先让用户二选一：双击 `start-helper.cmd` 让网页自动同步、或点「导出本机提交 JSON」另存为 `app/data/pending_submissions.json`、或把作文直接粘贴过来。
 2. **题目归类与查重（本项目的硬规则）**：题库分三类 —— `real` 考研真题、`mock` 模拟题、`mine` 我的题目（用户自带）。用户提供的题目（提交里有 `ownPrompt` 字段，或直接粘在对话里）必须先与 `real`/`mock` 题目比对：
    - **是同一道题** → 把这次作文与批改结果**归并到那道题下面**：提交的 `questionId` 用已有题目的 id，练习次数自然 +1，**不要新建题目**；对话里明确说明"已归并到《题名》"。
    - **确实是一道新题** → 新建题目归档到 `mine` 类别（id 用 `q_mine_001` 递增），并把题目写进 `data/state.js` 的 `S.questions`（或 `data/questions.js`），字段至少含 `id/category:"mine"/subject/kind/title/promptZh/promptTextZh/source:"我自己上传的题目"`。
@@ -75,9 +75,12 @@ user-invocable: true
      |---|---|---|---|
      | 英语一 | `tools/gen-questions.js` | `MAJOR`（大作文）/ `MINOR`（小作文） | 运行 `node tools/gen-questions.js` |
      | 英语二 | `tools/en2-data.js` | `EN2_MAJOR` / `EN2_MINOR` / `EN2_TRANS` | 同上 |
+     | 模拟题/长难句专项 | `tools/mock-data.js` | `PUSH({...})` 列表 | 同上 |
+
+     > 路径说明：技能里的 `tools/...`、`data/...` 都是**相对 `app/`**（仓库根下则是 `app/tools/...`、`app/data/...`）。命令行自检请用 `node tools/validate.js`（工作目录 = `app/`）。
 
      生成器会自动补 `subject`、`id`、`category`、`source`、`year`、`promptEn` 等字段，所以数据源里只需写 `year / title / tags / figure / text / zh / hint`（翻译题用 `topic`）。
-   - 若用户环境里题库已改成手工维护（`data/questions.js` 里直接有题目对象、生成器里没有对应条目），那就直接往 `data/questions.js` 末尾追加 `BANK.push({...})`，**不要**再跑生成器。
+   - **模拟题与长难句专项**：数据源是 `tools/mock-data.js`（一个 `PUSH({...})` 列表），写完同样运行 `node tools/gen-questions.js` 重新生成；**不要**直接改 `data/questions.js` —— 生成器只从数据源重建该文件，手改的内容会在下次生成时被丢弃。
    - 用户自带的题 → `data/state.js` 的 `S.questions`，`category:"mine"`，id 用 `q_mine_001` 递增。
 4. **先查重再落笔**：加题前先搜题库（**先限定同科目**，题干相似 + 题型一致 + 要点一致即算同一道）；同一道题**不新建**，把提交的 `questionId` 指向已有题目，练习次数自然 +1。
 
@@ -88,9 +91,9 @@ user-invocable: true
 1. 先分别检查**两个科目**的年份覆盖（`/bank` 端点与网页面板都会给出 `英语一 2010—2026 / 英语二 2010—2026` 与各自缺口）；
 2. 联网核对目标年份**两科**的真实题目：英语一 2 道（大作文 20 分 + 小作文 10 分）、英语二 3 道（图表大作文 15 分 + 小作文 10 分 + 整段翻译 15 分）；
 3. 按上面第 3 条改**数据源**并重新生成 `data/questions.js`；
-4. 跑 `node tools/validate.js` 确认通过（它会校验两科 2010—2026 的完整性），最后汇报两科各新增了什么、来源、不确定项。
+4. 跑 `node tools/validate.js` 确认输出"结果：全部通过"（它会分别校验**英语一与英语二** 2010—2026 × 各题型的完整性，也会拦住"英语二翻译缺英文原文"），最后汇报两科各新增了什么、来源、不确定项。
 
-更新前 `tools/grade-helper.js` 会自动把 `data/questions.js` 备份到 `data/backups/`（保留最近 10 份），网页上可「回退到更新前的备份」。
+更新前 `tools/grade-helper.js` 会自动把 `data/questions.js` 备份到 `data/backups/`（保留最近 10 份），网页上可「回退到更新前的备份」。`--max-year` 只用于裁剪测试，会丢掉范围外的真题，**不要**在日常更新里用。
 
 **新增英语一真题**：`subject:"en1"`、`category:"real"`、`year:"20XX 真题"`、id 用 `q_real_<年份>_major` / `_minor`；`source` 写"20XX 年考研英语一 大/小作文（Part A/B，X 分）"。
 **新增英语二真题**：`subject:"en2"`、`category:"real"`、id 用 `q_en2_<年份>_major`（图表大作文 15 分，约 150 词）/ `_minor`（小作文 10 分）/ `_translation`（整段英译汉 15 分，用 `passage` + `sentences` 承载）。

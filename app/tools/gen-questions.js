@@ -169,20 +169,38 @@ EN2.EN2_TRANS.filter(inRange).forEach(q => {
   out.push("    promptTextZh: '选段话题：" + q.topic.replace(/'/g, "\\'") + "',");
   out.push("    promptZh: '英语二翻译（整段英译汉，15 分）：" + q.topic.replace(/'/g, "\\'") + "',");
   out.push("    promptEn: " + JSON.stringify(EN2.EN2_TRANS_EN) + ",");
+  if (q.passage) out.push("    passage: " + JSON.stringify(q.passage) + ",");
+  if (Array.isArray(q.sentences) && q.sentences.length) out.push("    sentences: " + JSON.stringify(q.sentences, null, 2).replace(/\n/g, '\n    ') + ",");
   out.push("    hints: " + JSON.stringify(q.hint));
   out.push("  });");
   out.push("");
 });
-/* ============ 模拟题：从现有文件搬运（保持 id 不变，追加新题也放这里） ============ */
-const existing = fs.readFileSync(path.join(ROOT, 'data', 'questions.js'), 'utf8');
-const mockBlock = existing.match(/\/\* ===================== 二、模拟题（原创） ===================== \*\/([\s\S]*?)\/\* ============ 外刊长难句翻译专项/);
-const drillBlock = existing.match(/\/\* ============ 外刊长难句翻译专项[\s\S]*?\n  BANK\.push\(\{[\s\S]*?\n  \}\);\n/);
+/* ============ 模拟题与长难句专项：数据源 tools/mock-data.js（不再读自己的产物） ============ */
+const MOCK = require('./mock-data.js');
+function emitQuestion(q){
+  const lines = [];
+  lines.push("  BANK.push({");
+  lines.push("    id: " + JSON.stringify(q.id) + ", category: " + JSON.stringify(q.category) +
+             ", subject: " + JSON.stringify(q.subject) + ", kind: " + JSON.stringify(q.kind) + ",");
+  lines.push("    source: " + JSON.stringify(q.source) + ", year: " + JSON.stringify(q.year) + ",");
+  lines.push("    title: " + JSON.stringify(q.title) + ",");
+  lines.push("    difficulty: " + (q.difficulty || 3) + ", words: " + JSON.stringify(q.words || '') + ", tags: " + JSON.stringify(q.tags || []) + ",");
+  if (q.promptTextZh) lines.push("    promptTextZh: " + JSON.stringify(q.promptTextZh) + ",");
+  lines.push("    promptZh: " + JSON.stringify(q.promptZh || '') + ",");
+  if (q.promptEn) lines.push("    promptEn: " + JSON.stringify(q.promptEn) + ",");
+  if (q.figure) lines.push("    figure: " + JSON.stringify(q.figure) + ",");
+  if (q.passage) lines.push("    passage: " + JSON.stringify(q.passage) + ",");
+  if (Array.isArray(q.sentences) && q.sentences.length) lines.push("    sentences: " + JSON.stringify(q.sentences) + ",");
+  if (Array.isArray(q.hints) && q.hints.length) lines.push("    hints: " + JSON.stringify(q.hints));
+  // 去掉最后一行末尾的逗号
+  lines[lines.length - 1] = lines[lines.length - 1].replace(/,$/, '');
+  lines.push("  });");
+  return lines.join('\n');
+}
 out.push("  /* ===================== 二、模拟题（原创） ===================== */");
-if (mockBlock) out.push(mockBlock[1].replace(/\n{3,}/g, '\n\n').trimEnd());
-out.push("");
+MOCK.questions.filter(q => q.kind !== 'drill').forEach(q => { out.push(emitQuestion(q)); out.push(""); });
 out.push("  /* ============ 外刊长难句翻译专项（辅助训练，不打考研总分，归在模拟题类别） ============ */");
-if (drillBlock) out.push(drillBlock[0].split('\n').slice(1).join('\n').trimEnd());
-out.push("");
+MOCK.questions.filter(q => q.kind === 'drill').forEach(q => { out.push(emitQuestion(q)); out.push(""); });
 out.push("  window.__KAOYAN_QUESTIONS = BANK;");
 out.push("})();");
 out.push("");

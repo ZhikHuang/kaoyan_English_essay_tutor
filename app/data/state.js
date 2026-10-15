@@ -15,7 +15,7 @@
     version: 1,
     updatedAt: '2026-01-01T00:00:00+08:00',
     examDate: '',          // 例如 '2026-12-19'；留空 = 不显示倒计时
-    owner: '',             // 例如 '考研英语一考生'
+    owner: '',             // 例如 '考研英语（一）（二）考生'
     skill: 'kaoyan-english-tutor'
   };
 

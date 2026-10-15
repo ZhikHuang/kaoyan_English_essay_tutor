@@ -80,7 +80,7 @@ window.__KAOYAN_PATCHES['sub_0001'] = {
                                           }
                                       ],
                     "revisedEssay":  "As is vividly shown in the picture, a father and his daughter are sitting on the same sofa, but **each of them is** staring at **his or her** own mobile phone. The father\u0027s screen glows with work messages, while the daughter\u0027s screen glows with short videos. **For** one and a half hours, they **do not exchange a single word**.\n\nThe picture **reveals** a common problem in modern families. Mobile phones bring us **a great deal of convenience**, but they also take away the time we should spend with our family members. Many people think they are together, but in fact they are alone. The distance between the two people on the sofa is less than half a meter, yet their hearts are far away.\n\nIn my opinion, we should use mobile phones **in a reasonable way**. I suggest every family set a \"no phone time\" during dinner. In this way, we can talk with our parents and children, and we will find that real communication is much warmer than any screen. **Only when we put down our phones can we truly be together.**",
-                    "revisedWordCount":  180,
+                    "revisedWordCount":  183,
                     "expressions":  [
                                         {
                                             "phrase":  "physically close but emotionally distant",

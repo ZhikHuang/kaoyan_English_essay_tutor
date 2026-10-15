@@ -204,7 +204,7 @@
       <tr><td><b>docs/操作手册.pdf</b></td><td>就是本文件</td><td class="c">阅读</td></tr>
       <tr><td><b>skill/</b></td><td>批改标准（评分档位、检查清单、数据契约），供智能体读取</td><td class="c">不用改</td></tr>
       <tr><td>app/data/ </td><td>数据目录：题库、状态、批改结果、照片、备份</td><td class="c">一般不用</td></tr>
-      <tr><td>&nbsp;&nbsp;├ questions.js</td><td>题库（真题 + 模拟题）</td><td class="c">可加题</td></tr>
+      <tr><td>&nbsp;&nbsp;├ questions.js</td><td>题库（真题 + 模拟题；由生成器产出，不要手改）</td><td class="c">可加题</td></tr>
       <tr><td>&nbsp;&nbsp;├ state.js</td><td>状态：考试日期 + 你的提交记录</td><td class="c">改考试日期</td></tr>
       <tr><td>&nbsp;&nbsp;├ figures.js</td><td>示意图库（图画 / 表格 / 柱状图 / 饼图 / 双图表）</td><td class="c">不用</td></tr>
       <tr><td>&nbsp;&nbsp;├ patches/</td><td>每一次批改的结果，一次提交一个文件</td><td class="c"><b>不要删</b></td></tr>
@@ -263,7 +263,7 @@
     <tbody>
       <tr>
         <td><b>A. 网页按钮</b><br><span class="small">（推荐日常使用）</span></td>
-        <td>① 双击 <code>启动批改服务.cmd</code>（出现一个标题为「批改服务」的窗口，保持它开着）<br>② 网页「提交作文」页最下方点「<b>一键批改（N 篇）</b>」</td>
+        <td>① 双击 <code>start-helper.cmd</code>（出现一个标题为「辅助服务」的窗口，保持它开着）<br>② 网页「提交作文」页最下方点「<b>一键批改（N 篇）</b>」</td>
         <td>连练好几篇、不想反复切换窗口</td>
       </tr>
       <tr>
@@ -334,7 +334,7 @@
 
   <h3>方式一：从题库选题（最常用）</h3>
   <ol>
-    <li>「题库」→ 筛选「<b>考研真题</b>」（2010—2026，共 34 道）或「<b>模拟题</b>」（10 道）。</li>
+    <li>「题库」→ 筛选「<b>考研真题</b>」（2010—2026，共 34 道）或「<b>模拟题</b>」（9 道 + 长难句专项 1 道）。</li>
     <li>点开题目，核对题干与示意图（真题的图画/图表是本站自绘示意图，非真题原图）。</li>
     <li>点「用这道题写一篇 →」，粘贴作文，提交。</li>
   </ol>
@@ -478,7 +478,7 @@
   <div class="kv">
     <div class="box"><div class="k">英语一真题</div><div class="v">34 道</div><div class="small">2010—2026，每年大作文（20 分）+ 小作文（10 分）</div></div>
     <div class="box"><div class="k">英语二真题</div><div class="v">51 道</div><div class="small">2010—2026，每年图表大作文（15 分）+ 小作文（10 分）+ 整段翻译（15 分）</div></div>
-    <div class="box"><div class="k">模拟题</div><div class="v">10 道</div><div class="small">原创：3 篇图画作文 + 3 小作文 + 3 翻译 + 1 长难句专项</div></div>
+    <div class="box"><div class="k">模拟题</div><div class="v">9 道 + 专项 1 道</div><div class="small">原创：3 篇图画作文 + 3 小作文 + 3 翻译 + 1 长难句专项</div></div>
     <div class="box"><div class="k">我的题目</div><div class="v">0 道</div><div class="small">你上传题目后自动归档</div></div>
   </div>
   <div class="ok">
@@ -546,8 +546,9 @@
       <tr><td>顶栏显示「⚠ 未能读取 data/state.js」</td><td>确认 <code>index.html</code> 与 <code>data\</code> 在同一层目录，且 <code>data\state.js</code> 存在</td></tr>
       <tr><td>提交后网页上看不到批改结果</td><td>①确认补丁文件是 <code>data\patches\sub_XXXX.js</code>（<b>必须是 .js</b>）；②点右上角「重新加载数据」；③跑一次自检（见下）</td></tr>
       <tr><td>题目显示「（题目已删除）」</td><td>提交里的 <code>questionId</code> 在题库中找不到。检查 <code>data/state.js</code> 与 <code>data/questions.js</code> 里题目 id 是否被改过</td></tr>
-      <tr><td>网页里点了「一键批改」但没反应</td><td>批改服务窗口是否还开着？关掉就点了会失败。重新双击 <code>启动批改服务.cmd</code>，或改用 <code>一键批改.cmd</code></td></tr>
-      <tr><td>「一键批改.cmd」闪一下就关</td><td>会停在窗口里显示错误信息（如找不到 dsh）。把窗口里的内容发给 AI 看即可</td></tr>
+      <tr><td>网页里点了「一键批改」但没反应</td><td>批改服务窗口是否还开着？关掉就点了会失败。重新双击 <code>start-helper.cmd</code>，或改用 <code>一键批改.cmd</code></td></tr>
+      <tr><td>「一键批改.cmd」窗口停住不关</td><td>它会停在窗口里显示错误信息（如找不到 dsh / node），不会一闪而过。把窗口里的内容发给 AI 看即可</td></tr>
+<tr><td>AI 说「没有待批改的作文」</td><td>网页里的提交还只存在浏览器本地：先双击 <code>start-helper.cmd</code>，回网页点一次「一键批改」（会自动同步成 <code>app\data\pending_submissions.json</code>），或点「导出本机提交 JSON」另存为 <code>app\data\pending_submissions.json</code></td></tr>
       <tr><td>批改服务窗口出现 <code>DEP0190</code> 提示</td><td>Node 的弃用提醒，不影响运行，可忽略</td></tr>
       <tr><td>分数或统计对不上</td><td>跑自检工具定位到具体哪个补丁不一致（见 10.2）</td></tr>
     </tbody>
@@ -555,8 +556,8 @@
 
   <h3>10.2 自检工具</h3>
   <p>在项目文件夹里打开命令行，执行：</p>
-  <p><code>node tools\validate.js</code> —— 检查内联脚本语法、题库与状态文件、示意图结构、每个补丁的字段与分值自洽（采分点合计是否为 2、各句得分之和是否等于总分、注意事项是否 3 条等）。</p>
-  <p><code>node tools\validate.js --report</code> —— 额外用最小 DOM 仿真跑一遍页面逻辑，检查题目解析、逐句批改区块、图表渲染、错题库归类、趋势图等是否真的渲染出来。</p>
+  <p><code>node app\tools\validate.js</code>（工作目录 = 仓库根）—— 检查内联脚本语法、题库与状态文件、示意图结构、每个补丁的字段与分值自洽（采分点合计是否为 2、各句得分之和是否等于总分、注意事项是否 3 条等）。</p>
+  <p><code>node app\tools\validate.js --report</code> —— 额外用最小 DOM 仿真跑一遍页面逻辑，检查题目解析、逐句批改区块、图表渲染、错题库归类、趋势图等是否真的渲染出来。</p>
 
   <h3>10.3 数据存在哪里 / 怎么备份</h3>
   <table>

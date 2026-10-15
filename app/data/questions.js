@@ -766,6 +766,20 @@
     promptTextZh: '选段话题：以 Ted Ning 为例：他经历 90 年代末网络经济的兴衰、卖过保险、长期焦虑失眠，后来加入推广健康与可持续生活方式（LOHAS）的组织；说明"可持续"必须落实到日常选择与行动。',
     promptZh: '英语二翻译（整段英译汉，15 分）：以 Ted Ning 为例：他经历 90 年代末网络经济的兴衰、卖过保险、长期焦虑失眠，后来加入推广健康与可持续生活方式（LOHAS）的组织；说明"可持续"必须落实到日常选择与行动。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "\"Sustainability\" has become a popular word these days, but to Ted Ning, the concept will always have personal meaning. Having endured a painful period of unsustainability in his own life made it clear to him that sustainability-oriented values must be expressed through everyday action and choice.\n\nNing recalls spending a confusing year in the late 1990s selling insurance. He'd been through the dot-com boom and burst and, desperate for a job, signed on with a Boulder agency.\n\nIt didn't go well. \"It was a really bad move because that's not my passion,\" says Ning, whose dilemma about the job translated, predictably, into a lack of sales. \"I was miserable. I had so much anxiety that I would wake up in the middle of the night and stare at the ceiling. I had no money and needed the job. Everyone said, 'Just wait, you'll turn the corner, give it some time.'\"",
+    sentences: [
+      "\"Sustainability\" has become a popular word these days, but to Ted Ning, the concept will always have personal meaning.",
+      "Having endured a painful period of unsustainability in his own life made it clear to him that sustainability-oriented values must be expressed through everyday action and choice.",
+      "Ning recalls spending a confusing year in the late 1990s selling insurance.",
+      "He'd been through the dot-com boom and burst and, desperate for a job, signed on with a Boulder agency.",
+      "It didn't go well.",
+      "\"It was a really bad move because that's not my passion,\" says Ning, whose dilemma about the job translated, predictably, into a lack of sales.",
+      "\"I was miserable.",
+      "I had so much anxiety that I would wake up in the middle of the night and stare at the ceiling.",
+      "I had no money and needed the job.",
+      "Everyone said, 'Just wait, you'll turn the corner, give it some time.'",
+      "\""
+    ],
     hints: ["整段翻译，15 分；先通读抓主旨，再逐句划主干","注意人物经历的时间线与\"可持续\"的落地含义"]
   });
 
@@ -777,6 +791,18 @@
     promptTextZh: '选段话题：IT 产业的温室气体排放量与全球航空业相当（约占 CO2 总量的 2%）；每次搜索、数据中心的耗电与散热都带来环境负担；谷歌等大公司已在监控能效并改进，但仍需更多行动。',
     promptZh: '英语二翻译（整段英译汉，15 分）：IT 产业的温室气体排放量与全球航空业相当（约占 CO2 总量的 2%）；每次搜索、数据中心的耗电与散热都带来环境负担；谷歌等大公司已在监控能效并改进，但仍需更多行动。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "Who would have thought that, globally, the IT industry produces about the same volume of greenhouse gases as the world's airlines do — roughly 2 percent of all CO2 emissions?\n\nMany everyday tasks take a surprising toll on the environment. A Google search can leak between 0.2 and 7.0 grams of CO2, depending on how many attempts are needed to get the \"right\" answer. To deliver results to its users quickly, then, Google has to maintain vast data centres around the world, packed with powerful computers. While producing large quantities of CO2, these computers emit a great deal of heat, so the centres need to be well air-conditioned, which uses even more energy.\n\nHowever, Google and other big tech providers monitor their efficiency closely and make improvements. Monitoring is the first step on the road to reduction, but there is much more to be done, and not just by big companies.",
+    sentences: [
+      "Who would have thought that, globally, the IT industry produces about the same volume of greenhouse gases as the world's airlines do — roughly 2 percent of all CO2 emissions?",
+      "Many everyday tasks take a surprising toll on the environment.",
+      "A Google search can leak between 0.",
+      "2 and 7.",
+      "0 grams of CO2, depending on how many attempts are needed to get the \"right\" answer.",
+      "To deliver results to its users quickly, then, Google has to maintain vast data centres around the world, packed with powerful computers.",
+      "While producing large quantities of CO2, these computers emit a great deal of heat, so the centres need to be well air-conditioned, which uses even more energy.",
+      "However, Google and other big tech providers monitor their efficiency closely and make improvements.",
+      "Monitoring is the first step on the road to reduction, but there is much more to be done, and not just by big companies."
+    ],
     hints: ["注意比较结构（as much as）与数据表述","\"仍需更多行动\"是结论句，不要漏译"]
   });
 
@@ -788,6 +814,16 @@
     promptTextZh: '选段话题：人才外流长期困扰某些国家：急需的熟练劳动者流向海外，本可教书育人的人才离去；段落讨论人才流动的得失。',
     promptZh: '英语二翻译（整段英译汉，15 分）：人才外流长期困扰某些国家：急需的熟练劳动者流向海外，本可教书育人的人才离去；段落讨论人才流动的得失。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "When people in developing countries worry about migration, they are usually concerned at the prospect of their best and brightest departure to Silicon Valley or to hospitals and universities in the developed world. These are the kind of workers that countries like Britain, Canada and Australia try to attract by using immigration rules that privilege college graduates.\n\nLots of studies have found that well-educated people from developing countries are particularly likely to emigrate. A big survey of Indian households in 2004 found that nearly 40% of emigrants had more than a high-school education, compared with around 3.3% of all Indians over the age 25. This \"brain drain\" has long bothered policymakers in poor countries. They fear that it hurts their economies, depriving them of much-needed skilled workers who could have taught at their universities, worked in their hospitals and come up with clever new products for their factories to make.",
+    sentences: [
+      "When people in developing countries worry about migration, they are usually concerned at the prospect of their best and brightest departure to Silicon Valley or to hospitals and universities in the developed world.",
+      "These are the kind of workers that countries like Britain, Canada and Australia try to attract by using immigration rules that privilege college graduates.",
+      "Lots of studies have found that well-educated people from developing countries are particularly likely to emigrate.",
+      "A big survey of Indian households in 2004 found that nearly 40% of emigrants had more than a high-school education, compared with around 3.",
+      "3% of all Indians over the age 25.",
+      "This \"brain drain\" has long bothered policymakers in poor countries.",
+      "They fear that it hurts their economies, depriving them of much-needed skilled workers who could have taught at their universities, worked in their hospitals and come up with clever new products for their factories to make."
+    ],
     hints: ["brain drain 不能直译为\"脑力流失\"，应译\"人才外流\"","注意 gain / drain 的对举"]
   });
 
@@ -799,6 +835,18 @@
     promptTextZh: '选段话题：一位能记住自己生命中每一天的女士自述：记忆异常清晰（vivid）、无法遗忘，这既是天赋也是负担。',
     promptZh: '英语二翻译（整段英译汉，15 分）：一位能记住自己生命中每一天的女士自述：记忆异常清晰（vivid）、无法遗忘，这既是天赋也是负担。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "I can pick a date from the past 53 years and know instantly where I was, what happened in the news and even the day of the week. I've been able to do this since I was four.\n\nI never feel overwhelmed with the amount of information my brain absorbs. My mind seems to be able to cope and the information is stored away neatly. When I think of a sad memory, I do what everybody does - try to put it to one side. I don't think it's harder for me just because my memory is clearer. Powerful memory doesn't make my emotions any more acute or vivid. I can recall the day my grandfather died and the sadness I felt when we went to the hospital the day before. I also remember that the musical play Hair opened on Broadway on the same day — they both just pop into my mind in the same way.",
+    sentences: [
+      "I can pick a date from the past 53 years and know instantly where I was, what happened in the news and even the day of the week.",
+      "I've been able to do this since I was four.",
+      "I never feel overwhelmed with the amount of information my brain absorbs.",
+      "My mind seems to be able to cope and the information is stored away neatly.",
+      "When I think of a sad memory, I do what everybody does - try to put it to one side.",
+      "I don't think it's harder for me just because my memory is clearer.",
+      "Powerful memory doesn't make my emotions any more acute or vivid.",
+      "I can recall the day my grandfather died and the sadness I felt when we went to the hospital the day before.",
+      "I also remember that the musical play Hair opened on Broadway on the same day — they both just pop into my mind in the same way."
+    ],
     hints: ["第一人称叙事，中文保持叙述感","both a gift and a burden 这类对举要译出"]
   });
 
@@ -810,6 +858,19 @@
     promptTextZh: '选段话题：悲观不全是坏事：防御性悲观者通过预想最坏结果来降低焦虑、提前准备，往往表现更好。',
     promptZh: '英语二翻译（整段英译汉，15 分）：悲观不全是坏事：防御性悲观者通过预想最坏结果来降低焦虑、提前准备，往往表现更好。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "Most people would define optimism as being endlessly happy, with a glass that's perpetually half full. But that's exactly the kind of false cheerfulness that positive psychologists wouldn't recommend. \"Healthy optimism means being in touch with reality,\" says Tal Ben-Shahar, a Harvard professor. According to Ben-Shahar, realistic optimists are those who make the best of things that happen, but not those who believe everything happens for the best.\n\nBen-Shahar uses three optimistic exercises. When he feels down — say, after giving a bad lecture — he grants himself permission to be human. He reminds himself that not every lecture can be a Nobel winner; some will be less effective than others. Next is reconstruction. He analyzes the weak lecture, learning lessons for the future about what works and what doesn't. Finally, there is perspective, which involves acknowledging that in the grand scheme of life, one lecture really doesn't matter.",
+    sentences: [
+      "Most people would define optimism as being endlessly happy, with a glass that's perpetually half full.",
+      "But that's exactly the kind of false cheerfulness that positive psychologists wouldn't recommend.",
+      "\"Healthy optimism means being in touch with reality,\" says Tal Ben-Shahar, a Harvard professor.",
+      "According to Ben-Shahar, realistic optimists are those who make the best of things that happen, but not those who believe everything happens for the best.",
+      "Ben-Shahar uses three optimistic exercises.",
+      "When he feels down — say, after giving a bad lecture — he grants himself permission to be human.",
+      "He reminds himself that not every lecture can be a Nobel winner; some will be less effective than others.",
+      "Next is reconstruction.",
+      "He analyzes the weak lecture, learning lessons for the future about what works and what doesn't.",
+      "Finally, there is perspective, which involves acknowledging that in the grand scheme of life, one lecture really doesn't matter."
+    ],
     hints: ["defensive pessimism 译\"防御性悲观\"","注意\"看似矛盾却成立\"的逻辑关系"]
   });
 
@@ -821,6 +882,19 @@
     promptTextZh: '选段话题：为何熟悉的路线感觉更快到达：大脑处理熟悉路况更省力，导致主观时间感"缩短"，属于心理学现象解释。',
     promptZh: '英语二翻译（整段英译汉，15 分）：为何熟悉的路线感觉更快到达：大脑处理熟悉路况更省力，导致主观时间感"缩短"，属于心理学现象解释。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "Think about driving a route that's very familiar. It could be your commute to work, a trip into town or the way home. Whichever it is, you know every twist and turn like the back of your hand. On these sorts of trips it's easy to lose concentration on the driving and pay little attention to the passing scenery. The consequence is that you perceive that the trip has taken less time than it actually has.\n\nThis is the well-travelled road effect: People tend to underestimate the time it takes to travel a familiar route.\n\nThe effect is caused by the way we allocate our attention. When we travel down a well-known route, because we don't have to concentrate much, time seems to flow more quickly. And afterwards, when we come to think back on it, we can't remember the journey well because we didn't pay much attention to it. So we assume it was shorter.",
+    sentences: [
+      "Think about driving a route that's very familiar.",
+      "It could be your commute to work, a trip into town or the way home.",
+      "Whichever it is, you know every twist and turn like the back of your hand.",
+      "On these sorts of trips it's easy to lose concentration on the driving and pay little attention to the passing scenery.",
+      "The consequence is that you perceive that the trip has taken less time than it actually has.",
+      "This is the well-travelled road effect: People tend to underestimate the time it takes to travel a familiar route.",
+      "The effect is caused by the way we allocate our attention.",
+      "When we travel down a well-known route, because we don't have to concentrate much, time seems to flow more quickly.",
+      "And afterwards, when we come to think back on it, we can't remember the journey well because we didn't pay much attention to it.",
+      "So we assume it was shorter."
+    ],
     hints: ["注意\"主观时间感\"与\"实际用时\"的区分","因果链（熟悉→省力→感觉快）要译清楚"]
   });
 
@@ -832,6 +906,16 @@
     promptTextZh: '选段话题：超市如何利用心理学（布局、货架高度、气味、动线设计）促使顾客多买；了解这些"套路"有助于理性消费。',
     promptZh: '英语二翻译（整段英译汉，15 分）：超市如何利用心理学（布局、货架高度、气味、动线设计）促使顾客多买；了解这些"套路"有助于理性消费。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "The supermarket is designed to lure customers into spending as much time as possible within its doors. The reason for this is simple: The longer you stay in the store, the more stuff you'll see, and the more stuff you see, the more you'll buy. And supermarkets contain a lot of stuff. The average supermarket, according to the Food Marketing Institute, carries some 44,000 different items, and many carry tens of thousands more. The sheer volume of available choice is enough to send shoppers into a state of information overload. According to brain-scan experiments, the demands of so much decision-making quickly become too much for us. After about 40 minutes of shopping, most people stop struggling to be rationally selective, and instead begin shopping emotionally — which is the point at which we accumulate the 50 percent of stuff in our cart that we never intended buying.",
+    sentences: [
+      "The supermarket is designed to lure customers into spending as much time as possible within its doors.",
+      "The reason for this is simple: The longer you stay in the store, the more stuff you'll see, and the more stuff you see, the more you'll buy.",
+      "And supermarkets contain a lot of stuff.",
+      "The average supermarket, according to the Food Marketing Institute, carries some 44,000 different items, and many carry tens of thousands more.",
+      "The sheer volume of available choice is enough to send shoppers into a state of information overload.",
+      "According to brain-scan experiments, the demands of so much decision-making quickly become too much for us.",
+      "After about 40 minutes of shopping, most people stop struggling to be rationally selective, and instead begin shopping emotionally — which is the point at which we accumulate the 50 percent of stuff in our cart that we never intended buying."
+    ],
     hints: ["注意名词化结构的展开（the use of... 译成动词更顺）","结尾\"有助于理性消费\"不要漏"]
   });
 
@@ -843,6 +927,16 @@
     promptTextZh: '选段话题：作者自述梦想：本想学时装设计，自知难与有创造力的人竞争，转而选择新闻/写作，最终发现写作才是自己所爱。',
     promptZh: '英语二翻译（整段英译汉，15 分）：作者自述梦想：本想学时装设计，自知难与有创造力的人竞争，转而选择新闻/写作，最终发现写作才是自己所爱。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "My dream has always been to work somewhere in an area between fashion and publishing. Two years before graduating from secondary school, I took a sewing and design course thinking that I would move on to a fashion design course. However, during that course I realized I was not good enough in this area to compete with other creative personalities in the future, so I decided that it was not the right path for me. Before applying for university I told everyone that I would study journalism, because writing was, and still is, one of my favourite activities. But, to be honest, I said it, because I thought that fashion and me together was just a dream — I knew that no one could imagine me in the fashion industry at all! So I decided to look for some fashion-related courses that included writing. This is when I noticed the course \"Fashion Media & Promotion.\"",
+    sentences: [
+      "My dream has always been to work somewhere in an area between fashion and publishing.",
+      "Two years before graduating from secondary school, I took a sewing and design course thinking that I would move on to a fashion design course.",
+      "However, during that course I realized I was not good enough in this area to compete with other creative personalities in the future, so I decided that it was not the right path for me.",
+      "Before applying for university I told everyone that I would study journalism, because writing was, and still is, one of my favourite activities.",
+      "But, to be honest, I said it, because I thought that fashion and me together was just a dream — I knew that no one could imagine me in the fashion industry at all!",
+      "So I decided to look for some fashion-related courses that included writing.",
+      "This is when I noticed the course \"Fashion Media & Promotion.\""
+    ],
     hints: ["第一人称叙事；注意 turn to / end up 的译法","\"发现所爱\"是落点"]
   });
 
@@ -854,6 +948,18 @@
     promptTextZh: '选段话题：盖茨五年级就憧憬未来职业并大量阅读；成名后仍坚持阅读，每年至少读 50 本非虚构书籍，因为书能解释世界如何运转。',
     promptZh: '英语二翻译（整段英译汉，15 分）：盖茨五年级就憧憬未来职业并大量阅读；成名后仍坚持阅读，每年至少读 50 本非虚构书籍，因为书能解释世界如何运转。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "A fifth grader gets a homework assignment to select his future career path from a list of occupations. He ticks \"astronaut\" but quickly adds \"scientist\" to the list and selects it as well. The boy is convinced that if he reads enough, he can explore as many career paths as he likes. And so he reads - everything from encyclopedias to science fiction novels. He reads so passionately that his parents have to institute a \"no reading policy\" at the dinner table.\n\nThat boy was Bill Gates, and he hasn't stopped reading yet - not even after becoming one of the most successful people on the planet. Nowadays, his reading material has changed from science fiction and reference books: recently, he revealed that he reads at least 50 nonfiction books a year. Gates chooses nonfiction titles because they explain how the world works. \"Each book opens up new avenues of knowledge to explore\", Gates says.",
+    sentences: [
+      "A fifth grader gets a homework assignment to select his future career path from a list of occupations.",
+      "He ticks \"astronaut\" but quickly adds \"scientist\" to the list and selects it as well.",
+      "The boy is convinced that if he reads enough, he can explore as many career paths as he likes.",
+      "And so he reads - everything from encyclopedias to science fiction novels.",
+      "He reads so passionately that his parents have to institute a \"no reading policy\" at the dinner table.",
+      "That boy was Bill Gates, and he hasn't stopped reading yet - not even after becoming one of the most successful people on the planet.",
+      "Nowadays, his reading material has changed from science fiction and reference books: recently, he revealed that he reads at least 50 nonfiction books a year.",
+      "Gates chooses nonfiction titles because they explain how the world works.",
+      "\"Each book opens up new avenues of knowledge to explore\", Gates says."
+    ],
     hints: ["数字与频度（at least 50 books a year）要准确","how the world works 译\"世界如何运转\"帖切"]
   });
 
@@ -865,6 +971,19 @@
     promptTextZh: '选段话题：人们容易低估作家吉米·哈利：文风平易让人以为谁都能写，但他早年"尝试写作"并不容易；作品是多年练习、重写与阅读的成果，成功靠艰苦努力。',
     promptZh: '英语二翻译（整段英译汉，15 分）：人们容易低估作家吉米·哈利：文风平易让人以为谁都能写，但他早年"尝试写作"并不容易；作品是多年练习、重写与阅读的成果，成功靠艰苦努力。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "It is easy to underestimate English writer James Herriot. He had such a pleasant, readable style that one might think that anyone could imitate it. How many times have I heard people say, \"I could write a book. I just haven't the time.\" Easily said. Not so easily done. James Herriot, contrary to popular opinion, did not find it easy in his early days of, as he put it, \"having a go at the writing game\". While he obviously had an abundance of natural talent, the final, polished work that he gave to the world was the result of years of practicing, re-writing and reading. Like the majority of authors, he had to suffer many disappointments and rejections along the way, but these made him all the more determined to succeed. Everything he achieved in life was earned the hard way and his success in the literary field was no exception.",
+    sentences: [
+      "It is easy to underestimate English writer James Herriot.",
+      "He had such a pleasant, readable style that one might think that anyone could imitate it.",
+      "How many times have I heard people say, \"I could write a book.",
+      "I just haven't the time.\"",
+      "Easily said.",
+      "Not so easily done.",
+      "James Herriot, contrary to popular opinion, did not find it easy in his early days of, as he put it, \"having a go at the writing game\".",
+      "While he obviously had an abundance of natural talent, the final, polished work that he gave to the world was the result of years of practicing, re-writing and reading.",
+      "Like the majority of authors, he had to suffer many disappointments and rejections along the way, but these made him all the more determined to succeed.",
+      "Everything he achieved in life was earned the hard way and his success in the literary field was no exception."
+    ],
     hints: ["注意 take...for granted / underestimate 的译法","\"平易文风\"与\"多年练习\"的对比是重点"]
   });
 
@@ -876,6 +995,19 @@
     promptTextZh: '选段话题：人生难免失败；失败本身不可怕，关键在于我们如何解读——可选择把它当作学习经历，从中汲取教训、认识自己与真正的朋友。',
     promptZh: '英语二翻译（整段英译汉，15 分）：人生难免失败；失败本身不可怕，关键在于我们如何解读——可选择把它当作学习经历，从中汲取教训、认识自己与真正的朋友。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "It's almost impossible to go through life without experiencing some kind of failure. But, the wonderful thing about failure is that it's entirely up to us to decide how to look at it.\n\nWe can choose to see failure as \"the end of the world.\" Or, we can look at failure as the incredible learning experience that it often is. Every time we fail at something, we can choose to look for the lesson we're meant to learn. These lessons are very important; they're how we grow, and how we keep from making that same mistake again. Failures stop us only if we let them.\n\nFailure can also teach us things about ourselves that we would never have learned otherwise. For instance, failure can help you discover how strong a person you are. Failing at something can help you discover your truest friends, or help you find unexpected motivation to succeed.",
+    sentences: [
+      "It's almost impossible to go through life without experiencing some kind of failure.",
+      "But, the wonderful thing about failure is that it's entirely up to us to decide how to look at it.",
+      "We can choose to see failure as \"the end of the world.\"",
+      "Or, we can look at failure as the incredible learning experience that it often is.",
+      "Every time we fail at something, we can choose to look for the lesson we're meant to learn.",
+      "These lessons are very important; they're how we grow, and how we keep from making that same mistake again.",
+      "Failures stop us only if we let them.",
+      "Failure can also teach us things about ourselves that we would never have learned otherwise.",
+      "For instance, failure can help you discover how strong a person you are.",
+      "Failing at something can help you discover your truest friends, or help you find unexpected motivation to succeed."
+    ],
     hints: ["议论类短文，注意 how we interpret it 的译法","\"认识真正的朋友\"这一层不要漏"]
   });
 
@@ -887,6 +1019,16 @@
     promptTextZh: '选段话题：与陌生人交谈虽令人不适，但研究显示能提升情绪与归属感；通勤中主动交流的人更快乐。',
     promptZh: '英语二翻译（整段英译汉，15 分）：与陌生人交谈虽令人不适，但研究显示能提升情绪与归属感；通勤中主动交流的人更快乐。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "We tend to think that friends and family members are our biggest sources of connection, laughter, and warmth. While that may well be true, researchers have also recently found that interacting with strangers actually brings a boost in mood and feelings of belonging that we didn't expect.\n\nIn one series of studies, researchers instructed Chicago-area commuters using public transportation to strike up a conversation with someone near them. On average, participants who followed this instruction felt better than those who had been told to stand or sit in silence. The researchers also argued that when we shy away from casual interactions with strangers, it is often due to a misplaced anxiety that they might not want to talk to us. Much of the time, however, this belief is false. As it turns out, many people are actually perfectly willing to talk—and may even be flattered to receive your attention.",
+    sentences: [
+      "We tend to think that friends and family members are our biggest sources of connection, laughter, and warmth.",
+      "While that may well be true, researchers have also recently found that interacting with strangers actually brings a boost in mood and feelings of belonging that we didn't expect.",
+      "In one series of studies, researchers instructed Chicago-area commuters using public transportation to strike up a conversation with someone near them.",
+      "On average, participants who followed this instruction felt better than those who had been told to stand or sit in silence.",
+      "The researchers also argued that when we shy away from casual interactions with strangers, it is often due to a misplaced anxiety that they might not want to talk to us.",
+      "Much of the time, however, this belief is false.",
+      "As it turns out, many people are actually perfectly willing to talk—and may even be flattered to receive your attention."
+    ],
     hints: ["注意 although 让步 + 转折的逻辑","findings suggest 译\"研究显示/表明\""]
   });
 
@@ -898,6 +1040,15 @@
     promptTextZh: '选段话题：画画常不按计划实现，但意外结果有益：你会较快学会应对失望、随机应变、创造性地解决问题，这种能力在日常生活中很有用。',
     promptZh: '英语二翻译（整段英译汉，15 分）：画画常不按计划实现，但意外结果有益：你会较快学会应对失望、随机应变、创造性地解决问题，这种能力在日常生活中很有用。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "Although we try our best, sometimes our paintings rarely turn out as originally planned. Changes in the light, the limitations of your painting materials, and the lack of experience and technique mean that what you start out trying to achieve may not come to life the way that you expected.\n\nAlthough this can be frustrating and disappointing, it turns out that this can actually be good for you. Unexpected results have two benefits: you pretty quickly learn to deal with disappointment, and realise that when one door closes, another opens. You also quickly learn to adapt and come up with creative solutions to the problems the painting presents, and thinking outside the box will become your second nature.\n\nIn fact, creative problem-solving skills are incredibly useful in daily life, with which you're more likely to be able to find a solution when a problem arises.",
+    sentences: [
+      "Although we try our best, sometimes our paintings rarely turn out as originally planned.",
+      "Changes in the light, the limitations of your painting materials, and the lack of experience and technique mean that what you start out trying to achieve may not come to life the way that you expected.",
+      "Although this can be frustrating and disappointing, it turns out that this can actually be good for you.",
+      "Unexpected results have two benefits: you pretty quickly learn to deal with disappointment, and realise that when one door closes, another opens.",
+      "You also quickly learn to adapt and come up with creative solutions to the problems the painting presents, and thinking outside the box will become your second nature.",
+      "In fact, creative problem-solving skills are incredibly useful in daily life, with which you're more likely to be able to find a solution when a problem arises."
+    ],
     hints: ["注意 not...as planned 的译法","\"随机应变\"可用成语式表达，但不要过度发挥"]
   });
 
@@ -909,6 +1060,19 @@
     promptTextZh: '选段话题：华兹华斯与浪漫主义颂扬自然；诗歌有力量，其节奏与选词能打动人；诗歌历史早于文字、与歌唱相关，朗诵时更生动也更易理解。',
     promptZh: '英语二翻译（整段英译汉，15 分）：华兹华斯与浪漫主义颂扬自然；诗歌有力量，其节奏与选词能打动人；诗歌历史早于文字、与歌唱相关，朗诵时更生动也更易理解。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "In the late 18th century, William Wordsworth became famous for his poems about nature. And he was one of the founders of a movement called Romanticism, which celebrated the wonders of the natural world.\n\nPoetry is powerful. Its energy and rhythm can capture a reader, transport them to another world and make them see things differently. Through carefully selected words and phrases, poems can be dramatic, funny, beautiful, moving and inspiring.\n\nNo one knows for sure when poetry began but it has been around for thousands of years, even before people could write. It was a way to tell stories and pass down history. It is closely related to song and even when written it is usually created to be performed out loud. Poems really come to life when they are recited. This can also help with understanding them too, because the rhythm and sounds of the words become clearer.",
+    sentences: [
+      "In the late 18th century, William Wordsworth became famous for his poems about nature.",
+      "And he was one of the founders of a movement called Romanticism, which celebrated the wonders of the natural world.",
+      "Poetry is powerful.",
+      "Its energy and rhythm can capture a reader, transport them to another world and make them see things differently.",
+      "Through carefully selected words and phrases, poems can be dramatic, funny, beautiful, moving and inspiring.",
+      "No one knows for sure when poetry began but it has been around for thousands of years, even before people could write.",
+      "It was a way to tell stories and pass down history.",
+      "It is closely related to song and even when written it is usually created to be performed out loud.",
+      "Poems really come to life when they are recited.",
+      "This can also help with understanding them too, because the rhythm and sounds of the words become clearer."
+    ],
     hints: ["人名 Wordsworth 译\"华兹华斯\"","\"早于文字\"这种比较要译准"]
   });
 
@@ -920,6 +1084,15 @@
     promptTextZh: '选段话题：农贸市场是感官盛宴：能与种植者直接交流、支持本地经济、买到时令新鲜农产品；省去中间商后农户获利更多，消费者也知道钱流向谁。',
     promptZh: '英语二翻译（整段英译汉，15 分）：农贸市场是感官盛宴：能与种植者直接交流、支持本地经济、买到时令新鲜农产品；省去中间商后农户获利更多，消费者也知道钱流向谁。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "With the smell of coffee and fresh bread floating in the air, stalls bursting with colourful vegetables and tempting cheeses, and the buzz of friendly chats, farmers' markets are a feast for the senses. They also provide an opportunity to talk to the people responsible for growing or raising your food, support your local economy and pick up fresh seasonal produce — all at the same time.\n\nFarmers' markets are usually weekly or monthly events, most often with outdoor stalls, which allow farmers or producers to sell their food directly to customers. The size or regularity of markets can vary from season to season, depending on the area's agricultural calendar, and you're likely to find different produce on sale at different times of the year. By cutting out the middlemen, the farmers secure more profit for their produce. Shoppers also benefit from seeing exactly where — and to who — their money is going.",
+    sentences: [
+      "With the smell of coffee and fresh bread floating in the air, stalls bursting with colourful vegetables and tempting cheeses, and the buzz of friendly chats, farmers' markets are a feast for the senses.",
+      "They also provide an opportunity to talk to the people responsible for growing or raising your food, support your local economy and pick up fresh seasonal produce — all at the same time.",
+      "Farmers' markets are usually weekly or monthly events, most often with outdoor stalls, which allow farmers or producers to sell their food directly to customers.",
+      "The size or regularity of markets can vary from season to season, depending on the area's agricultural calendar, and you're likely to find different produce on sale at different times of the year.",
+      "By cutting out the middlemen, the farmers secure more profit for their produce.",
+      "Shoppers also benefit from seeing exactly where — and to who — their money is going."
+    ],
     hints: ["From Farm Gate to Plate 可译\"从农场到餐桌\"","\"中间商\"用 middlemen"]
   });
 
@@ -931,6 +1104,19 @@
     promptTextZh: '选段话题：对话中的沉默令人不安，人们担心冷场被负面解读；段落解释沉默的成因及其对交流的影响。',
     promptZh: '英语二翻译（整段英译汉，15 分）：对话中的沉默令人不安，人们担心冷场被负面解读；段落解释沉默的成因及其对交流的影响。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "You know the moment — the conversation slows, then there's a pause. It's awkward, and so awkward that some people will panic and say anything. Do we all find such silences so stressful?\n\nResearchers analysed the frequency and impact of gaps greater than 2 seconds during conversations, including an overview of previous studies which indicate that the fear of awkward silences can be so extreme that people avoid talking to strangers, even though doing so is likely to be an enjoyable experience.\n\nDuring conversations with short gaps, people feel more connected to their conversation partners. But such feelings of connection markedly dip when entering a long gap. Long gaps between strangers are likely to be followed by a change in topic.\n\nBut the opposite seems to be true for conversations between friends. Long gaps there saw increased connection. Between friends, longer gaps seem to provide natural moments for reflection and expression.",
+    sentences: [
+      "You know the moment — the conversation slows, then there's a pause.",
+      "It's awkward, and so awkward that some people will panic and say anything.",
+      "Do we all find such silences so stressful?",
+      "Researchers analysed the frequency and impact of gaps greater than 2 seconds during conversations, including an overview of previous studies which indicate that the fear of awkward silences can be so extreme that people avoid talking to strangers, even though doing so is likely to be an enjoyable experience.",
+      "During conversations with short gaps, people feel more connected to their conversation partners.",
+      "But such feelings of connection markedly dip when entering a long gap.",
+      "Long gaps between strangers are likely to be followed by a change in topic.",
+      "But the opposite seems to be true for conversations between friends.",
+      "Long gaps there saw increased connection.",
+      "Between friends, longer gaps seem to provide natural moments for reflection and expression."
+    ],
     hints: ["注意 be interpreted negatively 的被动处理","\"沉默\"可用 silence / pause，译时区分"]
   });
 
@@ -942,236 +1128,131 @@
     promptTextZh: '选段话题：衣着不只是遮体：它影响自我认知与他人互动，是自我表达（反映个性、心情、身份），也影响自信，并受文化与社会规范塑造。',
     promptZh: '英语二翻译（整段英译汉，15 分）：衣着不只是遮体：它影响自我认知与他人互动，是自我表达（反映个性、心情、身份），也影响自信，并受文化与社会规范塑造。',
     promptEn: "Translate the following text into Chinese. Write your translation on the ANSWER SHEET.",
+    passage: "The influence of wearables on psychology refers to how the clothes we wear affect our thoughts, feelings, and behaviors. Clothing is not just about covering our bodies; it plays a significant role in shaping our self-perception and interactions with others.\n\nOne aspect of this influence is self-expression. The clothes we choose can reflect our personality, mood, and identity. Whether we opt for bold, colorful outfits or prefer more understated styles, our dress choices convey messages about who we are and how we want to be perceived.\n\nAdditionally, clothing can impact our confidence levels. When we wear clothes that make us feel comfortable and confident, it can positively affect our self-esteem and overall mood.\n\nMoreover, cultural and societal influences play a significant role in shaping our dress choices. Different cultures have their norms and expectations regarding dress, which can influence the types of clothing people wear and the meanings attributed to them.",
+    sentences: [
+      "The influence of wearables on psychology refers to how the clothes we wear affect our thoughts, feelings, and behaviors.",
+      "Clothing is not just about covering our bodies; it plays a significant role in shaping our self-perception and interactions with others.",
+      "One aspect of this influence is self-expression.",
+      "The clothes we choose can reflect our personality, mood, and identity.",
+      "Whether we opt for bold, colorful outfits or prefer more understated styles, our dress choices convey messages about who we are and how we want to be perceived.",
+      "Additionally, clothing can impact our confidence levels.",
+      "When we wear clothes that make us feel comfortable and confident, it can positively affect our self-esteem and overall mood.",
+      "Moreover, cultural and societal influences play a significant role in shaping our dress choices.",
+      "Different cultures have their norms and expectations regarding dress, which can influence the types of clothing people wear and the meanings attributed to them."
+    ],
     hints: ["注意 not merely / more than 的递进","\"受文化与社会规范塑造\"是结论层"]
   });
 
   /* ===================== 二、模拟题（原创） ===================== */
-
-
-  var figA = '<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img">' +
-    '<rect width="640" height="400" fill="#f7f4ee"/>' +
-    '<rect x="0" y="300" width="640" height="100" fill="#e6dfd2"/>' +
-    '<rect x="60" y="215" width="520" height="82" rx="16" fill="#b9c8d8"/>' +
-    '<rect x="60" y="252" width="520" height="12" fill="#a3b4c6"/>' +
-    '<rect x="40" y="280" width="36" height="26" rx="6" fill="#c9b79c"/>' +
-    '<rect x="564" y="280" width="36" height="26" rx="6" fill="#c9b79c"/>' +
-    '<circle cx="205" cy="148" r="30" fill="#f0d3b8" stroke="#8a7a68" stroke-width="3"/>' +
-    '<path d="M182 132 q23 -22 46 0 q-8 -16 -23 -16 q-15 0 -23 16z" fill="#6b5b4b"/>' +
-    '<rect x="170" y="178" width="72" height="62" rx="16" fill="#7d9a86" stroke="#5f7a68" stroke-width="3"/>' +
-    '<rect x="188" y="196" width="40" height="58" rx="5" fill="#3c4653" stroke="#2b333d" stroke-width="3"/>' +
-    '<rect x="193" y="203" width="30" height="44" rx="3" fill="#8fd0e8"/>' +
-    '<path d="M196 200 q14 -40 34 -50" stroke="#7d9a86" stroke-width="10" fill="none" stroke-linecap="round"/>' +
-    '<circle cx="435" cy="180" r="26" fill="#f0d3b8" stroke="#8a7a68" stroke-width="3"/>' +
-    '<path d="M409 172 q4 -30 26 -30 q22 0 26 30 q-12 -14 -26 -14 q-14 0 -26 14z" fill="#5a4632"/>' +
-    '<rect x="404" y="204" width="62" height="48" rx="14" fill="#d99a94" stroke="#b87b76" stroke-width="3"/>' +
-    '<rect x="416" y="216" width="34" height="52" rx="5" fill="#3c4653" stroke="#2b333d" stroke-width="3"/>' +
-    '<rect x="420" y="222" width="26" height="40" rx="3" fill="#ffd98a"/>' +
-    '<path d="M438 216 q4 -34 16 -44" stroke="#d99a94" stroke-width="9" fill="none" stroke-linecap="round"/>' +
-    '<circle cx="208" cy="228" r="34" fill="#8fd0e8" opacity="0.18"/>' +
-    '<circle cx="433" cy="244" r="30" fill="#ffd98a" opacity="0.22"/>' +
-    '<path d="M300 120 q10 -12 20 0 q10 -12 20 0" stroke="#9aa6b2" stroke-width="3" fill="none"/>' +
-    '<text x="320" y="300" font-size="20" fill="#8a7a68" text-anchor="middle" font-family="sans-serif">（两人背对背，各看各的屏幕，全程无对话）</text>' +
-    '</svg>';
-
   BANK.push({
-    id: 'q_mock_01_major', category: 'mock', kind: 'major',
-    subject: 'en1',
-    source: '模拟题（自制，风格对齐 2021—2022 年真题）', year: '模拟卷一',
-    title: '最熟悉的陌生人：同桌各看手机',
-    difficulty: 3, words: '160-200', tags: ['科技', '人际关系', '家庭'],
-    figure: figA,
-    promptTextZh: '两人坐在同一张沙发上，却各自盯着自己的手机屏幕，全程没有交流。',
-    promptZh: '请根据图画写一篇 160—200 词的短文。要求：①简要描述图画内容；②解读图画寓意（家人近在咫尺，却被手机隔开）；③给出你的评论或建议。',
-    promptEn: 'Write an essay of 160-200 words based on the following drawing. In your essay, you should\n\n1) describe the drawing briefly,\n2) explain its intended meaning, and\n3) give your comments.\n\nYou should write neatly on the ANSWER SHEET. (20 points)',
-    hints: ['图画中出现两个人物但零互动，对比是写作重点', '注意 physical proximity 与 emotional distance 的对立表达']
+    id: "q_mock_01_major", category: "mock", subject: "en1", kind: "major",
+    source: "模拟题（自制，风格对齐 2021—2022 年真题）", year: "模拟卷一",
+    title: "最熟悉的陌生人：同桌各看手机",
+    difficulty: 3, words: "160-200", tags: ["科技","人际关系","家庭"],
+    promptTextZh: "两人坐在同一张沙发上，却各自盯着自己的手机屏幕，全程没有交流。",
+    promptZh: "请根据图画写一篇 160—200 词的短文。要求：①简要描述图画内容；②解读图画寓意（家人近在咫尺，却被手机隔开）；③给出你的评论或建议。",
+    promptEn: "Write an essay of 160-200 words based on the following drawing. In your essay, you should\n\n1) describe the drawing briefly,\n2) explain its intended meaning, and\n3) give your comments.\n\nYou should write neatly on the ANSWER SHEET. (20 points)",
+    figure: "<svg viewBox=\"0 0 640 400\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><rect width=\"640\" height=\"400\" fill=\"#f7f4ee\"/><rect x=\"0\" y=\"300\" width=\"640\" height=\"100\" fill=\"#e6dfd2\"/><rect x=\"60\" y=\"215\" width=\"520\" height=\"82\" rx=\"16\" fill=\"#b9c8d8\"/><rect x=\"60\" y=\"252\" width=\"520\" height=\"12\" fill=\"#a3b4c6\"/><rect x=\"40\" y=\"280\" width=\"36\" height=\"26\" rx=\"6\" fill=\"#c9b79c\"/><rect x=\"564\" y=\"280\" width=\"36\" height=\"26\" rx=\"6\" fill=\"#c9b79c\"/><circle cx=\"205\" cy=\"148\" r=\"30\" fill=\"#f0d3b8\" stroke=\"#8a7a68\" stroke-width=\"3\"/><path d=\"M182 132 q23 -22 46 0 q-8 -16 -23 -16 q-15 0 -23 16z\" fill=\"#6b5b4b\"/><rect x=\"170\" y=\"178\" width=\"72\" height=\"62\" rx=\"16\" fill=\"#7d9a86\" stroke=\"#5f7a68\" stroke-width=\"3\"/><rect x=\"188\" y=\"196\" width=\"40\" height=\"58\" rx=\"5\" fill=\"#3c4653\" stroke=\"#2b333d\" stroke-width=\"3\"/><rect x=\"193\" y=\"203\" width=\"30\" height=\"44\" rx=\"3\" fill=\"#8fd0e8\"/><path d=\"M196 200 q14 -40 34 -50\" stroke=\"#7d9a86\" stroke-width=\"10\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"435\" cy=\"180\" r=\"26\" fill=\"#f0d3b8\" stroke=\"#8a7a68\" stroke-width=\"3\"/><path d=\"M409 172 q4 -30 26 -30 q22 0 26 30 q-12 -14 -26 -14 q-14 0 -26 14z\" fill=\"#5a4632\"/><rect x=\"404\" y=\"204\" width=\"62\" height=\"48\" rx=\"14\" fill=\"#d99a94\" stroke=\"#b87b76\" stroke-width=\"3\"/><rect x=\"416\" y=\"216\" width=\"34\" height=\"52\" rx=\"5\" fill=\"#3c4653\" stroke=\"#2b333d\" stroke-width=\"3\"/><rect x=\"420\" y=\"222\" width=\"26\" height=\"40\" rx=\"3\" fill=\"#ffd98a\"/><path d=\"M438 216 q4 -34 16 -44\" stroke=\"#d99a94\" stroke-width=\"9\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"208\" cy=\"228\" r=\"34\" fill=\"#8fd0e8\" opacity=\"0.18\"/><circle cx=\"433\" cy=\"244\" r=\"30\" fill=\"#ffd98a\" opacity=\"0.22\"/><path d=\"M300 120 q10 -12 20 0 q10 -12 20 0\" stroke=\"#9aa6b2\" stroke-width=\"3\" fill=\"none\"/><text x=\"320\" y=\"300\" font-size=\"20\" fill=\"#8a7a68\" text-anchor=\"middle\" font-family=\"sans-serif\">（两人背对背，各看各的屏幕，全程无对话）</text></svg>",
+    hints: ["图画中出现两个人物但零互动，对比是写作重点","注意 physical proximity 与 emotional distance 的对立表达"]
   });
 
   BANK.push({
-    id: 'q_mock_01_minor', category: 'mock', kind: 'minor',
-    subject: 'en1',
-    source: '模拟题（自制，风格对齐近年真题；注意与 2021 真题"推荐演讲人"不是同一道题）', year: '模拟卷一',
-    title: '小作文：向社团推荐一位校外导师',
-    difficulty: 3, words: '100', tags: ['书信', '推荐信'],
-    promptZh: '你所在的创新创业社团正在筹备一系列面向低年级同学的入门工作坊，需要一位校外导师。请给社团负责人 Chris 写一封约 100 词的邮件：①推荐一位你了解的校外导师（可写所在单位与专长）；②说明推荐理由（与工作坊主题的契合度、带教经验）；③提出你对工作坊排期的建议。署名 Li Ming。',
-    promptEn: 'Suppose you are a member of the Innovation and Entrepreneurship Club of your university. The club is planning a series of introductory workshops for first-year students and needs a mentor from outside the university. Write an email of about 100 words to Chris, the head of the club, to\n\n1) recommend a mentor you know about,\n2) explain why you recommend him or her, and\n3) suggest a schedule for the workshops.\n\nDo not use your own name; use "Li Ming" instead. (10 points)',
-    hints: ['推荐信要点：对象、理由、建议，三段式', '结尾可用 I would be happy to help with the arrangements.']
+    id: "q_mock_01_minor", category: "mock", subject: "en1", kind: "minor",
+    source: "模拟题（自制，风格对齐近年真题；注意与 2021 真题\"推荐演讲人\"不是同一道题）", year: "模拟卷一",
+    title: "小作文：向社团推荐一位校外导师",
+    difficulty: 3, words: "100", tags: ["书信","推荐信"],
+    promptZh: "你所在的创新创业社团正在筹备一系列面向低年级同学的入门工作坊，需要一位校外导师。请给社团负责人 Chris 写一封约 100 词的邮件：①推荐一位你了解的校外导师（可写所在单位与专长）；②说明推荐理由（与工作坊主题的契合度、带教经验）；③提出你对工作坊排期的建议。署名 Li Ming。",
+    promptEn: "Suppose you are a member of the Innovation and Entrepreneurship Club of your university. The club is planning a series of introductory workshops for first-year students and needs a mentor from outside the university. Write an email of about 100 words to Chris, the head of the club, to\n\n1) recommend a mentor you know about,\n2) explain why you recommend him or her, and\n3) suggest a schedule for the workshops.\n\nDo not use your own name; use \"Li Ming\" instead. (10 points)",
+    hints: ["推荐信要点：对象、理由、建议，三段式","结尾可用 I would be happy to help with the arrangements."]
   });
 
   BANK.push({
-    id: 'q_mock_01_trans', category: 'mock', kind: 'translation',
-    subject: 'en1',
-    source: '外刊风格原创改写（城市生态评论，难度对齐 2010—2025 真题翻译）', year: '模拟卷一',
-    title: '翻译：城市野化与"让自然回来"',
-    difficulty: 3, words: '5 句，每句 2 分', tags: ['生态', '城市', '长难句'],
-    promptZh: '阅读下面短文，将 5 个划线句译成中文，每句 2 分，共 10 分。注意后置定语、插入语与指代关系。',
-    passage: 'For most of the past century, city planners treated nature as decoration: a few trees along a boulevard, a lawn that had to be mown and kept free of weeds. [1] That assumption is now being challenged by a generation of architects and ecologists who argue that the wildness once banished from the city should be invited back, not for its beauty alone, but for the services it quietly performs. [2] In Berlin, where abandoned railway yards have been left to seed themselves, researchers found that unmanaged plots supported nearly three times as many insect species as the manicured parks beside them. [3] Such findings, which surprise few biologists but unsettle many officials, suggest that the neatness long equated with good government may in fact be a form of poverty. [4] Cities that have begun to rewild, however cautiously, report benefits that no engineering project could have delivered at the same cost: cooler streets in summer, cheaper flood control, and a noticeable improvement in the mental health of residents who can walk to a meadow. [5] Whether this experiment survives the pressure of rising land values will depend less on ecology than on politics, for the question it raises is not what nature can do for cities but who has the right to decide what a city should look like.',
-    sentences: [
-      'That assumption is now being challenged by a generation of architects and ecologists who argue that the wildness once banished from the city should be invited back, not for its beauty alone, but for the services it quietly performs.',
-      'In Berlin, where abandoned railway yards have been left to seed themselves, researchers found that unmanaged plots supported nearly three times as many insect species as the manicured parks beside them.',
-      'Such findings, which surprise few biologists but unsettle many officials, suggest that the neatness long equated with good government may in fact be a form of poverty.',
-      'Cities that have begun to rewild, however cautiously, report benefits that no engineering project could have delivered at the same cost: cooler streets in summer, cheaper flood control, and a noticeable improvement in the mental health of residents who can walk to a meadow.',
-      'Whether this experiment survives the pressure of rising land values will depend less on ecology than on politics, for the question it raises is not what nature can do for cities but who has the right to decide what a city should look like.'
-    ],
-    hints: ['句 1 注意 not for...but for... 的并列与 it 的指代', '句 5 注意 Whether 主语从句 + depend less on A than on B 结构']
-  });
-
-  var figB = '<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img">' +
-    '<rect width="640" height="400" fill="#faf6ec"/>' +
-    '<rect x="0" y="312" width="640" height="88" fill="#eee3cd"/>' +
-    '<rect x="470" y="40" width="130" height="110" rx="6" fill="#cfe6f2" stroke="#a8c2d2" stroke-width="3"/>' +
-    '<path d="M535 40 v110 M470 95 h130" stroke="#a8c2d2" stroke-width="3"/>' +
-    '<circle cx="500" cy="70" r="14" fill="#ffd97a"/>' +
-    '<rect x="60" y="272" width="420" height="16" rx="5" fill="#c69a6b"/>' +
-    '<rect x="72" y="288" width="14" height="34" fill="#b0834f"/>' +
-    '<rect x="452" y="288" width="14" height="34" fill="#b0834f"/>' +
-    '<rect x="300" y="238" width="120" height="34" rx="4" fill="#e2564f" stroke="#c33f38" stroke-width="2"/>' +
-    '<circle cx="360" cy="255" r="11" fill="none" stroke="#fff0ec" stroke-width="3"/>' +
-    '<path d="M340 255 h-14 M394 255 h14 M360 240 v-10 M360 270 v10" stroke="#fff0ec" stroke-width="3"/>' +
-    '<path d="M268 250 l40 -22 M268 262 l40 22" stroke="#8e9aa6" stroke-width="5" stroke-linecap="round"/>' +
-    '<circle cx="262" cy="248" r="9" fill="none" stroke="#8e9aa6" stroke-width="4"/>' +
-    '<circle cx="262" cy="264" r="9" fill="none" stroke="#8e9aa6" stroke-width="4"/>' +
-    '<circle cx="150" cy="150" r="32" fill="#f5dcc2" stroke="#9c8a76" stroke-width="3"/>' +
-    '<path d="M120 140 q6 -34 30 -34 q24 0 30 34 q-10 -16 -30 -16 q-20 0 -30 16z" fill="#e8e5df"/>' +
-    '<path d="M126 176 q24 20 48 0 q-6 18 -24 18 q-18 0 -24 -18z" fill="#e8e5df"/>' +
-    '<rect x="104" y="190" width="94" height="84" rx="18" fill="#5d7f9c" stroke="#456580" stroke-width="3"/>' +
-    '<path d="M196 214 q30 16 60 -4" stroke="#5d7f9c" stroke-width="14" fill="none" stroke-linecap="round"/>' +
-    '<circle cx="252" cy="212" r="11" fill="#f5dcc2" stroke="#9c8a76" stroke-width="3"/>' +
-    '<circle cx="420" cy="196" r="24" fill="#f5dcc2" stroke="#9c8a76" stroke-width="3"/>' +
-    '<path d="M398 188 q2 -26 22 -26 q20 0 22 26 q-10 -12 -22 -12 q-12 0 -22 12z" fill="#3f3125"/>' +
-    '<path d="M394 208 q26 -18 52 0 l4 20 q-30 -14 -60 0z" fill="#3f3125"/>' +
-    '<rect x="392" y="222" width="58" height="50" rx="14" fill="#e0a75e" stroke="#bd8845" stroke-width="3"/>' +
-    '<path d="M392 236 q-26 12 -40 20" stroke="#e0a75e" stroke-width="12" fill="none" stroke-linecap="round"/>' +
-    '<circle cx="348" cy="258" r="9" fill="#f5dcc2" stroke="#9c8a76" stroke-width="3"/>' +
-    '<rect x="236" y="60" width="86" height="86" rx="6" fill="#fff" stroke="#d9c9ae" stroke-width="3"/>' +
-    '<circle cx="279" cy="103" r="24" fill="none" stroke="#e2564f" stroke-width="4"/>' +
-    '<path d="M279 79 v-8 M279 127 v8 M255 103 h-8 M303 103 h8 M262 86 l-6 -6 M296 86 l6 -6 M262 120 l-6 6 M296 120 l6 6" stroke="#e2564f" stroke-width="4" stroke-linecap="round"/>' +
-    '<text x="320" y="360" font-size="20" fill="#8a7a68" text-anchor="middle" font-family="sans-serif">（老人握着手教，女孩第一次剪出完整的"喜"字）</text>' +
-    '</svg>';
-
-  BANK.push({
-    id: 'q_mock_02_major', category: 'mock', kind: 'major',
-    subject: 'en1',
-    source: '模拟题（自制，风格对齐 2019、2023 年真题主题）', year: '模拟卷二',
-    title: '一剪一纸：老手艺与年轻人',
-    difficulty: 3, words: '160-200', tags: ['传统文化', '传承', '代际'],
-    figure: figB,
-    promptTextZh: '一位老人正手把手教年轻女孩剪"喜"字，桌上放着红纸与剪刀，墙上挂着成品剪纸。',
-    promptZh: '请根据图画写一篇 160—200 词的短文。要求：①描述图画内容；②说明图画所揭示的文化传承问题；③就"如何让传统手艺被年轻人接受"提出你的看法。',
-    promptEn: 'Write an essay of 160-200 words based on the following drawing. In your essay, you should\n\n1) describe the drawing briefly,\n2) interpret its cultural implications, and\n3) give your comments on how traditional crafts can be passed on to the young.\n\nYou should write neatly on the ANSWER SHEET. (20 points)',
-    hints: ['避免通篇喊口号，给出一个具体做法（如进校园、短视频、文创联名）', '可用 intangible cultural heritage（非物质文化遗产）等术语']
+    id: "q_mock_01_trans", category: "mock", subject: "en1", kind: "translation",
+    source: "外刊风格原创改写（城市生态评论，难度对齐 2010—2025 真题翻译）", year: "模拟卷一",
+    title: "翻译：城市野化与\"让自然回来\"",
+    difficulty: 3, words: "5 句，每句 2 分", tags: ["生态","城市","长难句"],
+    promptZh: "阅读下面短文，将 5 个划线句译成中文，每句 2 分，共 10 分。注意后置定语、插入语与指代关系。",
+    passage: "For most of the past century, city planners treated nature as decoration: a few trees along a boulevard, a lawn that had to be mown and kept free of weeds. [1] That assumption is now being challenged by a generation of architects and ecologists who argue that the wildness once banished from the city should be invited back, not for its beauty alone, but for the services it quietly performs. [2] In Berlin, where abandoned railway yards have been left to seed themselves, researchers found that unmanaged plots supported nearly three times as many insect species as the manicured parks beside them. [3] Such findings, which surprise few biologists but unsettle many officials, suggest that the neatness long equated with good government may in fact be a form of poverty. [4] Cities that have begun to rewild, however cautiously, report benefits that no engineering project could have delivered at the same cost: cooler streets in summer, cheaper flood control, and a noticeable improvement in the mental health of residents who can walk to a meadow. [5] Whether this experiment survives the pressure of rising land values will depend less on ecology than on politics, for the question it raises is not what nature can do for cities but who has the right to decide what a city should look like.",
+    sentences: ["That assumption is now being challenged by a generation of architects and ecologists who argue that the wildness once banished from the city should be invited back, not for its beauty alone, but for the services it quietly performs.","In Berlin, where abandoned railway yards have been left to seed themselves, researchers found that unmanaged plots supported nearly three times as many insect species as the manicured parks beside them.","Such findings, which surprise few biologists but unsettle many officials, suggest that the neatness long equated with good government may in fact be a form of poverty.","Cities that have begun to rewild, however cautiously, report benefits that no engineering project could have delivered at the same cost: cooler streets in summer, cheaper flood control, and a noticeable improvement in the mental health of residents who can walk to a meadow.","Whether this experiment survives the pressure of rising land values will depend less on ecology than on politics, for the question it raises is not what nature can do for cities but who has the right to decide what a city should look like."],
+    hints: ["句 1 注意 not for...but for... 的并列与 it 的指代","句 5 注意 Whether 主语从句 + depend less on A than on B 结构"]
   });
 
   BANK.push({
-    id: 'q_mock_02_minor', category: 'mock', kind: 'minor',
-    subject: 'en1',
-    source: '模拟题（自制，风格对齐 2022 年真题通知样式）', year: '模拟卷二',
-    title: '小作文：写一则数据安全讲座通知',
-    difficulty: 3, words: '100', tags: ['通知', '格式'],
-    promptZh: '校学生会将举办一场面向全体学生的"个人信息与数据安全"讲座。请以学生会名义写一则通知（Notice），约 100 词：①讲座的时间、地点与主讲人；②讲座主要内容与实用价值；③报名方式或注意事项。落款用 The Student Union。',
-    promptEn: 'The Student Union of your university is going to hold a lecture on personal information and data security. Write a notice in about 100 words to\n\n1) inform students of the time, place and speaker of the lecture,\n2) introduce the main contents and practical value of the lecture, and\n3) tell them how to sign up.\n\nDo not use your own name. Use "The Student Union" instead. (10 points)',
-    hints: ['通知格式：居中标题 Notice、正文、落款单位与日期', '开头常用 In order to / A lecture will be held...']
+    id: "q_mock_02_major", category: "mock", subject: "en1", kind: "major",
+    source: "模拟题（自制，风格对齐 2019、2023 年真题主题）", year: "模拟卷二",
+    title: "一剪一纸：老手艺与年轻人",
+    difficulty: 3, words: "160-200", tags: ["传统文化","传承","代际"],
+    promptTextZh: "一位老人正手把手教年轻女孩剪\"喜\"字，桌上放着红纸与剪刀，墙上挂着成品剪纸。",
+    promptZh: "请根据图画写一篇 160—200 词的短文。要求：①描述图画内容；②说明图画所揭示的文化传承问题；③就\"如何让传统手艺被年轻人接受\"提出你的看法。",
+    promptEn: "Write an essay of 160-200 words based on the following drawing. In your essay, you should\n\n1) describe the drawing briefly,\n2) interpret its cultural implications, and\n3) give your comments on how traditional crafts can be passed on to the young.\n\nYou should write neatly on the ANSWER SHEET. (20 points)",
+    figure: "<svg viewBox=\"0 0 640 400\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><rect width=\"640\" height=\"400\" fill=\"#faf6ec\"/><rect x=\"0\" y=\"312\" width=\"640\" height=\"88\" fill=\"#eee3cd\"/><rect x=\"470\" y=\"40\" width=\"130\" height=\"110\" rx=\"6\" fill=\"#cfe6f2\" stroke=\"#a8c2d2\" stroke-width=\"3\"/><path d=\"M535 40 v110 M470 95 h130\" stroke=\"#a8c2d2\" stroke-width=\"3\"/><circle cx=\"500\" cy=\"70\" r=\"14\" fill=\"#ffd97a\"/><rect x=\"60\" y=\"272\" width=\"420\" height=\"16\" rx=\"5\" fill=\"#c69a6b\"/><rect x=\"72\" y=\"288\" width=\"14\" height=\"34\" fill=\"#b0834f\"/><rect x=\"452\" y=\"288\" width=\"14\" height=\"34\" fill=\"#b0834f\"/><rect x=\"300\" y=\"238\" width=\"120\" height=\"34\" rx=\"4\" fill=\"#e2564f\" stroke=\"#c33f38\" stroke-width=\"2\"/><circle cx=\"360\" cy=\"255\" r=\"11\" fill=\"none\" stroke=\"#fff0ec\" stroke-width=\"3\"/><path d=\"M340 255 h-14 M394 255 h14 M360 240 v-10 M360 270 v10\" stroke=\"#fff0ec\" stroke-width=\"3\"/><path d=\"M268 250 l40 -22 M268 262 l40 22\" stroke=\"#8e9aa6\" stroke-width=\"5\" stroke-linecap=\"round\"/><circle cx=\"262\" cy=\"248\" r=\"9\" fill=\"none\" stroke=\"#8e9aa6\" stroke-width=\"4\"/><circle cx=\"262\" cy=\"264\" r=\"9\" fill=\"none\" stroke=\"#8e9aa6\" stroke-width=\"4\"/><circle cx=\"150\" cy=\"150\" r=\"32\" fill=\"#f5dcc2\" stroke=\"#9c8a76\" stroke-width=\"3\"/><path d=\"M120 140 q6 -34 30 -34 q24 0 30 34 q-10 -16 -30 -16 q-20 0 -30 16z\" fill=\"#e8e5df\"/><path d=\"M126 176 q24 20 48 0 q-6 18 -24 18 q-18 0 -24 -18z\" fill=\"#e8e5df\"/><rect x=\"104\" y=\"190\" width=\"94\" height=\"84\" rx=\"18\" fill=\"#5d7f9c\" stroke=\"#456580\" stroke-width=\"3\"/><path d=\"M196 214 q30 16 60 -4\" stroke=\"#5d7f9c\" stroke-width=\"14\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"252\" cy=\"212\" r=\"11\" fill=\"#f5dcc2\" stroke=\"#9c8a76\" stroke-width=\"3\"/><circle cx=\"420\" cy=\"196\" r=\"24\" fill=\"#f5dcc2\" stroke=\"#9c8a76\" stroke-width=\"3\"/><path d=\"M398 188 q2 -26 22 -26 q20 0 22 26 q-10 -12 -22 -12 q-12 0 -22 12z\" fill=\"#3f3125\"/><path d=\"M394 208 q26 -18 52 0 l4 20 q-30 -14 -60 0z\" fill=\"#3f3125\"/><rect x=\"392\" y=\"222\" width=\"58\" height=\"50\" rx=\"14\" fill=\"#e0a75e\" stroke=\"#bd8845\" stroke-width=\"3\"/><path d=\"M392 236 q-26 12 -40 20\" stroke=\"#e0a75e\" stroke-width=\"12\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"348\" cy=\"258\" r=\"9\" fill=\"#f5dcc2\" stroke=\"#9c8a76\" stroke-width=\"3\"/><rect x=\"236\" y=\"60\" width=\"86\" height=\"86\" rx=\"6\" fill=\"#fff\" stroke=\"#d9c9ae\" stroke-width=\"3\"/><circle cx=\"279\" cy=\"103\" r=\"24\" fill=\"none\" stroke=\"#e2564f\" stroke-width=\"4\"/><path d=\"M279 79 v-8 M279 127 v8 M255 103 h-8 M303 103 h8 M262 86 l-6 -6 M296 86 l6 -6 M262 120 l-6 6 M296 120 l6 6\" stroke=\"#e2564f\" stroke-width=\"4\" stroke-linecap=\"round\"/><text x=\"320\" y=\"360\" font-size=\"20\" fill=\"#8a7a68\" text-anchor=\"middle\" font-family=\"sans-serif\">（老人握着手教，女孩第一次剪出完整的\"喜\"字）</text></svg>",
+    hints: ["避免通篇喊口号，给出一个具体做法（如进校园、短视频、文创联名）","可用 intangible cultural heritage（非物质文化遗产）等术语"]
   });
 
   BANK.push({
-    id: 'q_mock_02_trans', category: 'mock', kind: 'translation',
-    subject: 'en1',
-    source: '外刊风格原创改写（共享经济社论，难度对齐真题翻译）', year: '模拟卷二',
-    title: '翻译：共享经济未兑现的承诺',
-    difficulty: 4, words: '5 句，每句 2 分', tags: ['经济', '社会', '长难句'],
-    promptZh: '阅读下面短文，将 5 个划线句译成中文，每句 2 分，共 10 分。注意名词化结构、插入语与让步逻辑。',
-    passage: 'When the first ride-sharing apps appeared, they were welcomed as a promise of liberation. Anyone with a car, it was said, could earn a living on his own schedule, and anyone without one could travel cheaply. [1] A decade later, that promise looks considerably less generous: the platforms that described themselves as marketplaces have turned out to be extraordinarily efficient machines for concentrating wealth in a handful of headquarters. [2] Drivers, classified as independent contractors rather than employees, bear the costs of fuel, insurance and depreciation while enjoying none of the protections that a regular wage normally brings. [3] What makes the arrangement so durable is not its fairness, which few defend, but the fact that customers have grown attached to prices that would be impossible if the true cost of the service were honestly calculated. [4] Regulators who have tried to intervene, whether by capping commissions or by reclassifying workers, have discovered that a company operating in hundreds of cities can move faster than any single legislature. [5] The real question, then, is not whether the sharing economy has failed — by most measures it has — but whether the convenience it created can be preserved without the exploitation that came with it.',
-    sentences: [
-      'A decade later, that promise looks considerably less generous: the platforms that described themselves as marketplaces have turned out to be extraordinarily efficient machines for concentrating wealth in a handful of headquarters.',
-      'Drivers, classified as independent contractors rather than employees, bear the costs of fuel, insurance and depreciation while enjoying none of the protections that a regular wage normally brings.',
-      'What makes the arrangement so durable is not its fairness, which few defend, but the fact that customers have grown attached to prices that would be impossible if the true cost of the service were honestly calculated.',
-      'Regulators who have tried to intervene, whether by capping commissions or by reclassifying workers, have discovered that a company operating in hundreds of cities can move faster than any single legislature.',
-      'The real question, then, is not whether the sharing economy has failed — by most measures it has — but whether the convenience it created can be preserved without the exploitation that came with it.'
-    ],
-    hints: ['句 3 是 What 主语从句 + not...but... 结构，注意 which few defend 的插入', '句 5 破折号中间是插入成分，先译主干再补插入']
-  });
-
-  var figC = '<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img">' +
-    '<defs><linearGradient id="skyC" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="#e8f0f7"/><stop offset="1" stop-color="#f8f4ea"/></linearGradient></defs>' +
-    '<rect width="640" height="400" fill="url(#skyC)"/>' +
-    '<circle cx="520" cy="86" r="34" fill="#ffd97a"/>' +
-    '<path d="M0 300 q140 -60 250 -10 q120 54 200 -6 q90 -66 190 -16 v132 H0z" fill="#dbe6dd"/>' +
-    '<rect x="150" y="296" width="300" height="34" rx="6" fill="#8fa9c2" stroke="#6d87a0" stroke-width="3"/>' +
-    '<rect x="196" y="258" width="212" height="38" rx="6" fill="#c08a8a" stroke="#a06c6c" stroke-width="3"/>' +
-    '<rect x="238" y="222" width="130" height="36" rx="6" fill="#e0b978" stroke="#bd9757" stroke-width="3"/>' +
-    '<rect x="272" y="188" width="66" height="34" rx="6" fill="#8fbf9f" stroke="#6f9c7f" stroke-width="3"/>' +
-    '<path d="M170 296 v34 M200 296 v34 M430 296 v34 M216 258 v38 M380 258 v38 M252 222 v36 M356 222 v36" stroke="#ffffff" stroke-width="2" opacity="0.6"/>' +
-    '<circle cx="305" cy="164" r="18" fill="#ffd97a" opacity="0.55"/>' +
-    '<circle cx="305" cy="162" r="9" fill="#ffec9e" stroke="#e0b040" stroke-width="2"/>' +
-    '<path d="M305 172 v10" stroke="#9c8a76" stroke-width="3"/>' +
-    '<path d="M283 150 q22 -26 44 0" stroke="#e0b040" stroke-width="3" fill="none"/>' +
-    '<circle cx="352" cy="228" r="18" fill="#f5dcc2" stroke="#9c8a76" stroke-width="3"/>' +
-    '<path d="M336 222 q4 -20 16 -20 q12 0 16 20 q-8 -10 -16 -10 q-8 0 -16 10z" fill="#3f3125"/>' +
-    '<rect x="336" y="248" width="34" height="42" rx="10" fill="#5d7f9c" stroke="#456580" stroke-width="3"/>' +
-    '<path d="M336 258 q-22 -18 -34 -34" stroke="#5d7f9c" stroke-width="10" fill="none" stroke-linecap="round"/>' +
-    '<path d="M370 258 q22 -12 30 -26" stroke="#5d7f9c" stroke-width="10" fill="none" stroke-linecap="round"/>' +
-    '<rect x="340" y="288" width="12" height="30" rx="5" fill="#4a5a6a"/>' +
-    '<rect x="356" y="288" width="12" height="26" rx="5" fill="#4a5a6a"/>' +
-    '<path d="M330 214 q-4 6 0 10 q4 -4 0 -10z" fill="#8fd0e8"/>' +
-    '<path d="M470 240 v-70 M470 170 l-16 20 M470 170 l16 20" stroke="#8fa9c2" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-    '<text x="320" y="372" font-size="20" fill="#8a7a68" text-anchor="middle" font-family="sans-serif">（一格一格往上爬，山顶亮着灯）</text>' +
-    '</svg>';
-
-  BANK.push({
-    id: 'q_mock_03_major', category: 'mock', kind: 'major',
-    subject: 'en1',
-    source: '模拟题（自制，风格对齐 2017、2020 年真题主题）', year: '模拟卷三',
-    title: '书山有路：一格一格往上爬',
-    difficulty: 2, words: '160-200', tags: ['教育', '成长', '奋斗'],
-    figure: figC,
-    promptTextZh: '一个学生沿着由书堆成的台阶向上攀爬，山顶亮着一盏灯。',
-    promptZh: '请根据图画写一篇 160—200 词的短文。要求：①描述图画内容；②解释图画寓意；③谈谈你对"学习是一条需要一步步走完的长路"的看法。',
-    promptEn: 'Write an essay of 160-200 words based on the following drawing. In your essay, you should\n\n1) describe the drawing briefly,\n2) explain its intended meaning, and\n3) give your comments on learning as a step-by-step journey.\n\nYou should write neatly on the ANSWER SHEET. (20 points)',
-    hints: ['可参考 step by step / incremental progress / sustained effort 等表达', '结尾建议给出可操作的学习态度，而非空喊努力']
+    id: "q_mock_02_minor", category: "mock", subject: "en1", kind: "minor",
+    source: "模拟题（自制，风格对齐 2022 年真题通知样式）", year: "模拟卷二",
+    title: "小作文：写一则数据安全讲座通知",
+    difficulty: 3, words: "100", tags: ["通知","格式"],
+    promptZh: "校学生会将举办一场面向全体学生的\"个人信息与数据安全\"讲座。请以学生会名义写一则通知（Notice），约 100 词：①讲座的时间、地点与主讲人；②讲座主要内容与实用价值；③报名方式或注意事项。落款用 The Student Union。",
+    promptEn: "The Student Union of your university is going to hold a lecture on personal information and data security. Write a notice in about 100 words to\n\n1) inform students of the time, place and speaker of the lecture,\n2) introduce the main contents and practical value of the lecture, and\n3) tell them how to sign up.\n\nDo not use your own name. Use \"The Student Union\" instead. (10 points)",
+    hints: ["通知格式：居中标题 Notice、正文、落款单位与日期","开头常用 In order to / A lecture will be held..."]
   });
 
   BANK.push({
-    id: 'q_mock_03_minor', category: 'mock', kind: 'minor',
-    subject: 'en1',
-    source: '模拟题（自制，风格对齐 2018 年真题邮件样式）', year: '模拟卷三',
-    title: '小作文：回复国际学生关于翻译项目的邮件',
-    difficulty: 3, words: '100', tags: ['邮件', '回复信'],
-    promptZh: '你收到国际学生 Anna 的邮件：她所在的社团想把一份英文研究摘要译成中文，希望你在翻译规范上给些建议，并询问你是否愿意帮他们校对。请回信约 100 词：①表示愿意提供帮助；②说明翻译时需要注意的两点（如术语统一、中文表达习惯）；③约定后续沟通方式。署名 Li Ming。',
-    promptEn: 'You have received an email from Anna, an international student, who asks for your advice on translating an English research abstract into Chinese and wonders whether you could proofread it. Write an email of about 100 words to\n\n1) offer your help,\n2) point out two things that matter in translation, and\n3) suggest how to keep in touch.\n\nDo not use your own name; use "Li Ming" instead. (10 points)',
-    hints: ['回信要有回应性：先回应对方请求，再提建议', '两点建议用 First... Second... 或 One thing to note is... 组织']
+    id: "q_mock_02_trans", category: "mock", subject: "en1", kind: "translation",
+    source: "外刊风格原创改写（共享经济社论，难度对齐真题翻译）", year: "模拟卷二",
+    title: "翻译：共享经济未兑现的承诺",
+    difficulty: 4, words: "5 句，每句 2 分", tags: ["经济","社会","长难句"],
+    promptZh: "阅读下面短文，将 5 个划线句译成中文，每句 2 分，共 10 分。注意名词化结构、插入语与让步逻辑。",
+    passage: "When the first ride-sharing apps appeared, they were welcomed as a promise of liberation. Anyone with a car, it was said, could earn a living on his own schedule, and anyone without one could travel cheaply. [1] A decade later, that promise looks considerably less generous: the platforms that described themselves as marketplaces have turned out to be extraordinarily efficient machines for concentrating wealth in a handful of headquarters. [2] Drivers, classified as independent contractors rather than employees, bear the costs of fuel, insurance and depreciation while enjoying none of the protections that a regular wage normally brings. [3] What makes the arrangement so durable is not its fairness, which few defend, but the fact that customers have grown attached to prices that would be impossible if the true cost of the service were honestly calculated. [4] Regulators who have tried to intervene, whether by capping commissions or by reclassifying workers, have discovered that a company operating in hundreds of cities can move faster than any single legislature. [5] The real question, then, is not whether the sharing economy has failed — by most measures it has — but whether the convenience it created can be preserved without the exploitation that came with it.",
+    sentences: ["A decade later, that promise looks considerably less generous: the platforms that described themselves as marketplaces have turned out to be extraordinarily efficient machines for concentrating wealth in a handful of headquarters.","Drivers, classified as independent contractors rather than employees, bear the costs of fuel, insurance and depreciation while enjoying none of the protections that a regular wage normally brings.","What makes the arrangement so durable is not its fairness, which few defend, but the fact that customers have grown attached to prices that would be impossible if the true cost of the service were honestly calculated.","Regulators who have tried to intervene, whether by capping commissions or by reclassifying workers, have discovered that a company operating in hundreds of cities can move faster than any single legislature.","The real question, then, is not whether the sharing economy has failed — by most measures it has — but whether the convenience it created can be preserved without the exploitation that came with it."],
+    hints: ["句 3 是 What 主语从句 + not...but... 结构，注意 which few defend 的插入","句 5 破折号中间是插入成分，先译主干再补插入"]
   });
 
   BANK.push({
-    id: 'q_mock_03_trans', category: 'mock', kind: 'translation',
-    subject: 'en1',
-    source: '外刊风格原创改写（法律与科技评论，偏难）', year: '模拟卷三',
-    title: '翻译：当算法作出决定，谁来解释',
-    difficulty: 5, words: '5 句，每句 2 分', tags: ['法律', '人工智能', '长难句'],
-    promptZh: '阅读下面短文，将 5 个划线句译成中文，每句 2 分，共 10 分。本卷句子结构较复杂，先划主干再动笔。',
-    passage: 'A judge who sentences a defendant is expected to give reasons; an algorithm that decides who gets a loan or a job is under no such obligation. [1] This asymmetry, long tolerated because the systems involved were assumed to be objective, has begun to look less like a technical detail than a hole in the rule of law. [2] The difficulty is not that machines make mistakes — human decision-makers do so constantly — but that their errors are hard to detect, impossible to cross-examine and, when they recur, applied to thousands of people at once. [3] Courts in several countries have therefore started to insist that a decision reached with the help of an automated system must be explainable in terms that the person affected can understand and challenge. [4] What such a requirement will mean in practice is far from settled, since the firms that build these systems argue that the details are trade secrets, while the agencies that buy them often lack the expertise to inspect what they have purchased. [5] The most promising proposals shift the burden: instead of asking whether an algorithm is fair in general, they require those who deploy it to show, case by case, that the reasons given for a decision would survive scrutiny.',
-    sentences: [
-      'This asymmetry, long tolerated because the systems involved were assumed to be objective, has begun to look less like a technical detail than a hole in the rule of law.',
-      'The difficulty is not that machines make mistakes — human decision-makers do so constantly — but that their errors are hard to detect, impossible to cross-examine and, when they recur, applied to thousands of people at once.',
-      'Courts in several countries have therefore started to insist that a decision reached with the help of an automated system must be explainable in terms that the person affected can understand and challenge.',
-      'What such a requirement will mean in practice is far from settled, since the firms that build these systems argue that the details are trade secrets, while the agencies that buy them often lack the expertise to inspect what they have purchased.',
-      'The most promising proposals shift the burden: instead of asking whether an algorithm is fair in general, they require those who deploy it to show, case by case, that the reasons given for a decision would survive scrutiny.'
-    ],
-    hints: ['句 1 的 long tolerated... 是过去分词短语作后置定语，修饰 asymmetry', '句 5 冒号后是解释；those who deploy it 作 require 的宾语']
+    id: "q_mock_03_major", category: "mock", subject: "en1", kind: "major",
+    source: "模拟题（自制，风格对齐 2017、2020 年真题主题）", year: "模拟卷三",
+    title: "书山有路：一格一格往上爬",
+    difficulty: 2, words: "160-200", tags: ["教育","成长","奋斗"],
+    promptTextZh: "一个学生沿着由书堆成的台阶向上攀爬，山顶亮着一盏灯。",
+    promptZh: "请根据图画写一篇 160—200 词的短文。要求：①描述图画内容；②解释图画寓意；③谈谈你对\"学习是一条需要一步步走完的长路\"的看法。",
+    promptEn: "Write an essay of 160-200 words based on the following drawing. In your essay, you should\n\n1) describe the drawing briefly,\n2) explain its intended meaning, and\n3) give your comments on learning as a step-by-step journey.\n\nYou should write neatly on the ANSWER SHEET. (20 points)",
+    figure: "<svg viewBox=\"0 0 640 400\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><defs><linearGradient id=\"skyC\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e8f0f7\"/><stop offset=\"1\" stop-color=\"#f8f4ea\"/></linearGradient></defs><rect width=\"640\" height=\"400\" fill=\"url(#skyC)\"/><circle cx=\"520\" cy=\"86\" r=\"34\" fill=\"#ffd97a\"/><path d=\"M0 300 q140 -60 250 -10 q120 54 200 -6 q90 -66 190 -16 v132 H0z\" fill=\"#dbe6dd\"/><rect x=\"150\" y=\"296\" width=\"300\" height=\"34\" rx=\"6\" fill=\"#8fa9c2\" stroke=\"#6d87a0\" stroke-width=\"3\"/><rect x=\"196\" y=\"258\" width=\"212\" height=\"38\" rx=\"6\" fill=\"#c08a8a\" stroke=\"#a06c6c\" stroke-width=\"3\"/><rect x=\"238\" y=\"222\" width=\"130\" height=\"36\" rx=\"6\" fill=\"#e0b978\" stroke=\"#bd9757\" stroke-width=\"3\"/><rect x=\"272\" y=\"188\" width=\"66\" height=\"34\" rx=\"6\" fill=\"#8fbf9f\" stroke=\"#6f9c7f\" stroke-width=\"3\"/><path d=\"M170 296 v34 M200 296 v34 M430 296 v34 M216 258 v38 M380 258 v38 M252 222 v36 M356 222 v36\" stroke=\"#ffffff\" stroke-width=\"2\" opacity=\"0.6\"/><circle cx=\"305\" cy=\"164\" r=\"18\" fill=\"#ffd97a\" opacity=\"0.55\"/><circle cx=\"305\" cy=\"162\" r=\"9\" fill=\"#ffec9e\" stroke=\"#e0b040\" stroke-width=\"2\"/><path d=\"M305 172 v10\" stroke=\"#9c8a76\" stroke-width=\"3\"/><path d=\"M283 150 q22 -26 44 0\" stroke=\"#e0b040\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"352\" cy=\"228\" r=\"18\" fill=\"#f5dcc2\" stroke=\"#9c8a76\" stroke-width=\"3\"/><path d=\"M336 222 q4 -20 16 -20 q12 0 16 20 q-8 -10 -16 -10 q-8 0 -16 10z\" fill=\"#3f3125\"/><rect x=\"336\" y=\"248\" width=\"34\" height=\"42\" rx=\"10\" fill=\"#5d7f9c\" stroke=\"#456580\" stroke-width=\"3\"/><path d=\"M336 258 q-22 -18 -34 -34\" stroke=\"#5d7f9c\" stroke-width=\"10\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M370 258 q22 -12 30 -26\" stroke=\"#5d7f9c\" stroke-width=\"10\" fill=\"none\" stroke-linecap=\"round\"/><rect x=\"340\" y=\"288\" width=\"12\" height=\"30\" rx=\"5\" fill=\"#4a5a6a\"/><rect x=\"356\" y=\"288\" width=\"12\" height=\"26\" rx=\"5\" fill=\"#4a5a6a\"/><path d=\"M330 214 q-4 6 0 10 q4 -4 0 -10z\" fill=\"#8fd0e8\"/><path d=\"M470 240 v-70 M470 170 l-16 20 M470 170 l16 20\" stroke=\"#8fa9c2\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/><text x=\"320\" y=\"372\" font-size=\"20\" fill=\"#8a7a68\" text-anchor=\"middle\" font-family=\"sans-serif\">（一格一格往上爬，山顶亮着灯）</text></svg>",
+    hints: ["可参考 step by step / incremental progress / sustained effort 等表达","结尾建议给出可操作的学习态度，而非空喊努力"]
+  });
+
+  BANK.push({
+    id: "q_mock_03_minor", category: "mock", subject: "en1", kind: "minor",
+    source: "模拟题（自制，风格对齐 2018 年真题邮件样式）", year: "模拟卷三",
+    title: "小作文：回复国际学生关于翻译项目的邮件",
+    difficulty: 3, words: "100", tags: ["邮件","回复信"],
+    promptZh: "你收到国际学生 Anna 的邮件：她所在的社团想把一份英文研究摘要译成中文，希望你在翻译规范上给些建议，并询问你是否愿意帮他们校对。请回信约 100 词：①表示愿意提供帮助；②说明翻译时需要注意的两点（如术语统一、中文表达习惯）；③约定后续沟通方式。署名 Li Ming。",
+    promptEn: "You have received an email from Anna, an international student, who asks for your advice on translating an English research abstract into Chinese and wonders whether you could proofread it. Write an email of about 100 words to\n\n1) offer your help,\n2) point out two things that matter in translation, and\n3) suggest how to keep in touch.\n\nDo not use your own name; use \"Li Ming\" instead. (10 points)",
+    hints: ["回信要有回应性：先回应对方请求，再提建议","两点建议用 First... Second... 或 One thing to note is... 组织"]
+  });
+
+  BANK.push({
+    id: "q_mock_03_trans", category: "mock", subject: "en1", kind: "translation",
+    source: "外刊风格原创改写（法律与科技评论，偏难）", year: "模拟卷三",
+    title: "翻译：当算法作出决定，谁来解释",
+    difficulty: 5, words: "5 句，每句 2 分", tags: ["法律","人工智能","长难句"],
+    promptZh: "阅读下面短文，将 5 个划线句译成中文，每句 2 分，共 10 分。本卷句子结构较复杂，先划主干再动笔。",
+    passage: "A judge who sentences a defendant is expected to give reasons; an algorithm that decides who gets a loan or a job is under no such obligation. [1] This asymmetry, long tolerated because the systems involved were assumed to be objective, has begun to look less like a technical detail than a hole in the rule of law. [2] The difficulty is not that machines make mistakes — human decision-makers do so constantly — but that their errors are hard to detect, impossible to cross-examine and, when they recur, applied to thousands of people at once. [3] Courts in several countries have therefore started to insist that a decision reached with the help of an automated system must be explainable in terms that the person affected can understand and challenge. [4] What such a requirement will mean in practice is far from settled, since the firms that build these systems argue that the details are trade secrets, while the agencies that buy them often lack the expertise to inspect what they have purchased. [5] The most promising proposals shift the burden: instead of asking whether an algorithm is fair in general, they require those who deploy it to show, case by case, that the reasons given for a decision would survive scrutiny.",
+    sentences: ["This asymmetry, long tolerated because the systems involved were assumed to be objective, has begun to look less like a technical detail than a hole in the rule of law.","The difficulty is not that machines make mistakes — human decision-makers do so constantly — but that their errors are hard to detect, impossible to cross-examine and, when they recur, applied to thousands of people at once.","Courts in several countries have therefore started to insist that a decision reached with the help of an automated system must be explainable in terms that the person affected can understand and challenge.","What such a requirement will mean in practice is far from settled, since the firms that build these systems argue that the details are trade secrets, while the agencies that buy them often lack the expertise to inspect what they have purchased.","The most promising proposals shift the burden: instead of asking whether an algorithm is fair in general, they require those who deploy it to show, case by case, that the reasons given for a decision would survive scrutiny."],
+    hints: ["句 1 的 long tolerated... 是过去分词短语作后置定语，修饰 asymmetry","句 5 冒号后是解释；those who deploy it 作 require 的宾语"]
   });
 
   /* ============ 外刊长难句翻译专项（辅助训练，不打考研总分，归在模拟题类别） ============ */
   BANK.push({
-    id: 'q_drill_01', category: 'mock', kind: 'drill',
-    subject: 'en1',
-    source: '外刊风格原创改写（The Economist 风格，科技与社会）', year: '专项训练',
-    title: '长难句 01：学者为什么开始怀疑"高效"',
-    difficulty: 4, words: '1 句，4 分', tags: ['专项', '长难句', '社会科学'],
-    promptZh: '把下面这句译成中文（4 分）。先划出主干，再处理修饰成分。',
-    passage: 'Scholars who spent their careers measuring the productivity of knowledge workers are now asking a question their training hardly prepared them for: whether the tools that were supposed to free such workers from routine tasks have instead filled their days with the very busywork the tools were meant to remove.',
-    sentences: [
-      'Scholars who spent their careers measuring the productivity of knowledge workers are now asking a question their training hardly prepared them for: whether the tools that were supposed to free such workers from routine tasks have instead filled their days with the very busywork the tools were meant to remove.'
-    ],
-    hints: ['主干：Scholars ... are now asking a question ...', '冒号后 whether 从句作 question 的同位语', 'the very busywork (that) the tools were meant to remove：省略关系词的定语从句']
+    id: "q_drill_01", category: "mock", subject: "en1", kind: "drill",
+    source: "外刊风格原创改写（The Economist 风格，科技与社会）", year: "专项训练",
+    title: "长难句 01：学者为什么开始怀疑\"高效\"",
+    difficulty: 4, words: "1 句，4 分", tags: ["专项","长难句","社会科学"],
+    promptZh: "把下面这句译成中文（4 分）。先划出主干，再处理修饰成分。",
+    passage: "Scholars who spent their careers measuring the productivity of knowledge workers are now asking a question their training hardly prepared them for: whether the tools that were supposed to free such workers from routine tasks have instead filled their days with the very busywork the tools were meant to remove.",
+    sentences: ["Scholars who spent their careers measuring the productivity of knowledge workers are now asking a question their training hardly prepared them for: whether the tools that were supposed to free such workers from routine tasks have instead filled their days with the very busywork the tools were meant to remove."],
+    hints: ["主干：Scholars ... are now asking a question ...","冒号后 whether 从句作 question 的同位语","the very busywork (that) the tools were meant to remove：省略关系词的定语从句"]
   });
 
   window.__KAOYAN_QUESTIONS = BANK;

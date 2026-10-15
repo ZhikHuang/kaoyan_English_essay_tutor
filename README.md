@@ -10,7 +10,7 @@
 | 小作文 | 10 分，约 100 词 | 10 分，约 100 词 |
 | 翻译 | 10 分，5 个划线句 | **15 分，整段英译汉** |
 
-- 题库：**真题 85 道**（英语一 34：2010—2026 大作文+小作文；英语二 51：2010—2026 大作文+小作文+翻译）+ 原创模拟题 10 道
+- 题库：**真题 85 道**（英语一 34：2010—2026 大作文+小作文；英语二 51：2010—2026 大作文+小作文+翻译）+ 原创模拟题 9 道 + 长难句专项 1 道
 - 批改：模拟评分（按科目取对应满分）+ 逐句批改 + 修改后全文 + 表达积累 + 本篇注意事项
 - 复盘：错题自动按语法类别归库、分数趋势、同一篇作文的改稿并排对比
 - 离线：网页零外链、零请求，断网照常用；数据全部在你自己的文件夹里
@@ -129,7 +129,9 @@ macOS 首次运行脚本若被系统拦下：右键脚本 →「打开」→ 确
 | **Claude Code** | 把 `skill/SKILL.md` 并进 `CLAUDE.md`，或复制 `skill/` 到 `.claude/skills/` |
 | **任意命令行智能体** | `node tools/grade-once.js --cmd "your-agent -p {task}"` |
 
-**核心只有一句话**：读 `app/data/state.js` 里 `status:"pending"` 的提交 → 按 `skill/` 的标准批改 → 按 `skill/references/web_bridge.md` 的字段写成 `app/data/patches/sub_XXXX.js`。任何智能体照这句做，网页就能显示结果。
+**核心只有一句话**：读 `app/data/pending_submissions.json`（网页自动同步）与 `app/data/state.js` 里 `status:"pending"` 的提交 → 按 `skill/` 的标准批改 → 按 `skill/references/web_bridge.md` 的字段写成 `app/data/patches/sub_XXXX.js`。任何智能体照这句做，网页就能显示结果。
+
+> 注意：网页里的提交平时存在浏览器 localStorage 里，只有**点过「一键批改」（网页按钮）**或**运行过辅助服务/`一键批改.cmd`**之后才会落到 `app/data/pending_submissions.json`。如果你换了一个智能体、它什么都没读到，先让用户在网页上点一次「一键批改」（会提示"同步"），或点「导出本机提交 JSON」另存为 `app/data/pending_submissions.json`。
 
 ---
 
@@ -155,16 +157,18 @@ kaoyan-english-writing/
 │  ├─ index.html
 │  ├─ data/
 │  │  ├─ state.js             ← 考试日期 + 你的提交记录（可编辑）
-│  │  ├─ questions.js         ← 题库
+│  │  ├─ questions.js         ← 题库（生成产物，不要手改）
 │  │  ├─ figures.js           ← 示意图库
+│  │  ├─ pending_submissions.json ← 网页/辅助服务同步过来的本机提交（AI 读这份）
 │  │  ├─ patches/             ← AI 写回的批改结果
 │  │  ├─ uploads/             ← 手写作文照片
 │  │  └─ backups/             ← 更新题库前的自动备份
 │  └─ tools/
 │     ├─ validate.js          ← 自检（数据 + 页面渲染仿真 + 两科年份完整性）
 │     ├─ grade-helper.js      ← 网页按钮背后的本地服务
-│     ├─ gen-questions.js     ← 题库生成脚本（英语一 + 英语二）
-│     └─ en2-data.js          ← 英语二真题数据（2010—2026）
+│     ├─ gen-questions.js     ← 题库生成脚本（英语一 + 英语二 + 模拟题）
+│     ├─ en2-data.js          ← 英语二真题数据（2010—2026）
+│     └─ mock-data.js         ← 模拟题与长难句专项数据源
 ├─ skill/                     ← 批改标准（智能体读的提示词）
 │  ├─ SKILL.md                ← 主入口：流程、科目/题型路由、通用守则
 │  └─ references/             ← 英语一三模块 + 英语二三模块 + 长难句 + 数据契约
@@ -211,7 +215,10 @@ node app/tools/validate.js --report   # 额外用 DOM 仿真检查页面渲染
 | 提交后网页看不到批改结果 | 确认补丁是 `app/data/patches/sub_XXXX.js`（**必须是 .js**）；点「重新加载数据」 |
 | 题库显示 0 道题 | 页面会给出诊断：通常是 `app/data/questions.js` 里调用了 `figures.js` 中不存在的图函数；跑 `validate.js` 看具体报错，或用「回退到更新前的备份」 |
 | 网页按钮点了没反应 | 辅助服务没启动：运行 `start-helper.cmd` / `./start-helper.sh` |
-| 「一键批改.cmd」闪一下就关 | 窗口里会显示错误（如找不到 dsh / node）；把内容发给 AI 看 |
+| AI 说「没有待批改的作文」 | 网页里的提交还在浏览器本地，先点一次网页上的「一键批改」（会把提交同步成 `app/data/pending_submissions.json`），或点「导出本机提交 JSON」另存为 `app/data/pending_submissions.json` |
+| 一键批改.cmd 报找不到 node | 在 DSH 里打开本文件夹的会话，让 DSH 跑（DSH 自带 Node）；或自行安装 Node.js 18+ |
+| 一键批改.cmd 报找不到 dsh | 该命令需要在 DSH 的终端里运行；替代做法是在 DSH 对话里说「批改待批改作文」 |
+| 「一键批改.cmd」窗口停住不动 | 它会在窗口里显示原因（如找不到 dsh / node），不会一闪而过；把内容发给 AI 看 |
 | 分数统计对不上 | 跑 `validate.js`，它会指出具体哪个补丁数值不一致 |
 
 ---

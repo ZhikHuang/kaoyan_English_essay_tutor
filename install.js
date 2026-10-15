@@ -29,7 +29,7 @@ const info = (s) => console.log('  ·  ' + s);
 
 say('');
 say('════════════════════════════════════════════════════');
-say('  考研英语一 · 作文批改练习台 —— 安装与自检');
+say('  考研英语（一）（二）· 作文批改练习台 —— 安装与自检');
 say('════════════════════════════════════════════════════');
 say('  平台：' + (WIN ? 'Windows' : MAC ? 'macOS' : LINUX ? 'Linux' : process.platform) +
             '　Node：' + process.version);
@@ -100,6 +100,18 @@ if (fs.existsSync(pdir)) {
 fs.mkdirSync(path.join(APP, 'data', 'uploads'), { recursive: true });
 fs.mkdirSync(path.join(APP, 'data', 'backups'), { recursive: true });
 
+/* 真正的批改依赖：命令行里的 dsh（网页批量按钮 / 一键批改.cmd 都靠它启动智能体） */
+const { spawnSync } = require('child_process');
+const dshCmd = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
+const dshProbe = spawnSync(dshCmd, ['--version'], { encoding: 'utf8', shell: process.platform === 'win32' });
+if (!dshProbe.error && dshProbe.status === 0) {
+  ok('批改依赖可用：' + dshCmd + ' ' + String(dshProbe.stdout || '').trim().split('\n')[0]);
+} else {
+  warn('在命令行里找不到 ' + dshCmd + '：网页「一键批改」「一键更新题库」和 一键批改.cmd 都会启动失败。');
+  info('  · 在 DSH 里打开本文件夹的会话时通常已可用；若确实不可用，请在 DSH 的终端里运行这些命令，或把 DSH 的 bin 目录加入 PATH。');
+  info('  · 不依赖 dsh 的替代做法：在 DSH 对话里说「批改待批改作文」（AI 会读 data/pending_submissions.json 与 data/state.js）。');
+}
+
 /* ---------- 2. 安装技能到 DSH 用户目录 ---------- */
 say('');
 say('【2/3】把技能文档安装到 DSH 用户技能目录（任何会话都能用）');
@@ -155,3 +167,6 @@ say('     node app/tools/validate.js --report');
 say('');
 say(problems === 0 ? '✅ 自检通过，可以直接开始使用。' : '⚠️  有 ' + problems + ' 项需要留意（见上面的 ⚠️ 行）。');
 say('');
+// 注意：这里的"需要留意"多为环境提示（例如命令行里没有 dsh），不代表安装失败，
+// 所以正常结束（退出码 0），避免一键调用它的脚本被误判为失败。
+process.exit(0);

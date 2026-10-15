@@ -30,25 +30,38 @@ const CMD_TEMPLATE = val('--cmd', '');
 const UPDATE_YEARS = val('--update', '');
 const TASK = val('--task', '');
 
-/* 默认任务文字 */
+/* 默认任务文字（注意：agent 的工作目录是 app/，所以这里的路径都相对 app/） */
 function defaultTask(){
   if (UPDATE_YEARS) {
     return [
-      '任务：联网核查并更新本机题库，补齐 ' + UPDATE_YEARS + ' 年考研英语一的真题写作题。',
+      '任务：联网核查并更新本机题库，补齐 ' + UPDATE_YEARS + ' 年考研英语（一）与英语（二）的真题主观题。',
       '严格按下面做完就结束，不要做任何其它事：',
-      '1. 用联网搜索查明这些年份考研英语一「大作文（Part B，20 分）」与「小作文（Part A，10 分）」的真实题目；每年查 2—4 个来源交叉核对，查不到就如实说"查不到"，不要编造。',
-      '2. 打开 app/data/questions.js，照已有 real 题目的写法追加：id 用 q_real_<年份>_major / q_real_<年份>_minor，category 为 "real"，补全 year、title、promptZh、promptTextZh、promptEn、hints、tags；figure 用 app/data/figures.js 里的 F.xxx() 生成。',
-      '3. 只允许修改 app/data/questions.js 一个文件；不要动 index.html、tools/、state.js。',
-      '4. 写完运行 node tools/validate.js 确认通过。',
-      '5. 用 5 行以内汇报：新增了哪几年的哪两道题、来源链接、哪些细节不确定。'
+      '【A. 英语一】每年 2 道：大作文（Part B，20 分，160—200 词）与 小作文（Part A，10 分，约 100 词）。'
+        + '2010—2023 大作文是图画作文；2024 是"图画+柱状图"；2025 是表格；2026 是双图表——先看题干是 drawing 还是 chart。'
+        + 'id 用 q_real_<年份>_major / q_real_<年份>_minor。',
+      '【B. 英语二】每年 3 道：图表大作文（15 分，约 150 词，id 用 q_en2_<年份>_major）、小作文（10 分，id 用 q_en2_<年份>_minor）、'
+        + '整段英译汉（15 分，id 用 q_en2_<年份>_translation，必须给出 passage 英文原文与按句拆分的 sentences）。',
+      '【C. 每年查 2—4 个来源交叉核对，查不到就如实说"查不到"，绝对不要编造。】',
+      '【D. 写在哪里】题库由生成器产出，直接改 data/questions.js 会在下次生成时被覆盖，所以要改数据源：',
+      '   · 英语一：编辑 tools/gen-questions.js 里的 MAJOR（大作文）与 MINOR（小作文）数组；',
+      '   · 英语二：编辑 tools/en2-data.js 里的 EN2_MAJOR / EN2_MINOR / EN2_TRANS 三个数组；',
+      '   · 改完运行 node tools/gen-questions.js 重新生成 data/questions.js。',
+      '   · 模拟题/长难句专项在 tools/mock-data.js 里，与本任务无关，不要动。',
+      '【E. 每条题目字段】照已有条目：subject（"en1"/"en2"）、category:"real"、kind、year:"<年份> 真题"、title、source、'
+        + 'promptZh、promptTextZh、promptEn、hints、tags；图表用 figures.js 里的 F.barChart/F.table/F.pieChart/F.pie2/F.pieBar/F.twinBars/F.lineChart，'
+        + '英语一图画用 F.twoPanel/F.facing/F.crowd/F.phones。不要发明图库里没有的函数名。',
+      '【F. 写完运行 node tools/validate.js，确认"结果：全部通过"（有 FAIL 就改好再跑）。】',
+      '【G. 用 8 行以内汇报：两科各新增了哪几年哪几道、来源链接、哪些细节不确定。】'
     ].join('\n');
   }
   return [
-    '任务：批改本机练习台里待批改的考研英语一作文。',
-    '1. 读 skill/SKILL.md 与它指向的评分文档，按其标准批改。',
-    '2. 从 app/data/state.js 里找 status 为 "pending" 的提交（或用户指定的编号）。',
-    '3. 按 skill/references/web_bridge.md 的字段契约，把结果写成 app/data/patches/sub_<编号>.js。',
-    '4. 在回复里给出：得分与档位、逐句批改、修改后全文、表达积累、本篇注意事项。'
+    '任务：批改本机练习台里待批改的考研英语（一）（二）作文与翻译。',
+    '1. 读 skill/SKILL.md 与它指向的评分文档，按科目（英语一 / 英语二）与题型选择对应标准。',
+    '2. 待批改提交按下面的顺序找：① data/pending_submissions.json（网页推送给辅助服务的本机提交，最全）；'
+      + '② data/state.js 里 status 为 "pending" 的提交（或用户指定的编号）。',
+    '3. 按 skill/references/web_bridge.md 的字段契约，把结果写成 data/patches/sub_<编号>.js（JS 形式，本地文件模式下只认 .js）。',
+    '4. 在回复里给出：得分与档位、逐句批改、修改后全文、表达积累、本篇注意事项。',
+    '注意：你的工作目录是 app/，所以上面路径都相对 app/（即 app/data/...、app/skill/... 不存在时用 data/...、skill/...）。'
   ].join('\n');
 }
 const task = TASK || defaultTask();
@@ -62,7 +75,7 @@ function buildCommand(){
 }
 
 console.log('');
-console.log('考研英语一 · 批改练习台 —— 一次性任务');
+console.log('考研英语（一）（二）· 批改练习台 —— 一次性任务');
 console.log('  工作目录：' + APP);
 console.log('  智能体  ：' + AGENT + (CMD_TEMPLATE ? '（自定义命令）' : ''));
 console.log('  任务    ：' + task.split('\n')[0]);
@@ -70,10 +83,12 @@ console.log('');
 
 let r;
 if (!CMD_TEMPLATE && AGENT === 'dsh') {
-  const cmd = process.platform === 'win32' ? 'dsh.cmd' : 'dsh';
-  r = spawnSync(cmd, ['--profile', 'headless', task], {
-    cwd: APP, stdio: 'inherit', shell: process.platform === 'win32'
-  });
+  // 任务文字含换行，走命令行参数在 Windows 上会被 cmd.exe 拆坏；用 stdin 传（dsh 支持从 stdin 读任务）。
+  // Windows 上直接 spawn 'dsh.cmd' 会 EINVAL，所以显式经 cmd.exe 调用。
+  const isWin = process.platform === 'win32';
+  const cmd = isWin ? (process.env.ComSpec || 'cmd.exe') : 'dsh';
+  const argv = isWin ? ['/d', '/s', '/c', 'dsh.cmd --profile headless'] : ['--profile', 'headless'];
+  r = spawnSync(cmd, argv, { cwd: APP, stdio: ['pipe', 'inherit', 'inherit'], input: task });
 } else {
   r = spawnSync(buildCommand(), { cwd: APP, stdio: 'inherit', shell: true });
 }

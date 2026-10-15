@@ -4,7 +4,7 @@ const path = require('path');
 const vm = require('vm');
 const { spawnSync } = require('child_process');
 
-const REPO = process.argv[2] || __dirname;
+const REPO = process.argv[2] || path.resolve(__dirname, '..');
 let bad = 0, warn = 0;
 const ok = m => console.log('  ✅ ' + m);
 const no = m => { bad++; console.log('  ❌ ' + m); };
@@ -104,8 +104,10 @@ for (const d of docs) {
   if (!fs.existsSync(p)) continue;
   const txt = fs.readFileSync(p, 'utf8');
   // 抓取形如 app/xxx、tools/xxx、skill/xxx、docs/xxx 的路径
-  const refs = [...new Set([...txt.matchAll(/(?:^|[\s`(（\[])((?:app|tools|skill|docs|\.dsh)\/[\w\u4e00-\u9fa5.\-\/]+?\.(?:md|js|html|pdf|sh))/g)].map(m => m[1].trim()))];
-  const missing = refs.filter(r => !/X{2,}|xxxx/i.test(r) && !fs.existsSync(path.join(REPO, r)));
+  const refs = [...new Set([...txt.matchAll(/(?:^|[\s`(（\[])((?:app|tools|skill|docs|\.dsh)\/[\w\u4e00-\u9fa5.\-\/]+?\.(?:md|js|html|pdf|sh|json))(?![a-z])/g)].map(m => m[1].trim()))];
+  // 运行期才会出现的用户数据文件（不进仓库、可能还没生成），不算"路径不存在"
+  const RUNTIME_DATA = ['app/data/pending_submissions.json', 'app/data/state.corrupt.bak'];
+  const missing = refs.filter(r => !/X{2,}|xxxx/i.test(r) && !RUNTIME_DATA.includes(r) && !fs.existsSync(path.join(REPO, r)));
   if (missing.length) no(d + ' 引用了不存在的路径：' + missing.join(', '));
   else ok(d + ' 的 ' + refs.length + ' 处路径引用全部有效');
 }
@@ -156,7 +158,8 @@ console.log('');
 console.log('【7】JS 脚本语法');
 for (const f of ['install.js', 'tools/grade-once.js', 'tools/gen-win-scripts.js', 'app/tools/validate.js', 'app/tools/grade-helper.js', 'app/tools/gen-questions.js']) {
   const r = spawnSync(process.execPath, ['--check', path.join(REPO, f)], { encoding: 'utf8' });
-  r.status === 0 ? null : no(f + ' 语法错误：' + (r.stderr || '').split('\n')[0]);
+  if (r.error) { wr(f + ' 无法启动 node --check（' + r.error.code + '），本项跳过'); continue; }
+  r.status === 0 ? null : no(f + ' 语法错误：' + ((r.stderr || '').split('\n')[0] || ('退出码 ' + r.status)));
 }
 if (!bad) ok('6 个 JS 脚本语法全部通过');
 
@@ -165,6 +168,7 @@ console.log('');
 console.log('【8】Unix 脚本格式（换行符 / shebang / 无 BOM）');
 for (const f of ['install.sh', 'grade-once.sh', 'start-helper.sh', 'stop-helper.sh', 'update-bank.sh']) {
   const p = path.join(REPO, f);
+  if (!fs.existsSync(p)) { no(f + ' 不存在'); continue; }
   const buf = fs.readFileSync(p);
   const probs = [];
   if (buf[0] === 0xEF && buf[1] === 0xBB) probs.push('含 BOM');

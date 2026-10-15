@@ -1,0 +1,19 @@
+# 用户数据：不要提交自己的作文与照片
+app/data/uploads/*
+!app/data/uploads/.gitkeep
+app/data/backups/*
+!app/data/backups/.gitkeep
+app/data/pending_submissions.json
+
+# 个人化状态（考试日期、提交记录）：保留模板形态即可
+# 若你 fork 后想把自己的记录一起发布，删掉下面这行
+# app/data/state.js
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+node_modules/
+.vscode/
+.idea/

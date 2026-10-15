@@ -1,6 +1,6 @@
 # AGENTS.md —— 给 AI 智能体（Codex / Cursor / Claude Code / DSH 等）的工作说明
 
-本仓库是一个**考研英语一作文练习台**：静态网页负责写作与查看，AI 负责批改，两者通过本地文件交换数据。
+本仓库是一个**考研英语（一）（二）作文练习台**：静态网页负责写作与查看，AI 负责批改，两者通过本地文件交换数据。
 你（智能体）在这里的核心职责只有两件事：**批改作文** 与 **更新题库**。请严格按下面的约定操作。
 
 ---
@@ -76,11 +76,11 @@
 要求：
 
 1. 用联网搜索查明目标年份两科的真实题目；**每年交叉核对 2—4 个来源**，查不到就如实说"查不到"，**不要编造**。注意区分两科（英语一大作文是图画/图表；英语二大作文是图表；英语二翻译是整段而非划线句）。
-2. 追加到 `app/data/questions.js`，照已有题目的写法，每条都要写 `subject`（`en1`/`en2`）、`category:"real"`、`kind`、`year`、`title`、`source`、`promptZh`、`promptTextZh`、`promptEn`、`hints`、`tags`。
+2. **写进数据源，不要手工改产物**：`app/data/questions.js` 是生成器产出物，手改会在下次生成时被丢弃。真题写数据源（英语一 → `app/tools/gen-questions.js` 的 `MAJOR`/`MINOR`；英语二 → `app/tools/en2-data.js` 的 `EN2_MAJOR`/`EN2_MINOR`/`EN2_TRANS`），模拟题与长难句专项写 `app/tools/mock-data.js`，然后运行 `node app/tools/gen-questions.js` 重新生成。每条都要有 `subject`（`en1`/`en2`）、`category:"real"`、`kind`、`year`、`title`、`source`、`promptZh`、`promptTextZh`、`promptEn`、`hints`、`tags`；英语二翻译还必须给 `passage`（英文原文）与按句拆分的 `sentences`。
    图表用现成函数：`F.barChart / F.table / F.pieChart / F.pie2 / F.pieBar / F.twinBars / F.lineChart`；英语一图画用 `F.twoPanel / F.facing / F.crowd / F.phones`。
 3. **只增不改**：不要改已有年份的题目或其 id。
 4. **不要发明图库里没有的函数名**；若确需新图型，必须同时在 `app/data/figures.js` 里定义并挂到 `window.__KAOYAN_FIG`——否则整个题库文件会执行中断，网页一道题都读不出来。
-5. 写完运行 `node app/tools/validate.js`（必要时加 `--report`），确认通过（它会检查两科年份完整性）。
+5. 写完运行 `node app/tools/validate.js`（必要时加 `--report`），确认输出"结果：全部通过"（它会分别检查两科 2010—2026 的完整性，并拦住"英语二翻译缺英文原文"）。
 6. 报告：两科各新增了哪几年哪几道题、来源链接、哪些细节不确定。
 
 ---

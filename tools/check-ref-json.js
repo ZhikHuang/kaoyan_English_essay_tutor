@@ -4,7 +4,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const dir = process.argv[2];
+const dir = process.argv[2] || path.join(__dirname, '..', 'skill', 'references');
+if (!fs.existsSync(dir)) {
+  console.log('用法：node tools/check-ref-json.js [参考文档目录，默认 skill/references]');
+  console.log('目录不存在：' + dir);
+  process.exit(1);
+}
 const files = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
 let bad = 0, checked = 0, skipped = 0;
 
@@ -65,6 +70,18 @@ for (const f of files) {
   else if (okCount === n) console.log('  ✅ ' + f + '：' + n + ' 个补丁模板全部可解析');
   else console.log('  →  ' + f + '：' + okCount + '/' + n + ' 可解析');
 }
+/* 文档里的"双引号套双引号"笔误（例如 category:""mine""）会让照抄的 JS 直接语法错误，
+   这里逐文件扫一遍，防止这类笔误再回到文档里。 */
+const DQ_TYPO = /:\s*""[A-Za-z_][\w-]*""/g;
+for (const f of files) {
+  const txt = fs.readFileSync(path.join(dir, f), 'utf8');
+  const hits = [...txt.matchAll(DQ_TYPO)].map(m => m[0]);
+  if (hits.length) {
+    bad++;
+    console.log('  ❌ ' + f + ' 含双引号笔误（应为单层双引号）：' + hits.join('、'));
+  }
+}
+
 console.log('');
 console.log('共校验 ' + checked + ' 个补丁模板（跳过 ' + skipped + ' 个非补丁代码块）；' + (bad === 0 ? '全部可解析 ✅' : bad + ' 个失败 ❌'));
 process.exit(bad ? 1 : 0);

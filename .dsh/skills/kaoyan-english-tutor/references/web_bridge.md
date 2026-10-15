@@ -167,7 +167,7 @@ window.__KAOYAN_PATCHES['sub_0001'] = {
 - **题库更新规则（AI 侧必须遵守）**：
   1. **只增不改**：新题追加到文件末尾，不修改已有题目对象。
   2. **id 终身不变**：`q_real_2021_major` / `q_mock_01_major` / `q_mine_001` 一旦分配不得更改，因为提交、练习次数、补丁都靠 id 关联。
-  3. **写入位置**：真题与模拟题 → `data/questions.js`（`window.__KAOYAN_QUESTIONS = BANK`）；用户自带的题 → `data/state.js` 的 `S.questions`，`category:""mine""`，id 用 `q_mine_001` 递增。
+  3. **写入位置**：真题与模拟题 → `data/questions.js`（`window.__KAOYAN_QUESTIONS = BANK`）；用户自带的题 → `data/state.js` 的 `S.questions`，`category:"mine"`，id 用 `q_mine_001` 递增。
   3b. **分科目**：每条题目都要写 `subject`（`en1`/`en2`）。英语二真题 id 用 `q_en2_<年份>_major`（图表大作文 15 分）/ `_minor`（小作文 10 分）/ `_translation`（整段英译汉 15 分）。
   3c. **一键更新要覆盖两个科目**：「一键更新题库」按科目分别检查缺失年份（英语一缺某年就补英语一那年的题，英语二缺某年就补英语二那年的题），并把结果分别写入 `questions.js`。
   4. **查重优先**：加题前先搜题库里是否已有同一道题（题干相似、题型一致、要点一致即算同一道）；同一道题**不新建**，把提交的 `questionId` 指向已有题目即可。

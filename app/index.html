@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>考研英语一 · 作文与翻译练习台</title>
+<title>考研英语（一）（二）· 作文与翻译练习台</title>
 <style>
   :root{
     --bg:#f6f4ef; --paper:#fffdf9; --ink:#26221d; --ink2:#5b5348; --ink3:#8d8477;
@@ -201,7 +201,7 @@
 <header class="top">
   <div class="topinner">
     <div class="brand">
-      <h1>考研英语一 · 作文与翻译练习台</h1>
+      <h1>考研英语（一）（二）· 作文与翻译练习台</h1>
       <span class="seal">kaoyan-english-tutor</span>
       <span class="sub">提交作文 → AI 按考研标准批改 → 结果自动回填本页</span>
     </div>
@@ -240,7 +240,7 @@
 
 <script>
 /* =====================================================================
-   考研英语一练习台 · 前端逻辑
+   考研英语（一）（二）练习台 · 前端逻辑
    数据来源三层合并（优先级从高到低）：
      1) data/patches/*.json  → AI 写回的批改结果（本次会话内已加载过的缓存）
      2) localStorage         → 本机新提交/草稿
@@ -249,7 +249,17 @@
 (function(){
 'use strict';
 
-var KIND_LABEL = { major:'大作文 20分', minor:'小作文 10分', translation:'翻译 10分', drill:'长难句专项' };
+/* 题型标签不带分值（英语一与英语二满分不同），分值一律按题目实际 fullScore 显示 */
+var KIND_LABEL = { major:'大作文', minor:'小作文', translation:'翻译', drill:'长难句专项' };
+var KIND_FULL = { en1:{ major:20, minor:10, translation:10 }, en2:{ major:15, minor:10, translation:15 } };
+function kindLabel(q){
+  if(q && typeof q === 'object'){
+    var s = subjOf(q);
+    var f = (KIND_FULL[s] || {})[q.kind];
+    return (KIND_LABEL[q.kind] || q.kind) + (f ? (' ' + f + '分') : '');
+  }
+  return KIND_LABEL[q] || q;
+}
 var KIND_CLASS = { major:'k-major', minor:'k-minor', translation:'k-translation', drill:'k-drill' };
 var CAT_LABEL = { real:'考研真题', mock:'模拟题', mine:'我的题目' };
 var CAT_CLASS = { real:'c-real', mock:'c-mock', mine:'c-mine' };
@@ -325,9 +335,43 @@ function toast(msg){
 function num(v, d){ var n = parseFloat(v); return isNaN(n) ? (d===undefined?null:d) : n; }
 function pct(v){ return (v==null) ? '—' : (Math.round(v*1000)/10)+'%'; }
 
+/* 从 localStorage 读 JSON：解析失败不要静默丢数据——先备份原始字符串，
+   再尽量"抢救"出数组里完整的对象，并把损坏情况告诉调用方。 */
+function loadLSStrict(key){
+  var raw;
+  try { raw = localStorage.getItem(key); } catch(e){ return { ok:true, value:null, storageError:String(e.message||e) }; }
+  if(!raw) return { ok:true, value:null, raw:null };
+  try { return { ok:true, value: JSON.parse(raw), raw:raw }; }
+  catch(e){
+    try { localStorage.setItem(key + '.corrupt.bak', raw); } catch(_) {}
+    var salvaged = null;
+    var m = /^\s*\[/.test(raw);
+    if(m){
+      // 粗暴抢救：把最外层数组里能被单独解析的对象挑出来
+      var items = raw.split(/\},\s*\{/);
+      if(items.length > 1){
+        var list = [];
+        items.forEach(function(chunk, i){
+          var s = chunk;
+          if(i > 0) s = '{' + s;
+          if(i < items.length - 1) s = s + '}';
+          try { var o = JSON.parse(s); if(o && typeof o === 'object') list.push(o); } catch(_) {}
+        });
+        if(list.length) salvaged = list;
+      }
+    }
+    return { ok:false, error:String(e.message || e), raw:raw, value:salvaged, salvaged: salvaged ? salvaged.length : 0 };
+  }
+}
 function loadLS(key, dflt){
-  try{ var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : dflt; }
-  catch(e){ return dflt; }
+  var r = loadLSStrict(key);
+  if(r.ok && r.value != null) return r.value;
+  if(!r.ok){
+    Store.dataWarnings = Store.dataWarnings || [];
+    Store.dataWarnings.push('本机数据「' + key + '」解析失败（已备份为 ' + key + '.corrupt.bak'
+      + (r.salvaged ? '，已抢救出 ' + r.salvaged + ' 条' : '') + '）');
+  }
+  return (r.value != null) ? r.value : dflt;
 }
 function saveLS(key, val){
   try{ localStorage.setItem(key, JSON.stringify(val)); return true; }
@@ -371,23 +415,30 @@ function scanPatchFiles(){
     // 仿真模式：由外部自检脚本负责真正加载补丁文件，这里等待其完成信号
     window.__KAOYAN_SCRIPTS = window.__KAOYAN_SCRIPTS || [];
     return (window.__KAOYAN_HARNESS_WAIT__ || Promise.resolve()).then(function(){
-      return Object.keys(window.__KAOYAN_PATCHES || {});
+      var ids = Object.keys(window.__KAOYAN_PATCHES || {});
+      return { ids: ids, requested: PATCH_IDS.length, loaded: ids.length };
     });
   }
   window.__KAOYAN_PATCHES = {};
   return new Promise(function(resolve){
-    var i = 0;
+    var i = 0, loaded = 0;
+    var total = PATCH_IDS.length;
     (function next(){
-      if(i >= PATCH_IDS.length){ resolve(Object.keys(window.__KAOYAN_PATCHES)); return; }
+      if(i >= total){ resolve({ ids: Object.keys(window.__KAOYAN_PATCHES), requested: total, loaded: loaded }); return; }
       var id = PATCH_IDS[i++];
       var s = document.createElement('script');
       var done = false;
-      function finish(){ if(done) return; done = true; if(s.parentNode) s.parentNode.removeChild(s); next(); }
+      function finish(okFlag){
+        if(done) return; done = true;
+        if(okFlag) loaded++;
+        if(s.parentNode) s.parentNode.removeChild(s);
+        next();
+      }
       s.src = 'data/patches/' + id + '.js?_p=' + Date.now();
-      s.onload = finish;
-      s.onerror = finish;          // 文件不存在时静默跳过
+      s.onload = function(){ finish(true); };
+      s.onerror = function(){ finish(false); };   // 文件不存在时静默跳过
       document.head.appendChild(s);
-      setTimeout(finish, 1200);    // 兜底，避免某个文件卡住整轮扫描
+      setTimeout(function(){ finish(false); }, 1200);    // 兜底，避免某个文件卡住整轮扫描
     })();
   });
 }
@@ -400,18 +451,30 @@ function scanPatchFiles(){
   };
 }
 
+/* 数据加载：等 3 个数据脚本真正 onload 后再合并（固定 90ms 定时器会撞上磁盘慢/文件大，
+   导致"题库 0 道题、提交记录消失"的偶发白屏，见 tools/validate.js 的渲染仿真之外的真机复现） */
+var LOAD_TIMEOUT_MS = 8000;
 function loadData(){
   return new Promise(function(resolve){
+    // 串行化：并发调用会互相清空 __KAOYAN_STATE / __KAOYAN_PATCHES，导致互相读到半成品
+    if(Store.loadingPromise){ Store.loadingPromise.then(function(){ resolve(); }); return; }
+    var finished = false;
+    var finishLoad;
+    Store.loadingPromise = new Promise(function(res){ finishLoad = res; });
     Store.seed = { meta:{}, questions:[], completions:[] };
     window.__KAOYAN_QUESTIONS = [];
     window.__KAOYAN_STATE = null;
     window.__KAOYAN_PATCHES = {};
     window.__KAOYAN_BANK_ERRORS = [];
-    // 每次重新加载都用带时间戳的新 script 标签，绕过 file:// 缓存
-    var s0 = injectScript('data/figures.js', null, function(){});   // 公用示意图库（须先于题库）
-    var s1 = injectScript('data/questions.js', null, function(){}); // 题目文件执行失败时不会中断本页
-    var s2 = injectScript('data/state.js', null, function(){});
-    setTimeout(function(){
+    var s0 = null, s1 = null, s2 = null;
+
+    function cleanup(){
+      [s0, s1, s2].forEach(function(s){ if(s && s.parentNode) s.parentNode.removeChild(s); });
+    }
+
+    function afterScripts(){
+      if(finished) return;
+      finished = true;
       var st = null;
       try { st = window.__KAOYAN_STATE; } catch(e){ Store.seedError = String(e.message || e); }
       if(st){
@@ -432,30 +495,67 @@ function loadData(){
         Store.syncNote = '数据已加载 · ' + fmtTime(new Date().toISOString());
       } else { initSeedFromBank(); if(!(window.__KAOYAN_QUESTIONS||[]).length) Store.bankError = bankProbe(); }
       if(!st) Store.syncNote = '⚠ 未能读取 data/state.js（正在用 data/questions.js 兜底）';
-      if(s0 && s0.parentNode) s0.parentNode.removeChild(s0);
-      if(s1 && s1.parentNode) s1.parentNode.removeChild(s1);
-      if(s2 && s2.parentNode) s2.parentNode.removeChild(s2);
+      cleanup();
       // 加载 AI 写回的批改补丁（JS 形式）；探测范围按已见到的编号动态生成
       rebuildPatchIds();
-      scanPatchFiles().then(function(foundIds){
-        var merged = {};
-        (foundIds||[]).forEach(function(id){ merged[id] = window.__KAOYAN_PATCHES[id]; });
-        Store.patchFiles = foundIds || [];
-        Store.patches = merged;
-        saveLS(LS_PATCH, Store.patches);
+      scanPatchFiles().then(function(res){
+        var foundIds = (res && res.ids) || [];
+        var mergedPatches = {};
+        foundIds.forEach(function(id){ mergedPatches[id] = window.__KAOYAN_PATCHES[id]; });
+        Store.patchFiles = foundIds;
+        Store.patchLoad = { requested: (res && res.requested) || foundIds.length, loaded: (res && res.loaded) || foundIds.length };
+        // 一个补丁都没读到、但上次明明有补丁 → 多半是 script 全被拦截/中途失败，
+        // 这时保留上次会话缓存，避免整页批改结果凭空消失。
+        if(!foundIds.length && Object.keys(Store.patches || {}).length && !(res && res.loaded)){
+          Store.syncNote = '⚠ 未能读取 data/patches/（仍然显示上次会话缓存的结果）';
+        } else {
+          Store.patches = mergedPatches;
+          saveLS(LS_PATCH, Store.patches);
+        }
         if(!Store.patchFiles.length && !st){
           Store.syncNote = '⚠ 未读到 state.js，也未发现任何批改补丁';
         } else if(Store.patchFiles.length){
           Store.syncNote = '数据已加载 · 补丁 ' + Store.patchFiles.length + ' 个 · ' + fmtTime(new Date().toISOString());
         }
         Store.lastLoad = new Date();
+        if(finishLoad) finishLoad();
+        Store.loadingPromise = null;
         renderMeta();
         render();
         if(window.__KAOYAN_DIAG) window.__KAOYAN_DIAG.ready = true;
         resolve();
       });
-    }, 90);
+    }
+
+    // 每次重新加载都用带时间戳的新 script 标签，绕过 file:// 缓存
+    s0 = injectScript('data/figures.js', null, function(){});   // 公用示意图库（须先于题库）
+    s1 = injectScript('data/questions.js', null, function(){}); // 题目文件执行失败时不会中断本页
+    s2 = injectScript('data/state.js', null, function(){});
+    // 三个脚本都 onload（或超时兜底）后再合并数据
+    waitScriptsLoaded([s0, s1, s2], afterScripts, LOAD_TIMEOUT_MS);
   });
+}
+
+/* 等一组 <script> 加载完成。
+   仿真模式（__KAOYAN_HARNESS__）下 injectScript 只登记脚本、由自检脚本读磁盘同步执行，
+   所以这里要等它的完成信号 __KAOYAN_HARNESS_WAIT__，否则会在数据还没执行时就去合并。 */
+function waitScriptsLoaded(list, done, timeoutMs){
+  if(window.__KAOYAN_HARNESS__){
+    var w = window.__KAOYAN_HARNESS_WAIT__;
+    if(w && typeof w.then === 'function'){ w.then(function(){ done(); }); }
+    else { setTimeout(done, 0); }   // 仿真脚本稍后才挂上完成信号，等它一轮
+    return;
+  }
+  var left = 0, fired = false;
+  function one(){ if(fired) return; left--; if(left <= 0){ fired = true; done(); } }
+  list.forEach(function(s){
+    if(!s){ return; }
+    left++;
+    s.addEventListener('load', one);
+    s.addEventListener('error', one);
+  });
+  setTimeout(function(){ if(!fired){ fired = true; done(); } }, timeoutMs || LOAD_TIMEOUT_MS);
+  if(left === 0){ fired = true; done(); }
 }
 
 /* ---------------- 数据合并 ---------------- */
@@ -1111,7 +1211,7 @@ function statCard(k,v,f){
 function pillFor(c){
   var p = c.status === 'graded' ? '<span class="pill graded">已批改</span>' : '<span class="pill pending">待批改</span>';
   var q = questionById(c.questionId);
-  var k = '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(KIND_LABEL[q.kind]||q.kind)+'</span>';
+  var k = '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(kindLabel(q))+'</span>';
   return k + ' ' + p;
 }
 function submissionItem(c, openByDefault){
@@ -1147,9 +1247,6 @@ function bindItems(root){
       render();
     });
   });
-  root.querySelectorAll('[data-view-link]').forEach(function(el){
-    el.addEventListener('click', function(){ switchView(el.getAttribute('data-view-link')); });
-  });
   root.querySelectorAll('[data-open-sub]').forEach(function(el){
     el.addEventListener('click', function(){
       var id = el.getAttribute('data-open-sub');
@@ -1180,6 +1277,19 @@ function bindItems(root){
       switchView('submit');
       toast('已把 ' + id + ' 的内容填回提交页，改完直接提交（会作为修改稿挂在同一篇下面）');
     });
+  });
+}
+
+/* 页面级「跳转」委托：只绑一次，避免重复绑定导致一次点击走多遍 */
+function bindViewLinks(root){
+  root = root || document;
+  if(root.__viewLinksBound) return;
+  root.__viewLinksBound = true;
+  root.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target.closest('[data-view-link]') : null;
+    if(!t) return;
+    e.preventDefault();
+    switchView(t.getAttribute('data-view-link'));
   });
 }
 
@@ -1275,11 +1385,16 @@ function renderGrading(g, c){
   }
   /* 翻译逐句 */
   if((g.sentences||[]).length){
+    var trq = questionById(c && c.questionId);
+    var isEn2Trans = subjOf(trq) === 'en2';
     h += '<h3 style="font-size:15px;margin:18px 0 6px">逐句批改（翻译采分点）</h3>';
     g.sentences.forEach(function(s){
+      var denom = (s.points && s.points.length)
+        ? s.points.reduce(function(a,p){ return a + (num(p.score) || 0); }, 0)
+        : (isEn2Trans ? '' : 2);
       h += '<div class="item" style="margin-bottom:12px"><div class="ihead" style="cursor:default">'
          + '<span class="ititle">第 '+esc(s.no||'')+' 句</span>'
-         + '<span class="score">'+ (num(s.score)==null?'—':s.score) +' / 2</span>'
+         + '<span class="score">'+ (num(s.score)==null?'—':s.score) + (denom === '' ? '' : (' / ' + denom)) + '</span>'
          + '<span class="spacer"></span><span class="isub">'+(s.points?('采分点 '+s.points.length+' 个'):'')+'</span></div>'
          + '<div class="ibody" style="padding:12px 16px">'
          + '<div class="orig en" style="font-family:Georgia,serif;color:var(--ink2)">'+esc(s.original||'')+'</div>';
@@ -1349,7 +1464,7 @@ function renderQuestionBody(q, compact){
   h += '<div class="qhead"><div><div class="row" style="margin-bottom:6px">'
      + subjPill(q)
      + catPill(q)
-     + '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(KIND_LABEL[q.kind]||q.kind)+'</span>'
+     + '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(kindLabel(q))+'</span>'
      + (q.year?'<span class="pill">'+esc(q.year)+'</span>':'')
      + (q.words?'<span class="pill">字数 '+esc(q.words)+'</span>':'')
      + (q.difficulty?'<span class="pill">难度 '+'★'.repeat(Math.max(0,Math.min(5,q.difficulty)))+'</span>':'')
@@ -1403,7 +1518,7 @@ function renderSubmit(){
       group.forEach(function(q){
         var st = practiceStats(q.id);
         h += '<option value="'+esc(q.id)+'"'+(q.id===cur?' selected':'')+'>'
-           + esc('　' + CAT_LABEL[cat] + '｜' + KIND_LABEL[q.kind] + '｜' + q.title + (st.total ? '　[练过 '+st.total+' 次]' : '　[未练习]'))
+           + esc('　' + CAT_LABEL[cat] + '｜' + kindLabel(q) + '｜' + q.title + (st.total ? '　[练过 '+st.total+' 次]' : '　[未练习]'))
            + '</option>';
       });
     });
@@ -1576,7 +1691,7 @@ function renderSubmit(){
     var g = qs.filter(function(x){ return catOf(x) === cat; });
     if(!g.length) return;
     var og = '<optgroup label="'+cat[1]+'">';
-    g.forEach(function(x){ og += '<option value="'+esc(x.id)+'">'+esc(KIND_LABEL[x.kind]+'｜'+x.title)+'</option>'; });
+    g.forEach(function(x){ og += '<option value="'+esc(x.id)+'">'+esc(kindLabel(x)+'｜'+x.title)+'</option>'; });
     og += '</optgroup>';
     if(myLink) myLink.insertAdjacentHTML('beforeend', og);
   });
@@ -1651,12 +1766,14 @@ function nextSubId(){
   return 'sub_' + ('000'+(max+1)).slice(-4);
 }
 function doSubmit(text, qid, revisesId){
-  if(!text || !text.trim()){ toast('请先粘贴作文正文（图片提交请填写图片路径后告知 AI）'); return; }
+  var imgPath = $('#in-imgpath') ? $('#in-imgpath').value.trim() : '';
+  // 手写照片也可以单独成篇（正文留空即可），与页面「手写稿可以跳过正文」的说明一致
+  if((!text || !text.trim()) && !imgPath){ toast('请粘贴作文正文，或先选一张手写照片（两者交一种即可）'); return; }
   var id = nextSubId();
   var c = {
     id: id, questionId: qid, submittedAt: new Date().toISOString(), status: 'pending',
-    essayText: text, note: $('#in-note') ? $('#in-note').value : '',
-    imagePath: $('#in-imgpath') ? $('#in-imgpath').value : ''
+    essayText: text || '', note: $('#in-note') ? $('#in-note').value : '',
+    imagePath: imgPath
   };
   // 改稿关系：标为某篇的修改稿 → 同一篇作文下可并排对比
   if(revisesId){
@@ -1672,13 +1789,23 @@ function doSubmit(text, qid, revisesId){
       toast('这一篇与所选上一篇不是同一道题，已按独立一篇记录');
     }
   }
-  if(Store.tmpImg){ Store.imgs[id] = Store.tmpImg; saveLS(LS_IMGS, Store.imgs); }
+  // 先落盘：写入失败（配额满 / 隐私模式）时不能假装成功，否则刷新即丢
+  var prevImgs = Store.tmpImg ? Store.imgs[id] : undefined;
+  if(Store.tmpImg){ Store.imgs[id] = Store.tmpImg; }
   Store.subs.push(c);
-  saveLS(LS_SUBS, Store.subs);
+  var okSubs = saveLS(LS_SUBS, Store.subs);
+  var okImgs = Store.tmpImg ? saveLS(LS_IMGS, Store.imgs) : true;
+  if(!okSubs || !okImgs){
+    Store.subs.pop();
+    if(Store.tmpImg){ if(prevImgs === undefined) delete Store.imgs[id]; else Store.imgs[id] = prevImgs; }
+    toast('提交失败：浏览器本地存储写不进去（可能已满或处于隐私模式）。请先在「错题与语言点库」导出备份，再清掉一些手写照片重试。');
+    return;
+  }
   Store.lastSubmit = id;
   Store.draftText = ''; Store.tmpImg = null; Store.tmpImgName = null; Store.prefillEdit = null;
   saveLS(LS_META, {draftText:'', draftQuestionId:qid, prefillEdit:null});
   toast('已提交 ' + id + (c.revises ? ('（' + revisesId + ' 的修改稿）') : '') + '。回到对话说「批改待批改作文」');
+  syncSubmissionsToHelper(true);      // 服务在线就顺手同步，省得 AI 读不到
   render();
 }
 
@@ -1689,8 +1816,16 @@ function doSubmitOwnQuestion(input){
   if(!promptText){ toast('请先粘贴题目原文（题目和作文要一起交）'); return; }
   if(!essay){ toast('还要粘贴你的作文正文——题目和作文要一起交给我'); return; }
   var qid = '';
+  var autoMerged = null;
   if(input.mode === 'link' && input.linkId){
     qid = input.linkId;
+  } else if(input.mode === 'new'){
+    // 用户明确选了「这是一道新题」→ 尊重他的选择，只提示相似题，不擅自归并
+    var maybe = bestDuplicate(promptText);
+    if(maybe){
+      autoMerged = maybe;
+      toast('这道题与题库里的「'+maybe.q.title+'」有些相似，已按你的选择新建到「我的题目」；想归并的话请把下拉改成「和题库里已有的题重复」');
+    }
   } else {
     // 二次判重：即使页面没提示，也再检查一次，避免重复建题
     var dup = bestDuplicate(promptText);
@@ -1762,18 +1897,19 @@ function renderResults(){
 }
 
 /* ---------------- 批改辅助服务（可选）：网页内一键批改 ----------------
-   需要在项目文件夹里跑 `node tools/grade-helper.js`（或双击 启动批改服务.cmd）。
+   需要在项目文件夹里跑 `node app/tools/grade-helper.js`（或双击 start-helper.cmd）。
    它只在本机 127.0.0.1 上听一个端口，按按钮时启动一次独立的 headless harness 去批改。
    没启动时，本页一切功能照旧，只是显示手动方式。 */
-var HELPER_URL = 'http://127.0.0.1:8787';
+var HELPER_URL = 'http://127.0.0.1:8787';   // 改端口时同步改这里（与 start-helper.cmd --port 一致）
 
 function helperHintHtml(){
   return '<div class="note" style="margin-top:12px"><b>批改方式（当前：手动）</b>'
-       + '<div style="margin-top:6px">我没有检测到本地批改服务。两种办法都能拿到批改：</div>'
+       + '<div style="margin-top:6px">我没有检测到本地批改服务。三种办法都能拿到批改：</div>'
        + '<ol class="tight" style="margin-top:6px">'
        + '<li>双击文件夹里的 <b>一键批改.cmd</b>（跑完自动关闭）；或</li>'
-       + '<li>双击 <b>启动批改服务.cmd</b> 让本页出现「一键批改」按钮；它常驻一个小服务，'
+       + '<li>双击 <b>start-helper.cmd</b>（macOS：<b>./start-helper.sh</b>）让本页出现「一键批改」按钮；它常驻一个小服务，'
        + '每次点按钮才启动一次独立的批改进程（不打开 DSH 界面，也不用先开着 DSH）。</li>'
+       + '<li>直接在 DSH 对话里把作文粘给我（或先点「导出本机提交 JSON」）。</li>'
        + '</ol></div>';
 }
 function checkHelper(){
@@ -1787,6 +1923,8 @@ function checkHelper(){
     .then(function(j){
       if(timer) clearTimeout(timer);
       Store.helper = { state:'on', info:j };
+      // 检测到服务在线就顺带把本机提交同步过去（保证「一键批改」时服务端能看到待批改）
+      syncSubmissionsToHelper(true);
       render();
     })
     .catch(function(){
@@ -1795,11 +1933,31 @@ function checkHelper(){
       render();
     });
 }
+/* 把本机提交推送给本地辅助服务落盘（data/pending_submissions.json）。
+   浏览器在 file:// 下无法自己写文件，这一步是"网页提交 → AI 能读到"的关键链路。 */
+function syncSubmissionsToHelper(silent){
+  if(typeof fetch !== 'function') return Promise.resolve(false);
+  var payload = { completions: allCompletions(true) };
+  var p = fetch(HELPER_URL + '/submissions', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload), cache:'no-store'
+  }).then(function(r){ return r.json(); }).then(function(j){
+    if(j && j.ok){
+      Store.syncedAt = new Date().toISOString();
+      if(!silent) toast('本机提交已同步到服务（待批改 ' + (j.pending||[]).length + ' 篇）');
+      return true;
+    }
+    if(!silent) toast('同步失败：' + ((j && j.error) || '未知原因'));
+    return false;
+  }).catch(function(e){ if(!silent) toast('同步失败：' + e.message); return false; });
+  return p;
+}
 function triggerGrade(){
   if(typeof fetch !== 'function'){ toast('这个浏览器不支持，请用 一键批改.cmd'); return; }
   var btn = $('#btn-grade');
-  if(btn){ btn.disabled = true; btn.textContent = '正在启动批改…'; }
-  fetch(HELPER_URL + '/grade', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ task: '批改待批改作文' }) })
+  if(btn){ btn.disabled = true; btn.textContent = '正在同步提交…'; }
+  syncSubmissionsToHelper(true).then(function(){
+  // 只发 pageTask 之外的字段；不传任务文字 → 服务端用启动参数里的 --task（默认"批改待批改作文"）
+  return fetch(HELPER_URL + '/grade', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({}) })
     .then(function(r){ return r.json(); })
     .then(function(j){
       if(!j.ok){ toast('未启动：' + (j.error || '未知原因')); if(btn){ btn.disabled = false; btn.textContent = '一键批改'; } return; }
@@ -1810,6 +1968,7 @@ function triggerGrade(){
       toast('连接批改服务失败：' + e.message);
       if(btn){ btn.disabled = false; btn.textContent = '一键批改'; }
     });
+  });
 }
 function helperPollUntilDone(){
   if(typeof fetch !== 'function') return;
@@ -1956,7 +2115,7 @@ function triggerBankUpdate(yearsOverride){
       pollBankUpdate();
     })
     .catch(function(e){
-      toast('连接辅助服务失败：' + e.message + '（先双击 启动批改服务.cmd）');
+      toast('连接辅助服务失败：' + e.message + '（先双击 start-helper.cmd）');
       render();
     });
 }
@@ -2006,7 +2165,7 @@ function updatePanelHtml(){
   } else if(st === false){
     h += '<div class="note"><b>当前无法一键更新（本地辅助服务未启动）。</b>两种办法：'
        + '<ol class="tight" style="margin-top:6px">'
-       + '<li>双击文件夹里的 <b>启动批改服务.cmd</b>，回到本页点「重新询问」；</li>'
+       + '<li>双击文件夹里的 <b>start-helper.cmd</b>（macOS：<b>./start-helper.sh</b>），回到本页点「重新询问」；</li>'
        + '<li>或直接在 DSH 对话里说：<b>联网更新考研英语一和英语二题库，补齐 ' + (info.need.length ? info.need.join('、') + ' 年' : '最新年份') + ' 真题</b>。</li>'
        + '</ol></div>';
     h += '<div class="row" style="margin-top:10px"><button class="btn" id="btn-bank-refresh">重新询问</button></div>';
@@ -2106,7 +2265,7 @@ function renderBank(){
        + '<span class="ititle">'+esc(q.title)+'</span>'
        + subjPill(q)
        + catPill(q)
-       + '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(KIND_LABEL[q.kind]||q.kind)+'</span>'
+       + '<span class="pill '+KIND_CLASS[q.kind]+'">'+esc(kindLabel(q))+'</span>'
        + practiceBadge(q.id)
        + '<span class="spacer"></span><span class="isub">'+esc(q.source||'')+'</span></div>';
     if(open) h += '<div class="ibody">'+renderQuestionBody(q, false)+'</div>';
@@ -2230,7 +2389,9 @@ function renderMistakes(){
   h += '<div class="card"><h2>导出 / 备份</h2><div class="hint">把本机提交导出为 JSON 文件，便于交给 AI 或备份。</div>'
     + '<div class="row"><button class="btn" id="btn-export">导出本机提交 JSON</button>'
     + '<button class="btn ghost" id="btn-wipe">清除本机草稿与图片缓存</button></div>'
-    + '<div class="note" style="margin-top:12px">AI 读取提交有两条路：① 你直接在本对话粘贴作文；② 把导出的 JSON 另存为 <span class="mono">data/pending_submissions.json</span> 并告诉我。批改结果一律写在 <span class="mono">data/patches/</span>。</div></div>';
+    + '<div class="note" style="margin-top:12px">提交进 AI 的三种途径：<b>①</b> 双击 <span class="mono">start-helper.cmd</span> 后，本页会自动把提交同步成 <span class="mono">data/pending_submissions.json</span>，' 
+    + '在对话里说一句<b>批改待批改作文</b>即可；<b>②</b> 点下面的按钮导出 JSON，另存为 <span class="mono">data/pending_submissions.json</span>；'
+    + '<b>③</b> 直接把作文粘到对话里。批改结果一律写在 <span class="mono">data/patches/</span>。</div></div>';
 
   el.innerHTML = h;
   bindItems(el);
@@ -2242,16 +2403,27 @@ function renderMistakes(){
     toast('已导出 pending_submissions.json —— 放进 data/ 目录后告诉我文件名即可');
   });
   $('#btn-wipe') && $('#btn-wipe').addEventListener('click', function(){
-    if(!confirm('确定清除本机保存的提交草稿与图片缓存？已批改结果（data/patches）不受影响。')) return;
+    var pend = pendingList().length;
+    var msg = '将清空本机保存的全部提交记录、草稿与图片缓存：\n'
+      + '· 共 ' + allCompletions(true).length + ' 条提交，其中【未批改 ' + pend + ' 条】会永久丢失（补丁里通常没有作文原文，无法恢复）\n'
+      + '· 已批改结果（data/patches/）不受影响\n\n'
+      + '建议先点「导出本机提交 JSON」留一份备份。确定要清除吗？';
+    if(!confirm(msg)) return;
     localStorage.removeItem(LS_SUBS); localStorage.removeItem(LS_IMGS); localStorage.removeItem(LS_META);
-    Store.subs = []; Store.imgs = {}; toast('已清除本机缓存'); render();
+    Store.subs = []; Store.imgs = {}; toast('已清除本机缓存（建议同时清掉服务端的 data/pending_submissions.json）'); render();
   });
 }
 
 /* ---------------- 渲染：趋势 ---------------- */
 function renderTrend(){
   var el = $('#view-trend');
-  var g = gradedList().slice().reverse(); // 时间正序
+  // 按「批改时间」正序（没有 gradedAt 的用提交时间兜底），与页面文案一致
+  var g = gradedList().slice().sort(function(a, b){
+    var ta = parseTime(a.grading && a.grading.gradedAt ? a.grading.gradedAt : (a.gradedAt || a.submittedAt));
+    var tb = parseTime(b.grading && b.grading.gradedAt ? b.grading.gradedAt : (b.gradedAt || b.submittedAt));
+    if(ta && tb) return ta - tb;
+    return String(a.id).localeCompare(String(b.id));
+  });
   var series = g.map(function(c){
     return { label: c.id, title: questionById(c.questionId).title, rate: rateOf(c),
              score: scoreOf(c), full: fullOf(c), when: c.gradedAt||c.submittedAt,
@@ -2365,7 +2537,10 @@ function render(){
   else if(currentView==='bank') renderBank();
   else if(currentView==='mistakes') renderMistakes();
   else if(currentView==='trend') renderTrend();
-  bindItems(document);
+  // 注意：不要在这里再 bindItems(document)。各视图渲染函数内部已经 bindItems(el)，
+  // 而 innerHTML 会在每次渲染时重建节点——重复绑定会让 [data-toggle] 的取反处理器
+  // 一次点击执行两遍，导致"展开/收起"永远打不开。
+  bindViewLinks(document);
 }
 
 /* ---------------- 启动 ---------------- */
@@ -2377,6 +2552,9 @@ function boot(){
   Store.draftText = meta.draftText || '';
   Store.draftQuestionId = meta.draftQuestionId || '';
   Store.prefillEdit = meta.prefillEdit || null;
+  if(Store.dataWarnings && Store.dataWarnings.length){
+    setTimeout(function(){ toast(Store.dataWarnings.join('；')); }, 800);
+  }
 
   $('#tabs').addEventListener('click', function(e){
     var b = e.target.closest('button[data-view]');
@@ -2386,11 +2564,8 @@ function boot(){
     Store.syncNote = '正在重新加载…'; renderMeta();
     loadData().then(function(){ toast('数据已重新加载'); });
   });
-  // 兼容总览/其它视图里的「去题库 →」类链接
-  document.addEventListener('click', function(e){
-    var t = e.target && e.target.closest ? e.target.closest('[data-view-link]') : null;
-    if(t){ e.preventDefault(); switchView(t.getAttribute('data-view-link')); }
-  });
+  // 兼容总览/其它视图里的「去题库 →」类链接（只绑一次）
+  bindViewLinks(document);
 
   loadData().then(function(){
     // 支持用 URL hash 直接打开某个视图（如 index.html#bank），也便于自动截图验证
@@ -2402,21 +2577,30 @@ function boot(){
     // 自动轮询：检测 AI 写回的新补丁
     setInterval(function(){
       if(document.hidden) return;
+      if(Store.loadingPromise) return;          // 正在整体重载时跳过这一轮，避免互相清空
+      rebuildPatchIds();                        // 本会话新提交的编号也要纳入探测
       var before = {};
       Object.keys(Store.patches).forEach(function(id){ before[id] = Store.patches[id]; });
-      scanPatchFiles().then(function(foundIds){
+      scanPatchFiles().then(function(res){
+        var foundIds = (res && res.ids) || [];
         var after = {};
-        (foundIds||[]).forEach(function(id){ after[id] = window.__KAOYAN_PATCHES[id]; });
+        foundIds.forEach(function(id){ after[id] = window.__KAOYAN_PATCHES[id]; });
         var changed = false;
         Object.keys(after).forEach(function(id){
           if(!before[id] || JSON.stringify(before[id]) !== JSON.stringify(after[id])) changed = true;
         });
-        Object.keys(before).forEach(function(id){ if(!after[id]) { after[id] = before[id]; } });
-        Store.patchFiles = foundIds || Store.patchFiles || [];
-        Store.patches = after;
-        saveLS(LS_PATCH, Store.patches);
+        Object.keys(before).forEach(function(id){ if(!after[id]) changed = true; });   // 补丁被删/被改写也要反映
+        // 以磁盘为准（补丁被删除后页面不再显示旧结果）；只有"一个都没读到"时才回退到缓存
+        var nothingLoaded = !(res && res.loaded);
+        if(nothingLoaded && Object.keys(before).length){
+          Store.syncNote = '⚠ 未能读取 data/patches/（仍然显示上次结果）';
+        } else {
+          Store.patches = after;
+          Store.patchFiles = foundIds;
+          saveLS(LS_PATCH, Store.patches);
+        }
         if(changed){
-          toast('检测到新的批改结果，已更新');
+          toast('批改结果已更新');
           Store.syncNote = '数据已加载 · 补丁 ' + Store.patchFiles.length + ' 个 · ' + fmtTime(new Date().toISOString());
           renderMeta(); render();
         }

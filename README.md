@@ -22,6 +22,44 @@
 
 ---
 
+## 界面预览
+
+> 截图来自本机实际运行（1440×900，2 倍图）。完整图文步骤见 **[操作手册（PDF）](docs/操作手册.pdf)**。
+
+<div align="center">
+
+<img src="docs/images/01-board.png" width="760" alt="总览页">
+
+<sub><b>总览</b>：距考试倒计时 · 已提交/已批改篇数 · 平均得分率 · 最近批改（点条目展开完整批改）</sub>
+
+<br><br>
+
+<img src="docs/images/02-bank.png" width="760" alt="题库页">
+
+<sub><b>题库</b>：科目（英语一/英语二）→ 类别（真题/模拟/我的题目）→ 题型（大作文/小作文/翻译/长难句）三级筛选</sub>
+
+<br><br>
+
+<img src="docs/images/05-helper.png" width="760" alt="一键批改面板">
+
+<sub><b>一键批改</b>：服务连接后点按钮，网页先把本机提交同步成 <code>data/pending_submissions.json</code>，AI 读它批改</sub>
+
+<br><br>
+
+<img src="docs/images/06-results.png" width="760" alt="批改结果">
+
+<sub><b>批改结果</b>：档位 + 分项评价 + 逐句批改 + 采分点表 + 修改后全文 + 词汇/语法升级</sub>
+
+<br><br>
+
+<img src="docs/images/09-trend.png" width="760" alt="分数趋势">
+
+<sub><b>复盘</b>：错题按语法类别归库、得分率趋势、同一篇作文的多稿并排对比</sub>
+
+</div>
+
+---
+
 ## 1. 三分钟开始
 
 ### 第 0 步：解压到哪里（下载 zip 之后，这一步别随手点）

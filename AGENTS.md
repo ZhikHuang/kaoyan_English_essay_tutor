@@ -10,7 +10,8 @@
 批改前**必须完整读取**：
 
 1. `skill/SKILL.md` —— 总入口：执行流程、**科目与题型路由**、通用守则
-2. **先确认科目**（英语一 / 英语二），再按题型读对应文档：
+2. **定档与给分**（必读）：考研 → `skill/references/rubric_kaoyan.md`；六级 → `skill/references/rubric_cet6.md`
+3. **先确认科目**（英语一 / 英语二 / 六级），再按题型读对应文档：
 
    | 科目 + 题型 | 文档 | 满分 / 词数 |
    |---|---|---|
@@ -19,12 +20,14 @@
    | 英语一 · 翻译（5 个划线句） | `skill/references/english1_translation.md` | 10 分 / 每句 2 分 |
    | **英语二 · 大作文（图表作文）** | `skill/references/english2_essay_major.md` | **15 分 / 约 150 词** |
    | **英语二 · 小作文（应用文）** | `skill/references/english2_essay_minor.md` | 10 分 / 约 100 词 |
-   | **英语二 · 翻译（整段英译汉）** | `skill/references/english2_translation.md` | **15 分** |
+   | **英语二 · 翻译（整段英译汉）** | `skill/references/english2_translation.md` | **15 分，四档** |
+   | 六级 · 作文 | 用 `rubric_cet6.md` + 通用语言库，不套考研档位 | 15 分 / 150—200 词 |
    | 外刊长难句专项（两科通用） | `skill/references/translation_long_sentence.md` | 不计考研总分 |
 
    - 英语一大作文注意：**2010—2023 是图画作文；2024 是图画+柱状图；2025 是表格；2026 是双图表**。先看题干是 `drawing` 还是 `chart`，再看文件里第 6 节（图画）/ 第 6B 节（图表）两套检查清单。
    - **科目判断依据**：题目 `subject` 字段（`en1`/`en2`）、id 前缀（`q_en2_*` 为英语二）、或题目 Directions。拿不准先问用户，**不要用英语一的满分（20/10/10）去批英语二**。
-3. 数据格式与字段契约 → `skill/references/web_bridge.md`（**写文件前必读**）
+4. **提分与模板**（每篇必用）：`skill/references/highscore_language.md`（给 3—5 处词汇升级 + 1—2 处语法升级）、`skill/references/templates_library.md`（多文体骨架）、`skill/references/master_methods.md`（名师共识，校准讲解）
+5. 数据格式与字段契约 → `skill/references/web_bridge.md`（**写文件前必读**）
 
 > 用户如果用 DSH：`skill/` 的内容也会被安装到 `~/.dsh/skills/kaoyan-english-tutor/`，可直接加载。
 

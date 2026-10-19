@@ -1,5 +1,10 @@
 # 考研英语一 · 大作文（图画/漫画作文，20 分）批改模块
 
+> **配套文件（必读）**：分档与给分以 `references/rubric_kaoyan.md` 为准；
+> 每篇作文必须给 **3—5 处词汇升级 + 1—2 处语法升级**（`references/highscore_language.md`），
+> 需要结构示范时用 `references/templates_library.md`。
+
+
 > 定位：**真题实战 + 逐句精讲**模块，直接折算考研分数（满分 20 分）。
 > 与 `english1_essay_minor.md`（小作文 10 分）、`english1_translation.md`（翻译 5×2 分）并列，三者口径不得混用。
 > 数据落盘规则以 `web_bridge.md` 为准；本文件只规定**大作文专属**的评分、批改与输出要求。

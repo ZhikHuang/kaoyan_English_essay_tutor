@@ -1,5 +1,10 @@
 # 考研英语二 · 小作文（应用文，10 分）批改模块
 
+> **配套文件（必读）**：分档与给分以 `references/rubric_kaoyan.md` 为准；
+> 每篇作文必须给 **3—5 处词汇升级 + 1—2 处语法升级**（`references/highscore_language.md`），
+> 需要结构示范时用 `references/templates_library.md`。
+
+
 > 满分 10 分，约 100 词。评分档位与英语一小作文口径接近，但**词数、文体分布与英语一不同**（英语二更常考通知、告示、备忘录与各类邮件）。
 > 数据落盘以 `references/web_bridge.md` 为准。
 

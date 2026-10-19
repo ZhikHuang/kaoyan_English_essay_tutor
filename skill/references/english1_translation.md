@@ -1,5 +1,10 @@
 # 考研英语一 · 翻译（英译汉：5 个划线句，每句 2 分，满分 10 分）批改模块
 
+> **配套文件（必读）**：分档与给分以 `references/rubric_kaoyan.md` 为准；
+> 每篇作文必须给 **3—5 处词汇升级 + 1—2 处语法升级**（`references/highscore_language.md`），
+> 需要结构示范时用 `references/templates_library.md`。
+
+
 > 定位：**真题实战 + 采分点给分 + 长难句逐句拆解**模块，直接折算考研分数（满分 10 分）。
 > 与 `english1_essay_major.md`（大作文 20 分）、`english1_essay_minor.md`（小作文 10 分）并列，
 > 与 `translation_long_sentence.md`（外刊长难句**专项训练**，不打总分、写 `partial:true`）**分工不同，口径不得混用**。

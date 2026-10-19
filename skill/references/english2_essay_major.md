@@ -1,5 +1,10 @@
 # 考研英语二 · 大作文（图表作文，15 分）批改模块
 
+> **配套文件（必读）**：分档与给分以 `references/rubric_kaoyan.md` 为准；
+> 每篇作文必须给 **3—5 处词汇升级 + 1—2 处语法升级**（`references/highscore_language.md`），
+> 需要结构示范时用 `references/templates_library.md`。
+
+
 > 定位：直接折算考研英语二分数（满分 15 分）。
 > 与英语一大作文（图画/图表，20 分）**评分档位与满分都不同**，不得混用。
 > 数据落盘规则以 `references/web_bridge.md` 为准；本文件只规定英语二大作文专属的评分、批改与输出要求。

@@ -1,5 +1,10 @@
 # 考研英语二 · 翻译（整段英译汉，15 分）批改模块
 
+> **配套文件（必读）**：分档与给分以 `references/rubric_kaoyan.md` 为准；
+> 每篇作文必须给 **3—5 处词汇升级 + 1—2 处语法升级**（`references/highscore_language.md`），
+> 需要结构示范时用 `references/templates_library.md`。
+
+
 > 满分 15 分，**整段英译汉**（约 150 词的一段英文），不是英语一的 5 个划线句。
 > 数据落盘以 `references/web_bridge.md` 为准。
 

@@ -177,6 +177,16 @@ for (const f of ['install.sh', 'grade-once.sh', 'start-helper.sh', 'stop-helper.
   probs.length ? no(f + '：' + probs.join('、')) : ok(f + ' 格式正确（LF + shebang + 无 BOM）');
 }
 
+/* 9. 技能包结构（路由、章节、编码） */
+console.log('');
+console.log('【9】技能包结构（SKILL.md 路由 ↔ references；新文档章节是否齐全）');
+{
+  const r = spawnSync(process.execPath, [path.join(REPO, 'tools', 'check-skill.js'), REPO], { encoding: 'utf8' });
+  if (r.error) wr('无法启动 check-skill.js（' + r.error.code + '），本项跳过');
+  else if (r.status === 0) ok('技能包结构检查通过（共 ' + String(r.stdout || '').split('\n').length + ' 行输出）');
+  else no('技能包结构检查失败：\n' + String(r.stdout || '').split('\n').filter(l => l.includes('❌')).join('\n'));
+}
+
 console.log('');
 console.log(bad === 0 ? '结果：全部通过（警告 ' + warn + ' 项）' : '结果：' + bad + ' 项失败，' + warn + ' 项警告');
 process.exit(bad ? 1 : 0);
